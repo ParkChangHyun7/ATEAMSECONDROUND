@@ -1,0 +1,18 @@
+/* 푸터 스타일 */
+.footer {
+    width: 100%;
+    height: 150px;
+    background-color: #444;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 푸터 반응형 스타일 */
+@media screen and (max-width: 768px) {
+    .footer {
+        height: 200px;
+        padding: 20px;
+    }
+} 

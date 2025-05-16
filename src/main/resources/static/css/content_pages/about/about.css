@@ -1,0 +1,264 @@
+/* about.css */
+
+.cpabout .wrap {
+  position: relative;
+}
+
+.cpabout .inner {
+  width: 1200px;
+  margin: 0 auto;
+  padding-top: 100px;
+}
+
+.cpabout .introTitle {
+  font-size: 33px;
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.cpabout .tabMenu {
+  display: flex;
+  justify-content: left;
+  border-bottom: 1px solid #dadada;
+  margin-bottom: 20px;
+}
+
+.cpabout .tab {
+  padding: 10px 20px;
+  margin-right: 10px;
+  background-color: #f1f1f1;
+}
+
+.cpabout .tab a {
+  font-size: 20px;
+  padding: 5px 10px;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.cpabout .tab:hover a {
+  text-decoration: underline;
+}
+
+.cpabout .tab.active {
+  background-color: #fff;
+  font-weight: bold;
+  border: 1px solid #dadada;
+  border-bottom: none;
+  margin-bottom: -1px;
+  position: relative;
+  z-index: 1;
+}
+
+.cpabout .tabContent {
+  padding: 20px 0;
+  display: none;
+}
+
+.cpabout .tabContent.active {
+  display: block;
+}
+
+.cpabout .sectionTitle {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.cpabout .tabContent .s1,
+.cpabout .s2 {
+  font-size: 20px;
+}
+
+.cpabout .conBox {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 20px 0 30px;
+}
+
+.cpabout .imgBox {
+  width: 150px;
+  height: 150px;
+  background-color: #f3f6fb;
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.cpabout .imgBox img {
+  width: 85px;
+  max-width: 100%;
+}
+
+.cpabout .textBox {
+  display: flex;
+  gap: 25px;
+  justify-content: center;
+  align-items: center;
+}
+
+.cpabout .conTitle {
+  width: 250px;
+  font-size: 22px;
+  font-weight: bold;
+  padding: 0 20px;
+}
+
+.cpabout .description li {
+  list-style: inside;
+  font-size: 18px;
+  padding: 10px 15px;
+}
+
+.cpabout .description span {
+  color: #1d3b5b;
+  font-weight: 500;
+}
+
+.cpabout .s2 {
+  width: 280px;
+  margin: auto;
+  text-align: center;
+  color: #1d3b5b;
+  border: 1px solid #1d3b5b;
+  border-radius: 45px;
+  padding: 20px;
+}
+
+.cpabout .dTitle {
+  flex: 1;
+  height: 350px;
+  border: 1px solid #dadada;
+  margin: 20px 0;
+}
+
+.cpabout .dTitle span {
+  display: inline-block;
+  width: 100%;
+  height: 60px;
+  background-color: #f3f6fb;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 15px;
+}
+
+.cpabout .dTitle .indent {
+  text-indent: 1em;
+}
+
+.cpabout .roleTable,
+.cpabout .stateTable {
+  margin: 20px 0 30px;
+  max-width: 100%;
+  border-collapse: collapse;
+}
+
+.cpabout .roleTable th {
+  width: 300px;
+  background-color: #f3f6fb;
+  font-size: 20px;
+  border-top: 2px solid #333;
+  border-bottom: 1px solid #666;
+  padding: 20px;
+}
+
+.cpabout .roleTable th:last-child {
+  width: 600px;
+}
+
+.cpabout .roleTable td {
+  font-size: 18px;
+  text-align: center;
+  border-bottom: 1px solid #666;
+  padding: 20px;
+}
+
+.cpabout .roleTable td li {
+  list-style: inside;
+  font-size: 18px;
+  text-align: left;
+  padding: 10px 15px;
+}
+
+.cpabout .stateTable th {
+  width: 400px;
+  background-color: #f3f6fb;
+  font-size: 20px;
+  border-top: 2px solid #333;
+  border-bottom: 1px solid #666;
+  padding: 20px;
+}
+
+.cpabout .stateTable td {
+  text-align: center;
+  border-bottom: 1px dotted #666;
+}
+
+.cpabout .stateTable td:last-child {
+  padding: 20px;
+}
+
+.cpabout .stateTable tr:last-child {
+  background-color: #f3f6fb;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.cpabout .tTitle {
+  background-color: #f0f0f0;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.cpabout .stateTable td li {
+  font-size: 18px;
+  border-bottom: 1px dashed #dadada;
+  padding: 10px;
+  list-style: none;
+}
+
+.cpabout .stateTable td li:last-child {
+  border: none;
+}
+
+.cpabout .ggMap {
+  margin: auto;
+}
+
+.cpabout .locaTable {
+  width: 950px;
+  margin: 20px 0 30px;
+  max-width: 100%;
+  border-collapse: collapse;
+}
+
+.cpabout .locaTable tr:first-child {
+  border-top: 2px solid #333;
+}
+
+.cpabout .locaTable td {
+  font-size: 18px;
+  border-bottom: 1px solid #dadada;
+  padding: 10px;
+}
+
+.cpabout .locaTable td:first-child {
+  width: 250px;
+  text-align: center;
+}
+
+.cpabout .locaTable td:last-child {
+  padding-left: 20px;
+}
+
+.cpabout .locaTable .indent {
+  list-style: inside;
+  text-indent: 1em;
+}

@@ -1,0 +1,119 @@
+    .weather-info {
+        position: relative;
+        top: 0px;
+        left: 0px;
+        width: fit-content;
+        padding-right: 80px;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        /* 배경 위에 올라옴 */
+    }
+
+    .weather-temp-sky-rain{
+        width: fit-content;
+        height: fit-content;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        font-size: 24px;
+        font-weight: bold;
+        color: white;
+        text-align: right;
+        margin-bottom: 5px;
+    }
+
+    .weather-sky {
+        display: flex;
+        align-items: center;
+    }
+
+    .weather-details {
+        display: flex;
+        gap: 5px;
+    }
+    
+    .weather-details span:not([class*="default"]) {
+        color: white;
+        padding: 3px 6px;
+        padding-bottom: 4px;
+        padding-right: 7px;
+        border-radius: 7px;
+        font-size: 15px;
+        align-self: center;
+    }
+
+    .wds-default {
+        color: rgb(75, 75, 75);
+        padding-top: 3px;
+        border-radius: 7px;
+        font-size: 15px;
+        font-weight: 500;
+    }
+
+    .dust-value-0 {
+        background-color: #0051ff;
+    }
+    .dust-value-1 {
+        background-color: #4CAF50;
+    }
+    .dust-value-2 {
+        background-color: #ff6600;
+    }
+    .dust-value-3 {
+        background-color: #c41d1d;
+    }
+
+    .weather-icon {
+        height: 27px;
+        display: inline-block;
+        background-repeat: no-repeat;
+        background-size: contain;
+        position: relative;  /* 툴팁 위치 기준점 */
+    }
+    
+    /* 툴팁 스타일 */
+    .weather-icon::after {
+        content: attr(data-tooltip);  /* data-tooltip 속성의 값을 표시 */
+        position: absolute;
+        bottom: 110%;  /* 아이콘 위에 표시 */
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 5px 10px;
+        background: rgb(194, 243, 255);
+        color: #000000;
+        border-radius: 4px;
+        font-size: 12px;
+        white-space: nowrap;
+        opacity: 0;  /* 기본적으로 숨김 */
+        visibility: hidden;
+        transition: opacity 0.2s;
+    }
+    
+    /* 마우스 오버 시 툴팁 표시 */
+    .weather-icon:hover::after {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    /* 각 아이콘별 스타일은 그대로 유지 */
+    .weather-icon.sunny {
+        width: 27px;
+        background-image: url('/images/weather_icon_sunny.png');
+    }
+    
+    .weather-icon.partly-cloudy {
+        width: 35px;
+        background-image: url('/images/weather_icon_partly_cloudy.png');
+    }
+    
+    .weather-icon.mostly-cloudy {
+        width: 35px;
+        background-image: url('/images/weather_icon_mostly_cloudy.png');
+    }
+    
+    .weather-icon.cloudy {
+        width: 38px;
+        background-image: url('/images/weather_icon_cloudy.png');
+    }
