@@ -1,0 +1,142 @@
+package seoul.its.info.user.validation.email.gmail_old_never_edit_this;
+
+import com.google.auth.http.HttpCredentialsAdapter;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.auth.oauth2.ServiceAccountCredentials; // 최신 표준 import
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.gmail.Gmail;
+import com.google.api.services.gmail.GmailScopes;
+import com.google.api.services.gmail.model.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Session;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
+import lombok.extern.slf4j.Slf4j; // Slf4j import 추가
+import org.apache.commons.codec.binary.Base64;
+import org.springframework.stereotype.Service;
+import seoul.its.info.common.exception.BusinessException;
+// ErrorCode import 제거 또는 주석 처리 (String 코드 사용)
+// import seoul.its.info.common.exception.ErrorCode;
+import seoul.its.info.user.validation.email.EmailVerificationService;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
+import java.util.Collections;
+import java.util.Properties;
+
+@Service
+@Slf4j // Slf4j 어노테이션 추가
+public class EmailVerificationServiceImpl implements EmailVerificationService {
+
+    private static final int EXPIRATION_MINUTES = 3;
+    private static final String APPLICATION_NAME = "Seoul ITS Info"; // 애플리케이션 이름
+    private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+    // 서비스 계정 키 파일 경로 (리소스 폴더 내) - **배포 시 안전한 외부 경로 권장**
+    private static final String SERVICE_ACCOUNT_KEY_PATH = "/com/properties/gen-lang-client-0883647859-1dcf0f11ad28.json";
+    // 위임할 사용자 이메일 주소 (서비스 계정이 이 사용자 권한으로 메일 발송) - 필요시 설정
+    // private static final String USER_TO_IMPERSONATE = "admin@example.com"; // 예시
+
+    private Gmail gmailService; // Gmail 서비스 객체
+
+    // 생성자에서 Gmail 서비스 초기화
+    public EmailVerificationServiceImpl() {
+        log.info("[EmailService] Initializing Gmail service...");
+        try {
+            this.gmailService = getGmailService();
+            log.info("[EmailService] Gmail service initialized successfully.");
+        } catch (IOException | GeneralSecurityException e) {
+            log.error("[EmailService] Failed to initialize Gmail service: {}", e.getMessage(), e);
+            // 애플리케이션 시작 시 서비스 초기화 실패는 심각한 문제일 수 있으므로 RuntimeException 발생 유지
+             throw new RuntimeException("Failed to initialize Gmail service", e);
+        }
+    }
+
+    private Gmail getGmailService() throws IOException, GeneralSecurityException {
+        log.debug("[EmailService] Attempting to load service account key: {}", SERVICE_ACCOUNT_KEY_PATH);
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+
+        InputStream in = EmailVerificationServiceImpl.class.getResourceAsStream(SERVICE_ACCOUNT_KEY_PATH);
+        if (in == null) {
+            throw new FileNotFoundException("Service account key file not found: " + SERVICE_ACCOUNT_KEY_PATH);
+        }
+        log.debug("[EmailService] Service account key file loaded.");
+
+        // 최신 표준: ServiceAccountCredentials 사용
+        GoogleCredentials credentials = ServiceAccountCredentials.fromStream(in)
+                .createScoped(Collections.singleton(GmailScopes.GMAIL_SEND));
+                // .createDelegated(USER_TO_IMPERSONATE); // 위임 필요 시 사용
+        log.debug("[EmailService] Credentials created with scope: {}", GmailScopes.GMAIL_SEND);
+
+        // Gmail 서비스 빌드 시 HttpCredentialsAdapter 사용
+        Gmail service = new Gmail.Builder(HTTP_TRANSPORT, JSON_FACTORY, new HttpCredentialsAdapter(credentials))
+                .setApplicationName(APPLICATION_NAME)
+                .build();
+        log.debug("[EmailService] Gmail service client built.");
+        return service;
+    }
+
+    private MimeMessage createEmail(String to, String subject, String bodyText) throws MessagingException {
+        log.debug("[EmailService] Creating MimeMessage for recipient: {}", to);
+        Properties props = new Properties();
+        Session session = Session.getDefaultInstance(props, null);
+        MimeMessage email = new MimeMessage(session);
+
+        // 발신자 설정: 서비스 계정 이메일 주소 또는 위임된 사용자 주소 사용 가능
+        // 여기서는 "me"를 사용하여 인증된 계정(서비스 계정)으로 발송하도록 함
+        email.setFrom(new InternetAddress("me"));
+        email.addRecipient(jakarta.mail.Message.RecipientType.TO, new InternetAddress(to));
+        email.setSubject(subject, StandardCharsets.UTF_8.name());
+        email.setText(bodyText, StandardCharsets.UTF_8.name());
+        log.debug("[EmailService] MimeMessage created. Subject: {}", subject);
+        return email;
+    }
+
+    private Message createMessageWithEmail(MimeMessage email) throws MessagingException, IOException {
+        log.debug("[EmailService] Encoding MimeMessage to Base64URL string...");
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        email.writeTo(buffer);
+        byte[] bytes = buffer.toByteArray();
+        String encodedEmail = Base64.encodeBase64URLSafeString(bytes);
+        Message message = new Message();
+        message.setRaw(encodedEmail);
+        log.debug("[EmailService] MimeMessage encoded and wrapped in Gmail Message object.");
+        return message;
+    }
+
+
+    @Override
+    public void sendVerificationEmail(String email, String code) throws BusinessException {
+        log.info("[EmailService] Attempting to send verification email to: {}", email);
+        try {
+            // 메일 내용 생성
+            String subject = "[Seoul ITS Info] 이메일 인증 코드입니다.";
+            String bodyText = "인증 코드: " + code + "\n이 코드는 " + EXPIRATION_MINUTES + "분 동안 유효합니다.";
+            log.debug("[EmailService] Email content generated. Code: {}", code);
+
+            // MimeMessage 생성
+            MimeMessage mimeMessage = createEmail(email, subject, bodyText);
+
+            // Gmail API Message 생성
+            Message message = createMessageWithEmail(mimeMessage);
+
+            // Gmail API를 통해 메일 발송 ("me"는 인증된 서비스 계정 자신을 의미)
+            Message sentMessage = gmailService.users().messages().send("me", message).execute();
+
+            log.info("[EmailService] Email sent successfully to {}. Message ID: {}", email, sentMessage.getId());
+
+        } catch (MessagingException | IOException e) {
+            log.error("[EmailService] Error during email creation or sending for {}: {}", email, e.getMessage(), e);
+            // CommonExceptionHandler 에서 처리될 수 있도록 BusinessException 발생
+            // 오류 코드로 "EMAIL_SEND_FAILURE" 사용
+             throw new BusinessException("EMAIL_SEND_FAILURE", "이메일 발송 중 오류가 발생했습니다: " + e.getMessage());
+        } catch (Exception e) {
+            log.error("[EmailService] Unexpected error during email sending for {}: {}", email, e.getMessage(), e);
+            // 예상치 못한 다른 예외 처리 (SystemException 등 다른 타입 고려 가능)
+             throw new BusinessException("UNEXPECTED_EMAIL_ERROR", "이메일 발송 중 예상치 못한 오류 발생: " + e.getMessage());
+        }
+    }
+}
