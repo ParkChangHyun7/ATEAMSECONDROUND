@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.4.5</version>
+		<relativePath />
+		<!-- lookup parent from repository -->
+	</parent>
+	<groupId>A-Team</groupId>
+	<artifactId>seoul-its-info</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>Seoul ITS Info By A-Team</name>
+	<description>Seoul ITS info project by A-Team</description>
+	<url />
+	<licenses>
+		<license />
+	</licenses>
+	<developers>
+		<developer />
+	</developers>
+	<scm>
+		<connection />
+		<developerConnection />
+		<tag />
+		<url />
+	</scm>
+	<properties>
+		<java.version>17</java.version>
+	</properties>
+	<dependencies>
+		<!-- Spring Boot Actuator: 애플리케이션 모니터링 및 관리 기능 제공 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<!-- Spring Boot Web: 웹 애플리케이션 개발을 위한 핵심 의존성 (MVC, REST 등) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<!-- Spring Boot Security: 스프링 기반 애플리케이션 보안(인증, 인가) 기능 제공 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<!-- Spring Boot Web Services: SOAP 웹 서비스 개발 지원 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web-services</artifactId>
+		</dependency>
+		<!-- Spring Boot Tomcat: 내장 톰캣 서버 사용 (WAR 패키징 시 provided 범위) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- Spring Boot DevTools: 개발 편의 기능 제공 (자동 재시작, 라이브 리로드 등) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- MyBatis Spring Boot Starter: MyBatis와 스프링 부트 연동 -->
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>3.0.4</version>
+		</dependency>
+
+		<!-- Jakarta Servlet API: 서블릿 스펙 API (JSP 등에서 사용) -->
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<!-- <version>6.0.0</version> WAR 패키징 시 부모 버전 상속, provided 범위 -->
+			<scope>provided</scope>
+		</dependency>
+		<!-- Jakarta Standard Tag Library (JSTL) API: JSTL 사용을 위한 API -->
+		<dependency>
+			<groupId>jakarta.servlet.jsp.jstl</groupId>
+			<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+			<!-- <version>3.0.0</version> 부모 버전 상속 -->
+		</dependency>
+		<!-- Jakarta Standard Tag Library (JSTL) Implementation: JSTL 구현체 -->
+		<dependency>
+			<groupId>org.glassfish.web</groupId>
+			<artifactId>jakarta.servlet.jsp.jstl</artifactId>
+			<!-- <version>3.0.1</version> 부모 버전 상속 -->
+		</dependency>
+		<!-- Tomcat Jasper: JSP 파일을 서블릿 코드로 변환하는 엔진 -->
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<scope>provided</scope> <!-- WAR 패키징 시 provided 범위 -->
+		</dependency>
+		<!-- Spring Boot Webflux: 비동기 처리 지원 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+		<!-- Jackson (JSON 처리) -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+		<!-- MySQL Connector/J: MySQL 데이터베이스 연결 드라이버 -->
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Lombok: 어노테이션 기반 코드 자동 생성 (Getter, Setter, 생성자 등) -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<!-- Apache Commons Text: 문자열 처리 유틸리티 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-text</artifactId>
+			<version>1.13.1</version>
+		</dependency>
+		<!-- JSON.simple: 간단한 JSON 처리 라이브러리 -->
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
+		<!-- Spring Boot Test Starter: 스프링 부트 애플리케이션 테스트 지원 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- MyBatis Spring Boot Test Starter: MyBatis 관련 테스트 지원 -->
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter-test</artifactId>
+			<version>3.0.4</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Webjars Locator Core: Webjars 리소스 경로 자동 탐색 지원 -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>webjars-locator-core</artifactId>
+		</dependency>
+		<!-- jQuery Webjar: jQuery 라이브러리 -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>jquery</artifactId>
+			<version>3.7.1</version>
+		</dependency>
+		<!-- Moment.js Webjar: 날짜/시간 처리 라이브러리 -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>momentjs</artifactId>
+			<version>2.29.4</version>
+		</dependency>
+		<!-- Day.js Webjar: 경량 날짜/시간 처리 라이브러리 -->
+		<dependency>
+			<groupId>org.webjars.npm</groupId>
+			<artifactId>dayjs</artifactId>
+			<version>1.11.13</version>
+		</dependency>
+		<!-- jQuery Touch Swipe Webjar: 터치 스와이프 이벤트 지원 -->
+		<dependency>
+			<groupId>org.webjars.npm</groupId>
+			<artifactId>jquery-touchswipe</artifactId>
+			<version>1.6.19</version>
+		</dependency>
+		<!-- js-cookie Webjar: 쿠키 관리 라이브러리 -->
+		<dependency>
+			<groupId>org.webjars.npm</groupId>
+			<artifactId>js-cookie</artifactId>
+			<version>3.0.5</version>
+		</dependency>
+		<!-- OpenLayers Webjar: 지도 표시 라이브러리 -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>openlayers</artifactId>
+			<version>6.4.3</version>
+		</dependency>
+		<!-- jQuery BlockUI Webjar: 특정 영역 UI 차단(로딩 표시 등) 라이브러리 -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>jquery-blockui</artifactId>
+			<version>2.70</version>
+		</dependency>
+		<!-- Spring Boot Validation Starter: Bean Validation (JSR-380) 지원 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		<!-- Jakarta Bean Validation API: Bean Validation API -->
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+			<!-- <version>3.0.2</version> 부모 버전 상속 -->
+		</dependency>
+		<!-- Spring Boot OAuth2 Client Starter: OAuth2 클라이언트 기능 지원 (소셜 로그인 등) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-client</artifactId>
+		</dependency>
+		<!-- Spring Boot Mail Starter: 이메일 발송 기능 지원 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+		<!-- Google API Services Gmail: 구글 Gmail API 사용 지원 -->
+		<dependency>
+			<groupId>com.google.apis</groupId>
+			<artifactId>google-api-services-gmail</artifactId>
+			<version>v1-rev20250331-2.0.0</version>
+		</dependency>
+		<!-- Google Auth Library for Service Account Credentials -->
+		<dependency>
+			<groupId>com.google.auth</groupId>
+			<artifactId>google-auth-library-oauth2-http</artifactId>
+			<version>1.34.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.bucket4j/bucket4j-core -->
+		<dependency>
+			<groupId>com.bucket4j</groupId>
+			<artifactId>bucket4j-core</artifactId>
+			<version>8.10.1</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<!-- <version>${project.parent.version}</version> 부모 버전을 따름 -->
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+					<!-- 기본 mainClass 설정이 있다면 생략 가능 -->
+					<!-- <mainClass>seoul.its.info.SeoulITSInfoByATeamApplication</mainClass> -->
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<!-- <version>3.4.0</version> 부모 플러그인 버전 관리 활용 -->
+				<configuration>
+					<packagingExcludes>
+						image_ongoing_work/**,
+						**/image_ongoing_work/**
+					</packagingExcludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
