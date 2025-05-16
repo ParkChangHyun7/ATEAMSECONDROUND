@@ -1,0 +1,67 @@
+seoul.its.info.services
+├── users
+│   ├── detail // 유저 정보(role, nickname) 필요할 때 이용할 패키지
+│   │   ├── UserDetailsImpl.java
+│   │   └── UserDetailsServiceImpl.java
+└── boards
+    ├── BoardController.java
+    ├── BoardMapper.java
+    ├── dto
+    │   ├── BoardsDto.java
+    │   ├── BoardRequestDto.java
+    │   └── BoardResponseDto.java
+    └── service
+    │   ├── BoardService.java
+    │   └── BoardServiceImpl.java
+    ├── posts
+    │   ├── PostController.java
+    │   ├── PostMapper.java
+    │   ├── dto
+    │   │   ├── PostsDto.java
+    │   │   ├── PostRequestDto.java
+    │   │   ├── PostResponseDto.java
+    │   │   └── PostListDto.java
+    │   └── service
+    │       ├── PostManagementService.java // 작성, 수정, 삭제 등등
+    │       ├── PostManagementServiceImpl.java
+    │       ├── PostQueryService.java // 게시글 읽기, 목록 조회 등등등
+    │       └── PostQueryServiceImpl.java
+    │
+    ├── comments
+    │   ├── CommentController.java
+    │   ├── CommentMapper.java
+    │   ├── dto
+    │   │   ├── CommentDto.java
+    │   │   ├── CommentRequestDto.java
+    │   │   └── CommentResponseDto.java
+    │   └── service
+    │       ├── CommentService.java
+    │       └── CommentServiceImpl.java
+    │
+    ├── attachments // 댓글은 이미지 1장 첨부만, 게시글은 이미지 및 파일 다중첨부 가능
+    │   ├── AttachmentController.java
+    │   ├── AttachmentMapper.java
+    │   ├── dto
+    │   │   └── AttachmentDto.java
+    │   └── service
+    │       ├── AttachmentService.java
+    │       └── AttachmentServiceImpl.java
+    │
+    ├── likes // 댓글, 대댓글, 게시글 셋 모두에 공통으로 사용됨
+    │   ├── LikeController.java
+    │   ├── LikeMapper.java
+    │   ├── dto
+    │   │   └── LikeDto.java
+    │   └── service
+    │       ├── LikeService.java
+    │       └── LikeServiceImpl.java
+    │
+    └── reporting // 댓글, 대댓글, 게시글 셋 모두에 공통으로 사용됨
+        ├── ReportController.java
+        ├── ReportMapper.java
+        ├── dto
+        │   └── ReportDto.java
+        └── service
+            ├── ReportService.java
+            └── ReportServiceImpl.java
+

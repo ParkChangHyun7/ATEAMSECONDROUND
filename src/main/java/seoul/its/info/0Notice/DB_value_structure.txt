@@ -20,7 +20,7 @@ CREATE TABLE users (
     address_postcode VARCHAR(10),
     address_base VARCHAR(255),
     address_detail VARCHAR(255),
-    role TINYINT NOT NULL DEFAULT 0, -- 관리자는 100부터
+    role TINYINT NOT NULL DEFAULT 1, -- 관리자는 100부터, 1=일반 회원
     login_fail_count INT NOT NULL DEFAULT 0,
     last_login_at DATETIME,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -55,6 +55,7 @@ CREATE TABLE boards (
     is_active TINYINT DEFAULT 0, -- 사용 중인 게시판인지? 0이면 100이상만 접근 가능하도록 해서 관리자 전용 게시판 구분값으로 쓰면 좋을 듯
     write_role TINYINT DEFAULT 0, -- 글쓰기 가능 레벨 기준 (공지사항은 어드민 레벨 100부터 된다던지 등)
     read_role TINYINT DEFAULT 1, -- 읽기 가능 레벨 기준 (0 = 미회원, 1 = 회원, above 100 = 관리자 게시판 등)
+    is_anonymous TINYINT DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP, -- 게시판 생성 시간
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 게시판 정보 업데이트 시간
     updated_by BIGINT, -- 게시판 정보 업데이트한 사용자 idx
@@ -74,7 +75,7 @@ CREATE TABLE posts (
     like_count INT DEFAULT 0,
     report_count INT DEFAULT 0,
     is_notice TINYINT DEFAULT 0,
-    is_secret TINYINT DEFAULT 0,
+    is_anonymous TINYINT DEFAULT 0,
     is_blinded TINYINT DEFAULT 0,
     is_deleted TINYINT DEFAULT 0,
     file_included TINYINT DEFAULT 0, -- 파일 첨부 여부, 인덱싱 용도 & 분기 구분 용도
@@ -117,12 +118,13 @@ CREATE TABLE comments (
     user_id BIGINT NOT NULL,
     login_id VARCHAR(100),
     writer VARCHAR(100),
+    like_count INT DEFAULT 0,
     content TEXT NOT NULL,
     is_parent TINYINT DEFAULT 0, -- 댓글인지 대댓글인지 구분
     parent_comment_id BIGINT,
     post_writer_only TINYINT DEFAULT 0, -- 원글 작성자(post_writer)만 볼 수 있는지 여부. 대댓글로는 불가
     post_writer_id BIGINT, -- 원글(포스트) 작성자의 idx값.
-    is_secret TINYINT DEFAULT 0, -- 원 글이 비밀글일 경우 댓글도 비밀댓글만 가능, 원 글이 비밀글이 아닐 경우 댓글도 비밀글 설정 불가능
+    is_anonymous TINYINT DEFAULT 0, -- 원 글이 비밀글일 경우 댓글도 비밀댓글만 가능, 원 글이 비밀글이 아닐 경우 댓글도 비밀글 설정 불가능
     is_blinded TINYINT DEFAULT 0,
     is_deleted TINYINT DEFAULT 0,
     deleted_by_post_status TINYINT DEFAULT 0,
@@ -153,7 +155,7 @@ CREATE TABLE deleted_posts (
     like_count INT DEFAULT 0,
     report_count INT DEFAULT 0,
     is_notice TINYINT DEFAULT 0,
-    is_secret TINYINT DEFAULT 0,
+    is_anonymous TINYINT DEFAULT 0,
     is_blinded TINYINT DEFAULT 0,
     is_deleted TINYINT DEFAULT 0,
     file_included TINYINT DEFAULT 0, -- 파일 첨부 여부, 인덱싱 용도 & 분기 구분 용도도
@@ -177,7 +179,7 @@ CREATE TABLE deleted_comments (
     nickname VARCHAR(100),
     content TEXT NOT NULL,
     parent_comment_id BIGINT,
-    is_secret TINYINT DEFAULT 0,
+    is_anonymous TINYINT DEFAULT 0,
     is_blinded TINYINT DEFAULT 0,
     is_deleted TINYINT DEFAULT 0,
     deleted_by_post_status TINYINT DEFAULT 0,
@@ -297,8 +299,9 @@ CREATE TABLE files (
     login_id VARCHAR(100), -- 업로더 로그인 id
     original_name VARCHAR(255), -- 파일 본래 이름
     saved_name VARCHAR(255), -- 서버에 저장되는 이름(파일 이름 정규식이 있다면 맞게 수정된 이름)
+    is_image TINYINT,
     file_path VARCHAR(500),
-    file_size BIGINT,
+    file_size VARCHAR(50),
     file_type VARCHAR(100), -- 파일 확장자
     risk_level TINYINT NOT NULL DEFAULT 0, -- 0=safe, 1=suspicious, 2=Danger, 3=UnKnown(Admin은 virustotal 패스하고 올림)
     uploader_ip_address VARCHAR(50),
@@ -312,8 +315,6 @@ CREATE TABLE files (
     FOREIGN KEY (login_id) REFERENCES users(login_id),
     FOREIGN KEY (contact_id) REFERENCES contacts(id)
 );
-
--- upload_from 13 = 로그인 안 한 유저가 파일 보낼 수 있는 서비스에서 로그인 안 한 유저가 보냈다는 뜻.
 
 CREATE TABLE file_histories (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
