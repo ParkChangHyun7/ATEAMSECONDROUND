@@ -1,0 +1,254 @@
+[v-cloak] {
+  display: none;
+}
+
+.topdiv-list {
+  background-color: #f8f9fa;
+  display: flex;
+  justify-content: center;
+  padding-top: 50px;
+  margin: 0;
+  color: #333;
+}
+
+.container {
+  background-color: #ffffff;
+  padding: 0 40px;
+  padding-top: 30px;
+  padding-bottom: 0px;
+  border-radius: 8px;
+  box-shadow: 0 5px 50px rgba(0, 0, 0, 0.5);
+  max-width: 1140px; /* 기본 최대 너비를 1140px로 변경 */
+  min-width: 360px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 50px;
+  margin-bottom: 100px;
+}
+
+.h1 {
+  font-size: 33px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+/* 게시글 목록 테이블 스타일 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 14px;
+    table-layout: fixed; /* 테이블 레이아웃 고정하여 너비 설정 용이하게 */
+    border-top: 1px solid #333; /* 테이블 최상단에 #333 색상 1px 구분선 추가 */
+}
+
+/* thead th { */ /* 헤더는 display: none 처리되었으므로, 이 부분 스타일은 현재 영향 없음 */
+/*     background-color: #1d3b5b; */
+/*     color: #fff; */
+/*     font-weight: 600; */
+/*     padding: 12px 10px; */
+/*     text-align: left; */
+/* } */
+
+/* 테이블 헤더 숨기기 */
+thead {
+    display: none;
+}
+
+tbody tr {
+    border-bottom: 1px solid #f5f5f5; /* 가로 구분선 색상을 #f5f5f5로 더 연하게 변경 */
+}
+
+/* tbody tr:nth-child(even) { */ /* 짝수 행 배경색 제거 */
+/*    background-color: #f9f9f9; */
+/* } */
+
+tbody td {
+    padding: 10px 8px;
+    vertical-align: middle; 
+    /* border-right: 1px solid #f0f0f0; */ 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    white-space: nowrap; 
+}
+
+/* 구분자 | 스타일 */
+td.td-separator {
+    width: 1%; /* 매우 좁은 너비 */
+    text-align: center;
+    padding: 10px 0; /* 상하 패딩은 유지, 좌우 패딩 제거 */
+    color: #eaeaea; /* 세로 구분선 파이프 색상을 #eaeaea로 더 연하게 변경 */
+    overflow: visible; /* 파이프가 잘리지 않도록 */
+    white-space: normal; /* 줄바꿈은 필요 없지만念のため */
+}
+
+/* 컬럼 너비 설정 (구분자 셀 포함하여 nth-child 인덱스 조정) */
+/* 좋아요 */
+tbody td:nth-child(1) { 
+    width: 4%; 
+    text-align: center;
+}
+/* 제목 */
+tbody td:nth-child(3) { /* 이전: nth-child(2) */
+    width: auto; 
+    white-space: normal; 
+}
+/* 작성자 */
+tbody td:nth-child(5) { /* 이전: nth-child(3) */
+    width: 15%; 
+    text-align: center; 
+}
+/* 작성일 */
+tbody td:nth-child(7) { /* 이전: nth-child(4) */
+    width: 12%; 
+    text-align: center;
+}
+/* 조회수 */
+tbody td:nth-child(9) { /* 이전: nth-child(5) */
+    width: 10%; 
+    text-align: center;
+}
+
+/* 조회수의 'k' 접미사 스타일 */
+.k-suffix {
+    color: #c62828; /* 요청하신 색상 */
+    font-weight: bold; /* 약간 강조 (선택 사항) */
+}
+
+tbody tr.notice-row {
+    background-color: #fafafa; /* 공지사항 배경색을 아주 연한 회색으로 변경 (#fff3cd -> #fafafa) */
+    font-weight: bold;
+}
+
+/* 게시글 제목 링크 스타일 */
+tbody td a {
+    color: #333;
+    text-decoration: none;
+}
+
+tbody td a:hover {
+    text-decoration: underline;
+}
+
+/* 아이콘 스타일 (첨부 파일, 이미지) */
+.material-symbols-outlined {
+  font-size: 16px;
+  vertical-align: middle;
+  margin-left: 5px;
+  color: #555; /* 아이콘 색상 */
+}
+
+/* 페이지네이션 스타일 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px; /* 페이지네이션 아래 여백 추가 */
+}
+
+.pagination button {
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    padding: 8px 12px;
+    margin: 0 4px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+}
+
+.pagination button:hover:not(:disabled) {
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.pagination button.active {
+    background-color: #1d3b5b;
+    color: #fff;
+    border-color: #1d3b5b;
+    font-weight: bold;
+}
+
+.pagination button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* 상단 컨트롤 영역 (검색 & 글쓰기 버튼) */
+.list-top-controls {
+    display: flex;
+    justify-content: space-between; /* 양쪽으로 정렬 (검색은 왼쪽, 글쓰기는 오른쪽) */
+    align-items: center; /* 수직 중앙 정렬 */
+    padding: 15px 0; /* 상하 패딩 추가 */
+    margin-bottom: 15px; /* 테이블과의 하단 여백 추가 */
+    /* border-top: 1px solid #eee; /* 구분선 추가 (선택 사항) */
+}
+
+.search-controls {
+    /* 향후 검색창 스타일 추가 공간 */
+    /* 예: flex-grow: 1; 로 남은 공간 채우기 */
+}
+
+.write-button-container {
+    /* 버튼이 오른쪽으로 정렬되도록 특별한 스타일 불필요 (부모의 justify-content) */
+}
+
+.write-button-container .btn-primary {
+    background-color: #1d3b5b; /* boards.css .submit-button 기본 배경색 */
+    color: #fff; /* boards.css .submit-button 기본 글자색 */
+    border: none; /* 테두리 제거 (선택 사항, .submit-button에 맞춰봄) */
+    padding: 10px 18px; /* 패딩 조정 (boards.css 참고 및 미세 조정) */
+    font-size: 14px; /* 버튼 폰트 크기 조정 */
+    border-radius: 4px; /* join.css, boards.css 참고 */
+    text-decoration: none; /* a 태그 기본 밑줄 제거 */
+    display: inline-block; /* a 태그를 버튼처럼 보이게 */
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out; /* 부드러운 전환 효과 */
+}
+
+.write-button-container .btn-primary:hover {
+    background-color: #f1b300; /* boards.css .submit-button 호버 배경색 */
+    color: #1d3b5b; /* boards.css .submit-button 호버 글자색 */
+    text-decoration: none; /* 호버 시 밑줄 제거 */
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 20px;
+        margin: 0 10px;
+    }
+
+    .h1 {
+        font-size: 24px;
+    }
+
+    thead th, tbody td {
+        padding: 10px 5px;
+    }
+
+     .pagination button {
+        padding: 6px 10px;
+        margin: 0 2px;
+    }
+
+    .list-top-controls {
+        flex-direction: column; /* 작은 화면에서는 세로로 쌓기 */
+        align-items: stretch; /* 아이템들을 가로로 꽉 채우기 */
+    }
+
+    .search-controls {
+        margin-bottom: 10px; /* 검색창과 버튼 사이 여백 */
+        width: 100%;
+    }
+
+    .write-button-container {
+        text-align: right; /* 버튼을 오른쪽으로 정렬 (내용물 기준) */
+        width: 100%; /* 전체 너비 사용 */
+    }
+
+    .write-button-container .btn-primary {
+        width: auto; /* 버튼 너비는 내용에 맞게 자동 조정 */
+        /* display: block; */ /* 버튼을 블록 요소로 만들어 전체 너비를 차지하게 하려면 */
+    }
+}

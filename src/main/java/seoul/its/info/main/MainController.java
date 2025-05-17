@@ -30,13 +30,13 @@ public class MainController {
 		return "base";
 	}
 
-	@GetMapping("/manage")
-	public String manage(Model model) {
-		model.addAttribute("pageTitle", "게시판 관리");
-		model.addAttribute("contentPage", "content_pages/boards/boards.jsp");
-		model.addAttribute("scriptsPage", "include/boards/scripts.jsp");
-			model.addAttribute("resourcesPage", "include/boards/resources.jsp");
-			return "base";
+	@GetMapping("/admin")
+	public String adminPage(Model model) {
+		model.addAttribute("pageTitle", "관리자 페이지");
+		model.addAttribute("contentPage", "content_pages/admin/whereto.jsp");
+		model.addAttribute("scriptsPage", "include/admin/scripts.jsp");
+		model.addAttribute("resourcesPage", "include/admin/resources.jsp");
+		return "base";
 	  }
 
 	@GetMapping("/about")

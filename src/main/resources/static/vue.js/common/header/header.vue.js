@@ -64,7 +64,7 @@ createApp({
       <!-- 운영자 메뉴: 로그인 상태이고 role이 100 이상일 때만 표시 -->
       <template v-if="isLoggedIn && role >= 100">
         <span>|</span>
-        <a href="/manage" class="auth-link"><span>운영자</span></a>
+        <a href="/admin" class="auth-link"><span>운영자</span></a>
       </template>
     </template>
     <template v-else>

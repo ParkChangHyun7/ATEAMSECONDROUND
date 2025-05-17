@@ -97,7 +97,6 @@
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-jasper</artifactId>
-			<scope>provided</scope> <!-- WAR 패키징 시 provided 범위 -->
 		</dependency>
 		<!-- Spring Boot Webflux: 비동기 처리 지원 -->
 		<dependency>

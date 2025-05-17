@@ -16,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
 
 @Configuration
@@ -60,7 +59,8 @@ public class SecurityConfig {
                 http
                                 .addFilterBefore(xssFilter, CsrfFilter.class)
                                 .authorizeHttpRequests(authorize -> authorize
-                                                .requestMatchers("/manage/**").hasRole("100")
+                                                .requestMatchers("/admin/**").hasRole("100")
+                                                .requestMatchers("/favicon.ico").permitAll()
                                                 .anyRequest().permitAll())
                                 .formLogin(formLogin -> formLogin
                                                 .loginPage("/user/login")

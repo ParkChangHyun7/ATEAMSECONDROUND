@@ -25,7 +25,7 @@ pageEncoding="UTF-8" %>
               <li><a href="/parking">주차장정보</a></li>
               <li><a href="/transport">대중교통정보</a></li>
               <li><a href="/contact">문의하기</a></li>
-              <li><a href="/board/list">커뮤니티</a></li>
+              <li><a href="/boards/1/posts">커뮤니티</a></li>
             </ul>
             <span class="material-symbols-outlined menu_open">menu_open</span>
           </nav>

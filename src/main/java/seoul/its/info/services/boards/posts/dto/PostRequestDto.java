@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class PostRequestDto {
     private Long boardId;
+    private Long postId;
     private String title;
     private String content;
     private Integer isAnonymous;

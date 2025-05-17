@@ -49,6 +49,10 @@ public class CommonConfig implements WebMvcConfigurer {
                                 .setCachePeriod(30); // 개발 환경: 30초 캐시
                 // .setCachePeriod(60 * 60 * 24 * 365); // 운영 환경: 1년 캐시
 
+                // favicon.ico 특정 핸들러 추가
+                registry.addResourceHandler("/favicon.ico")
+                                .addResourceLocations("classpath:/static/images/");
+
                 registry.addResourceHandler("/js/**")
                                 .addResourceLocations("classpath:/static/js/")
                                 .setCachePeriod(30); // 개발 환경: 30초 캐시

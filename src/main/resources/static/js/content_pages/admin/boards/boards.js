@@ -19,7 +19,7 @@ createApp({
         const fetchBoards = async () => {
             try {
                 console.log('Fetching boards...');
-                const response = await fetch('/manage/boards/list', { method: 'GET' });
+                const response = await fetch('/admin/boards/list', { method: 'GET' });
 
                 if (!response.ok) {
                     const errorData = await response.json();
@@ -44,7 +44,7 @@ createApp({
 
                 if (boardForm.value.id === null) {
                      console.log('Creating new board...');
-                     const result = await apiService.postRequest('/manage/create/board', boardForm.value);
+                     const result = await apiService.postRequest('/admin/boards/create', boardForm.value);
 
                      if (!result.success) {
                          console.error('Failed to create board:', result);
@@ -62,7 +62,7 @@ createApp({
                          alert('보안 정보가 없어 게시판을 수정할 수 없습니다.');
                          return;
                     }
-                    response = await fetch(`/manage/modify/${boardForm.value.id}`, {
+                    response = await fetch(`/admin/boards/modify/${boardForm.value.id}`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -119,7 +119,7 @@ createApp({
                          alert('보안 정보가 없어 게시판을 삭제할 수 없습니다.');
                          return;
                     }
-                    const response = await fetch(`/manage/delete/${boardId}`, {
+                    const response = await fetch(`/admin/boards/delete/${boardId}`, {
                         method: 'DELETE',
                          headers: {
                             'Content-Type': 'application/json',
