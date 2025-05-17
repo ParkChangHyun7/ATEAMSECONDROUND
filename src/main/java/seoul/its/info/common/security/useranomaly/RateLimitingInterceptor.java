@@ -77,12 +77,27 @@ public class RateLimitingInterceptor implements HandlerInterceptor {
       if (authentication == null || !authentication.isAuthenticated()) {
          return false;
       }
-      Object principal = authentication.getPrincipal();
-      if (principal instanceof UserDetailsImpl) {
-         UserDetailsImpl userDetails = (UserDetailsImpl) principal;
-         return userDetails.getRole() != null && userDetails.getRole() >= ADMIN_ROLE_THRESHOLD;
+
+      boolean isAnonymous = authentication.getAuthorities().stream()
+                              .anyMatch(auth -> "ROLE_ANONYMOUS".equals(auth.getAuthority()));
+      if (isAnonymous) {
+         return false;
       }
-      return false;
+      
+      return authentication.getAuthorities().stream()
+            .anyMatch(grantedAuthority -> {
+               String authorityString = grantedAuthority.getAuthority();
+               if (authorityString != null && authorityString.matches("\\d+")) {
+                   try {
+                      int roleValue = Integer.parseInt(authorityString);
+                      return roleValue >= ADMIN_ROLE_THRESHOLD;
+                   } catch (NumberFormatException e) {
+                      log.error("관리자 권한 숫자 변환 중 예기치 않은 오류 발생: {}", authorityString, e);
+                      return false;
+                   }
+               }
+               return false; 
+            });
    }
 
    private Bucket createNewBucket(HttpServletRequest request, String key) {

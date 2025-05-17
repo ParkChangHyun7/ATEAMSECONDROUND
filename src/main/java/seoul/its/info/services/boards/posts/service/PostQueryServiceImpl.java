@@ -1,6 +1,5 @@
 package seoul.its.info.services.boards.posts.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,6 @@ public class PostQueryServiceImpl implements PostQueryService {
     private final PostMapper postMapper;
     private final BoardMapper boardMapper;
 
-    @Autowired
     public PostQueryServiceImpl(PostMapper postMapper, BoardMapper boardMapper) {
         this.postMapper = postMapper;
         this.boardMapper = boardMapper;

@@ -1,9 +1,7 @@
 package seoul.its.info.services.boards.posts.service;
 
-import seoul.its.info.services.boards.posts.dto.PostListDto;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.List;
 import java.util.Map;
 
 public interface PostQueryService {

@@ -11,7 +11,7 @@
          data-board-id='${boardId}'
          data-can-write="${canWrite}"
          data-page-title='${pageTitle}'>
-        <h1 class="h1">{{ pageTitleVue }}</h1> <%-- Vue 변수로 변경 --%>
+        <h1 class="h1">{{ pageTitleVue }}</h1>
 
         <%-- 게시글 목록 테이블 --%>
         <table>
@@ -30,18 +30,19 @@
                     <td class="td-separator">|</td>
                     <td>
                         <a :href="'/boards/' + boardIdVue + '/posts/' + post.id">{{ post.title }}</a>
+                        <span v-if="post.commentCount > 0" class="comment-count">{{ formatCommentCount(post.commentCount) }}</span>
                          <span v-if="post.fileIncluded === 1" class="material-symbols-outlined">attach_file</span>
                          <span v-if="post.imageIncluded === 1" class="material-symbols-outlined">image</span>
                     </td>
                     <td class="td-separator">|</td>
                     <td>{{ post.writer }}</td>
                     <td class="td-separator">|</td>
-                    <td>{{ formatDisplayDate(post.createdAt) }} <span v-if="post.updatedAt && post.createdAt !== post.updatedAt">*</span></td> <%-- 날짜 포맷팅 함수 및 수정 여부 개선 --%>
+                    <td>{{ formatDisplayDate(post.createdAt) }} <span v-if="post.updatedAt && post.createdAt !== post.updatedAt">*</span></td>
                     <td class="td-separator">|</td>
-                    <td v-html="formatViewCount(post.viewCount)"></td> <%-- v-html 사용하여 조회수 렌더링 --%>
+                    <td v-html="formatViewCount(post.viewCount)"></td>
                 </tr>
                 <tr v-if="posts.length === 0">
-                    <td colspan="9" style="text-align: center;">게시글이 없습니다.</td> <%-- colspan 수정 --%>
+                    <td colspan="9" style="text-align: center;">게시글이 없습니다.</td>
                 </tr>
             </tbody>
         </table>

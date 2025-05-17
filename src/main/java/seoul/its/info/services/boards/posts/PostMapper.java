@@ -44,11 +44,11 @@ public interface PostMapper {
     int hardDeletePost(@Param("boardId") Long boardId, @Param("postId") Long postId);
 
     // 특정 게시판의 공지사항 게시글 목록 조회
-    @Select("SELECT id, board_id, user_id, login_id, writer, title, content, view_count, comment_count, like_count, report_count, is_notice, is_anonymous, is_blinded, is_deleted, file_included, image_included, writer_role, thumbnail_path, report_status, ip_address, created_at, updated_at FROM posts WHERE board_id = #{boardId} AND is_deleted = 0 AND is_notice = 1 ORDER BY created_at DESC")
+    @Select("SELECT id, board_id, user_id, login_id, writer, title, content, view_count, comment_count, like_count, report_count, is_notice, is_anonymous, is_blinded, is_deleted, file_included, image_included, writer_role, thumbnail_path, report_status, ip_address, created_at, updated_at FROM posts WHERE board_id = #{boardId} AND is_deleted = 0 AND is_notice = 1 ORDER BY id DESC")
     List<PostListDto> getNoticePostListByBoardId(@Param("boardId") Long boardId);
 
     // 특정 게시판의 페이징 처리된 일반 게시글 목록 조회
-    @Select("SELECT id, board_id, user_id, login_id, writer, title, content, view_count, comment_count, like_count, report_count, is_notice, is_anonymous, is_blinded, is_deleted, file_included, image_included, writer_role, thumbnail_path, report_status, ip_address, created_at, updated_at FROM posts WHERE board_id = #{boardId} AND is_deleted = 0 AND is_notice = 0 ORDER BY created_at DESC LIMIT #{limit} OFFSET #{offset}")
+    @Select("SELECT id, board_id, user_id, login_id, writer, title, content, view_count, comment_count, like_count, report_count, is_notice, is_anonymous, is_blinded, is_deleted, file_included, image_included, writer_role, thumbnail_path, report_status, ip_address, created_at, updated_at FROM posts WHERE board_id = #{boardId} AND is_deleted = 0 AND is_notice = 0 ORDER BY id DESC LIMIT #{limit} OFFSET #{offset}")
     List<PostListDto> getRegularPostListByBoardId(@Param("boardId") Long boardId, @Param("offset") int offset, @Param("limit") int limit);
 
     // 특정 게시판의 일반 게시글 총 개수 조회

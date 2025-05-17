@@ -1,21 +1,15 @@
 package seoul.its.info.services.boards.posts;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import seoul.its.info.services.boards.posts.PostMapper;
-import seoul.its.info.services.boards.BoardMapper;
 import seoul.its.info.services.boards.posts.service.PostQueryService;
-import seoul.its.info.services.boards.dto.BoardsDto;
-// import seoul.its.info.services.boards.posts.dto.PostListDto; // 더 이상 직접 사용하지 않음
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import seoul.its.info.services.users.login.detail.UserDetailsImpl;
 
 import java.util.Collections;
 // import java.util.List; // 더 이상 직접 사용하지 않음
@@ -26,11 +20,9 @@ import java.util.Map;
 public class PostController {
 
     private final PostQueryService postQueryService;
-    private final BoardMapper boardMapper;
 
-    public PostController(PostQueryService postQueryService, BoardMapper boardMapper) {
+    public PostController(PostQueryService postQueryService) {
         this.postQueryService = postQueryService;
-        this.boardMapper = boardMapper;
     }
 
     // 게시글 목록 조회 (JSP 뷰 반환)
@@ -41,18 +33,10 @@ public class PostController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int pageSize,
             @AuthenticationPrincipal UserDetails userDetails,
-            Model model // Model 객체 추가
+            Model model
     ) {
         // PostQueryService를 사용하여 게시글 목록, 총 개수, 쓰기 권한 등 조회
         Map<String, Object> result = postQueryService.getPostList(boardId, page, pageSize, userDetails);
-
-        // 게시판 정보 조회 로직은 서비스 계층으로 이동했으므로 여기서는 제거
-        // BoardsDto board = boardMapper.getBoardDetail(boardId);
-        // if (board != null) {
-        //     model.addAttribute("pageTitle", board.getName());
-        // } else {
-        //     model.addAttribute("pageTitle", "게시판");
-        // }
 
         // 서비스에서 가져온 게시판 이름으로 pageTitle 설정
         model.addAttribute("pageTitle", result.getOrDefault("boardName", "게시판"));
@@ -71,11 +55,11 @@ public class PostController {
             // 로그 추가: e.printStackTrace(); 또는 로거 사용
         }
 
-        model.addAttribute("totalRegularPosts", result.get("totalRegularPosts").toString()); // 안전하게 문자열로 변환
-        model.addAttribute("currentPage", String.valueOf(page)); // 안전하게 문자열로 변환
-        model.addAttribute("pageSize", String.valueOf(pageSize)); // 안전하게 문자열로 변환
-        model.addAttribute("boardId", String.valueOf(boardId)); // 안전하게 문자열로 변환
-        model.addAttribute("canWrite", result.get("canWrite").toString()); // canWrite 추가 (문자열로 변환)
+        model.addAttribute("totalRegularPosts", result.get("totalRegularPosts").toString());
+        model.addAttribute("currentPage", String.valueOf(page));
+        model.addAttribute("pageSize", String.valueOf(pageSize));
+        model.addAttribute("boardId", String.valueOf(boardId));
+        model.addAttribute("canWrite", result.get("canWrite").toString());
 
         model.addAttribute("contentPage", "content_pages/boards/list.jsp");
         model.addAttribute("scriptsPage", "include/boards/list/scripts.jsp");
@@ -104,7 +88,7 @@ public class PostController {
     @GetMapping("/{postId}")
     @ResponseBody
     public ResponseEntity<?> getPostDetail(@PathVariable Long boardId, @PathVariable Long postId) {
-        // TODO: Implement logic to fetch post detail for the given boardId and postId
+        // TODO: 주어진 boardId와 postId에 대한 게시글 상세 정보 조회 로직 구현 예정
         return ResponseEntity.ok(Collections.emptyMap()); // 임시 응답
     }
 
@@ -112,7 +96,7 @@ public class PostController {
     @PostMapping
     @ResponseBody
     public ResponseEntity<?> createPost(@PathVariable Long boardId, @RequestBody Object postRequestDto) {
-        // TODO: Implement logic to create a new post
+        // TODO: 새 게시글 생성 로직 구현 예정
         // postRequestDto 대신 실제 DTO 클래스를 사용해야 합니다.
         return ResponseEntity.ok(Collections.emptyMap()); // 임시 응답
     }
@@ -121,7 +105,7 @@ public class PostController {
     @PutMapping("/{postId}")
     @ResponseBody
     public ResponseEntity<?> updatePost(@PathVariable Long boardId, @PathVariable Long postId, @RequestBody Object postRequestDto) {
-        // TODO: Implement logic to update the post
+        // TODO: 게시글 수정 로직 구현 예정
         // postRequestDto 대신 실제 DTO 클래스를 사용해야 합니다.
         return ResponseEntity.ok(Collections.emptyMap()); // 임시 응답
     }
@@ -130,7 +114,7 @@ public class PostController {
     @DeleteMapping("/{postId}")
     @ResponseBody
     public ResponseEntity<?> deletePost(@PathVariable Long boardId, @PathVariable Long postId) {
-        // TODO: Implement logic to delete the post
+        // TODO: 게시글 삭제 로직 구현 예정
         return ResponseEntity.ok(Collections.emptyMap()); // 임시 응답
     }
 } 
