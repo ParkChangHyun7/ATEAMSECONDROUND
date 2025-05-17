@@ -1,9 +1,12 @@
-Vue.createApp({
+import { createApp } from 'vue';
+
+createApp({
   data() {
     // data is a function in Vue 3
     return {
       isLoggedIn: false,
       nickname: null,
+      role: null, // 운영자 메뉴 표시를 위해 role 추가
     };
   },
   mounted() {
@@ -36,21 +39,20 @@ Vue.createApp({
 
         if (response.ok && responseData?.success) {
           this.isLoggedIn = true;
-          this.nickname = responseData.nickname || null; // 닉네임이 없을 경우 대비
-          console.log("사용자 로그인 상태 및 닉네임 확인 완료:", this.nickname);
+          this.nickname = responseData.nickname || null;
+          this.role = responseData.role || null; // role 값 저장
+          console.log("사용자 로그인 상태, 닉네임, 역할 확인 완료: 닉네임=", this.nickname, ", 레벨=", this.role);
         } else {
           console.log("사용자 로그인 상태 확인: 로그아웃 상태 또는 오류 발생");
-          console.error(
-            "/usercheck API 호출 실패 또는 오류 응답",
-            responseData
-          );
           this.isLoggedIn = false;
           this.nickname = null;
+          this.role = null; // 로그아웃 상태이면 role 초기화
         }
       } catch (error) {
         console.error("/usercheck API 호출 중 오류 발생:", error);
         this.isLoggedIn = false;
         this.nickname = null;
+        this.role = null; // 오류 발생 시 role 초기화
       }
     },
   },
@@ -59,6 +61,11 @@ Vue.createApp({
       <a href="/user/modify" class="auth-link"><span>{{ nickname ? nickname + '님' : '회원' }} 환영합니다!</span></a>
       <span>|</span>
       <a href="/user/logout" class="auth-link"><span>로그아웃</span></a>
+      <!-- 운영자 메뉴: 로그인 상태이고 role이 100 이상일 때만 표시 -->
+      <template v-if="isLoggedIn && role >= 100">
+        <span>|</span>
+        <a href="/manage" class="auth-link"><span>운영자</span></a>
+      </template>
     </template>
     <template v-else>
       <a href="/user/join" class="auth-link"><span>회원가입</span></a>

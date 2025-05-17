@@ -122,7 +122,10 @@ public class UserLoginController {
                 && !"anonymousUser".equals(authentication.getPrincipal())) {
             log.debug("/usercheck: 사용자가 인증됨");
             String nickname = ((UserDetailsImpl) authentication.getPrincipal()).getNickname();
+            Integer role = ((UserDetailsImpl) authentication.getPrincipal()).getRole();
             response.put("nickname", nickname);
+            response.put("role", role);
+            System.out.println("닉네임: " + nickname + ", 레벨: " + role);
             response.put("success", true);
         } else {
             log.debug("/usercheck: 사용자가 인증되지 않음");

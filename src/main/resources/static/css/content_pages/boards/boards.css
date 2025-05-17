@@ -1,0 +1,192 @@
+[v-cloak] {
+  display: none;
+}
+
+.topdiv-boards {
+  background-color: #f8f9fa; /* join.css 참고 */
+  display: flex;
+  justify-content: center;
+  padding-top: 50px;
+  margin: 0;
+  color: #333;
+}
+
+.container {
+  background-color: #ffffff; /* join.css 참고 */
+  padding: 0 40px;
+  padding-top: 30px;
+  padding-bottom: 0px; /* 필요한 경우 조정 */
+  border-radius: 8px; /* join.css 참고 */
+  box-shadow: 0 5px 50px rgba(0, 0, 0, 0.5); /* join.css 참고 */
+  max-width: 800px; /* 게시판 목록 테이블 고려하여 조정 */
+  min-width: 360px; /* join.css 참고 */
+  width: 100%; /* join.css 참고 */
+  box-sizing: border-box; /* join.css 참고 */
+  margin-top: 50px; /* join.css 참고 */
+  margin-bottom: 100px; /* join.css 참고 */
+}
+
+.container button {
+  cursor: pointer; /* join.css 참고 */
+  border-radius: 4px; /* join.css 참고 */
+  padding: 8px 15px; /* 버튼 패딩 추가 */
+  margin-right: 5px; /* 버튼 간 간격 */
+}
+
+.container button:last-child {
+    margin-right: 0;
+}
+
+.container button:hover {
+  background-color: #f1b300; /* join.css 참고 */
+  color: #1d3b5b; /* 호버 시 글자 색상 변경 */
+}
+
+.container .submit-button {
+    background-color: #1d3b5b; /* join.css 참고 */
+    color: #fff; /* join.css 참고 */
+    width: auto; /* 폼 버튼 너비 조정 */
+    padding: 12px 20px; /* join.css 참고 */
+    margin-top: 10px; /* join.css 참고 */
+    margin-right: 10px; /* 버튼 간 간격 */
+    border: none; /* join.css 참고 */
+}
+
+.container .submit-button:hover {
+    background-color: #f1b300; /* join.css 참고 */
+    color: #1d3b5b; /* 호버 시 글자 색상 변경 */
+}
+
+
+.h1 {
+  font-size: 33px; /* join.css 참고 */
+  font-weight: bold; /* join.css 참고 */
+  margin-bottom: 20px; /* join.css 참고 */
+  text-align: left; /* join.css 참고 */
+}
+
+.form-section {
+  margin-bottom: 20px; /* join.css 참고 */
+}
+
+.section-title {
+  display: block; /* join.css 참고 */
+  font-weight: 600; /* join.css 참고 */
+  margin-bottom: 15px; /* join.css 참고 */
+  font-size: 18px; /* 제목 크기 조정 */
+  color: #333; /* join.css 참고 */
+  padding-left: 2px; /* join.css 참고 */
+  border-bottom: 2px solid #1d3b5b; /* 제목 밑줄 추가 */
+  padding-bottom: 5px;
+}
+
+.form-section label {
+  display: block; /* join.css 참고 */
+  font-weight: 600; /* join.css 참고 */
+  margin-bottom: 8px; /* join.css 참고 */
+  font-size: 14px; /* join.css 참고 */
+  color: #333; /* join.css 참고 */
+  padding-left: 2px; /* join.css 참고 */
+}
+
+.form-section .required {
+  color: red; /* join.css 참고 */
+  margin-left: 4px; /* join.css 참고 */
+}
+
+.form-section input[type="text"],
+.form-section input[type="number"],
+.form-section select,
+.form-section textarea {
+  width: 100%; /* join.css 참고 */
+  padding: 12px 12px; /* join.css 참고 */
+  border: 1px solid #ced4da; /* join.css 참고 */
+  border-radius: 5px; /* join.css 참고 */
+  font-size: 14px; /* join.css 참고 */
+  box-sizing: border-box; /* join.css 참고 */
+  margin-bottom: 15px; /* 간격 조정 */
+}
+
+.form-section textarea {
+    resize: vertical; /* 세로 방향으로만 크기 조절 */
+    min-height: 80px; /* 최소 높이 설정 */
+}
+
+/* 게시판 목록 테이블 스타일 */
+.board-list-section table {
+    width: 100%;
+    border-collapse: collapse; /* 셀 경계선 합치기 */
+    margin-top: 15px;
+}
+
+.board-list-section th,
+.board-list-section td {
+    border: 1px solid #ddd; /* 경계선 색상 */
+    padding: 10px; /* 셀 안쪽 여백 */
+    text-align: left; /* 텍스트 정렬 */
+}
+
+.board-list-section th {
+    background-color: #f2f2f2; /* 헤더 배경색 */
+    font-weight: bold;
+}
+
+.board-list-section tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* 짝수 행 배경색 */
+}
+
+.board-list-section td button {
+    padding: 5px 10px;
+    font-size: 13px;
+    background-color: #e9ecef; /* 버튼 기본 색상 */
+    border: 1px solid #ced4da; /* 버튼 경계선 */
+}
+
+/* Error message style */
+.board-error-message {
+    background-color: #ffebee; /* 연한 빨강 */
+    color: #c62828; /* 진한 빨강 */
+    border: 1px solid #ffcdd2; /* 연한 빨강 경계선 */
+    border-radius: 4px; /* 둥근 모서리 */
+    padding: 10px 15px; /* 패딩 */
+    margin-bottom: 20px; /* 아래쪽 여백 */
+    font-size: 14px;
+    font-weight: bold;
+}
+
+@media (max-width: 764px) {
+  .container {
+    padding: 20px 15px; /* join.css 참고 */
+    margin: 0 10px; /* join.css 참고 */
+    max-width: 100%; /* join.css 참고 */
+  }
+
+  .h1 {
+    font-size: 20px; /* join.css 참고 */
+    margin-bottom: 20px; /* join.css 참고 */
+  }
+
+  .board-list-section th,
+  .board-list-section td {
+      padding: 8px; /* 모바일 패딩 조정 */
+      font-size: 13px;
+  }
+
+   .container button {
+      padding: 6px 10px; /* 모바일 버튼 패딩 */
+      font-size: 12px;
+   }
+
+   .container .submit-button {
+        padding: 10px 15px; /* 모바일 폼 버튼 패딩 */
+   }
+
+   .form-section input[type="text"],
+    .form-section input[type="number"],
+    .form-section select,
+    .form-section textarea {
+        padding: 10px 10px; /* 모바일 폼 입력창 패딩 */
+        font-size: 13px;
+        margin-bottom: 10px; /* 모바일 폼 입력창 간격 */
+    }
+} 

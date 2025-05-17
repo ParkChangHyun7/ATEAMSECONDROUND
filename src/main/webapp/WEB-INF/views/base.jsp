@@ -66,6 +66,16 @@
                     pointer-events: auto;
                 }
             </style>
+
+            <!-- Import Map: Bare module specifiers를 CDN URL로 매핑 -->
+            <script type="importmap">
+            {
+              "imports": {
+                "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+              }
+            }
+            </script>
+
             <!-- 8. 페이지별 추가 리소스 (컨트롤러에서 인자값으로 받아옴. 없으면 생략됩니당) -->
             <c:if test="${not empty resourcesPage}">
                 <c:import url="${resourcesPage}" />
@@ -73,7 +83,7 @@
         </head>
 
         <body>
-            <div class="wrapper">
+            <div class="base-wrapper">
                 <!-- 헤더 영역 -->
                 <jsp:include page="common/header.jsp" />
                 <!-- 서버에서 페이지별 메시지가 있을 때 "message"로 전달 됨 -->
@@ -130,9 +140,9 @@
             <script src="/js/commonUtils/apiService.js"></script>
             <!-- vue 사용을 위해 scriptPages보다 먼저 호출되어야함 -->
             <!-- vue 도입 개발 버전 (자세한 경고 포함) -->
-            <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+            <script src="https://unpkg.com/vue@3/dist/vue.esm-browser.js" type="module"></script>
             <!-- 개발 끝나고 변경할 프로덕션 버전 (최적화됨) -->
-            <!-- <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script> -->
+            <!-- <script src="https://unpkg.com/vue@3/dist/vue.esm-browser.prod.js" type="module"></script> -->
             <script src="/vue.js/common/header/header.vue.js" type="module"></script>
             <!-- 9. 페이지별 스크립트 (컨트롤러에서 인자값으로 받아옴. 이것도 없으면 생략됩니당) -->
             <c:if test="${not empty scriptsPage}">

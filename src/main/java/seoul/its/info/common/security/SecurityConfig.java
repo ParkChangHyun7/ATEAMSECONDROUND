@@ -14,6 +14,10 @@ import seoul.its.info.services.users.login.handler.LoginSuccessHandler;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
 
 @Configuration
 @EnableWebSecurity
@@ -40,13 +44,26 @@ public class SecurityConfig {
         }
 
         @Bean
+        public RoleHierarchy roleHierarchy() {
+                // Define role hierarchy: ROLE_200 includes ROLE_100, ROLE_100 includes ROLE_0
+                String hierarchy = "ROLE_200 > ROLE_100 \n ROLE_100 > ROLE_0";
+                return RoleHierarchyImpl.fromHierarchy(hierarchy);
+        }
+
+        @Bean
+        public GrantedAuthorityDefaults grantedAuthorityDefaults() {
+            return new GrantedAuthorityDefaults("");
+        }
+
+        @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
                 http
                                 .addFilterBefore(xssFilter, CsrfFilter.class)
                                 .authorizeHttpRequests(authorize -> authorize
+                                                .requestMatchers("/manage/**").hasRole("100")
                                                 .anyRequest().permitAll())
                                 .formLogin(formLogin -> formLogin
-                                                .loginPage("/users/login")
+                                                .loginPage("/user/login")
                                                 .loginProcessingUrl("/user/login")
                                                 .usernameParameter("login_id")
                                                 .passwordParameter("password")

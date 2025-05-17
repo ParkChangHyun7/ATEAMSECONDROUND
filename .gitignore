@@ -187,3 +187,4 @@ node_modules/
 /tests
 src/main/resources/com/json/seoulpublicdata.json
 /uploads
+src/main/data/api/json/seoulpublicdata.json

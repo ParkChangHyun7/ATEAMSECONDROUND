@@ -28,7 +28,7 @@ body {
 }
 
 /* 레이아웃 래퍼 */
-.wrapper {
+.base-wrapper {
     min-width: 450px;
     overflow-x: auto;
     padding-top: 70px;
@@ -36,7 +36,7 @@ body {
 
 /* 반응형 스타일 */
 @media screen and (max-width: 768px) {
-    .wrapper {
+    .base-wrapper {
         max-width: 650px;
         width: 100%;
     }

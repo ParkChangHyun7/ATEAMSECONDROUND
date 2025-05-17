@@ -30,6 +30,15 @@ public class MainController {
 		return "base";
 	}
 
+	@GetMapping("/manage")
+	public String manage(Model model) {
+		model.addAttribute("pageTitle", "게시판 관리");
+		model.addAttribute("contentPage", "content_pages/boards/boards.jsp");
+		model.addAttribute("scriptsPage", "include/boards/scripts.jsp");
+			model.addAttribute("resourcesPage", "include/boards/resources.jsp");
+			return "base";
+	  }
+
 	@GetMapping("/about")
 	public String about(Model model) {
 		model.addAttribute("pageTitle", "소개");

@@ -55,7 +55,7 @@ CREATE TABLE boards (
     is_active TINYINT DEFAULT 0, -- 사용 중인 게시판인지? 0이면 100이상만 접근 가능하도록 해서 관리자 전용 게시판 구분값으로 쓰면 좋을 듯
     write_role TINYINT DEFAULT 0, -- 글쓰기 가능 레벨 기준 (공지사항은 어드민 레벨 100부터 된다던지 등)
     read_role TINYINT DEFAULT 1, -- 읽기 가능 레벨 기준 (0 = 미회원, 1 = 회원, above 100 = 관리자 게시판 등)
-    is_anonymous TINYINT DEFAULT 0,
+    is_anonymous TINYINT DEFAULT 0, -- 익명 게시판 여부 (0 = false, 1 = true)
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP, -- 게시판 생성 시간
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 게시판 정보 업데이트 시간
     updated_by BIGINT, -- 게시판 정보 업데이트한 사용자 idx

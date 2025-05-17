@@ -25,15 +25,8 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        String authority;
-        if (this.role == null) {
-            authority = "ROLE_USER";
-        } else if (this.role == 100) {
-            authority = "ROLE_ADMIN";
-        } else {
-            authority = "ROLE_USER";
-        }
-        return Collections.singletonList(new SimpleGrantedAuthority(authority));
+        String authorityString = (this.role == null) ? "0" : String.valueOf(this.role);
+        return Collections.singletonList(new SimpleGrantedAuthority(authorityString));
     }
 
     @Override
