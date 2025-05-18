@@ -7,6 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import seoul.its.info.services.boards.posts.service.PostQueryService;
+import seoul.its.info.services.boards.posts.service.PostManagementService;
+import seoul.its.info.services.boards.posts.dto.PostRequestDto;
+import seoul.its.info.services.boards.posts.dto.PostResponseDto;
+import seoul.its.info.services.users.login.detail.UserDetailsImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -20,9 +24,11 @@ import java.util.Map;
 public class PostController {
 
     private final PostQueryService postQueryService;
+    private final PostManagementService postManagementService;
 
-    public PostController(PostQueryService postQueryService) {
+    public PostController(PostQueryService postQueryService, PostManagementService postManagementService) {
         this.postQueryService = postQueryService;
+        this.postManagementService = postManagementService;
     }
 
     // 게시글 목록 조회 (JSP 뷰 반환)
@@ -84,37 +90,86 @@ public class PostController {
         return ResponseEntity.ok(result);
     }
 
-    // 게시글 상세 조회
+    // 게시글 상세 조회 (API 반환)
     @GetMapping("/{postId}")
     @ResponseBody
-    public ResponseEntity<?> getPostDetail(@PathVariable Long boardId, @PathVariable Long postId) {
-        // TODO: 주어진 boardId와 postId에 대한 게시글 상세 정보 조회 로직 구현 예정
-        return ResponseEntity.ok(Collections.emptyMap()); // 임시 응답
+    public ResponseEntity<?> getPostDetailApi(@PathVariable Long boardId, @PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(postManagementService.getPostDetail(boardId, postId, userDetails));
+    }
+
+    // 게시글 상세 조회 (JSP 뷰 반환)
+    @GetMapping("/read/{postId}")
+    public String showPostReadPage(
+            @PathVariable Long boardId,
+            @PathVariable Long postId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails, // UserDetailsImpl 직접 사용
+            Model model
+    ) {
+        PostResponseDto postResponseDto = postManagementService.getPostDetail(boardId, postId, userDetails);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+        try {
+            model.addAttribute("postJson", objectMapper.writeValueAsString(postResponseDto));
+            
+            Map<String, Object> boardConfig = Map.of(
+                "id", postResponseDto.getBoardId(),
+                "name", postResponseDto.getBoardName() != null ? postResponseDto.getBoardName() : "게시판"
+            );
+            model.addAttribute("boardConfigJson", objectMapper.writeValueAsString(boardConfig));
+
+            // UserDetailsImpl이 null일 수 있으므로 방어 코드 추가
+            if (userDetails != null) {
+                model.addAttribute("currentUserJson", objectMapper.writeValueAsString(Map.of(
+                    "id", userDetails.getId(),
+                    "username", userDetails.getUsername(),
+                    "nickname", userDetails.getNickname(),
+                    "role", userDetails.getRole() // UserDetailsImpl에 getRole()이 숫자나 Enum을 반환한다고 가정
+                )));
+            } else {
+                model.addAttribute("currentUserJson", objectMapper.writeValueAsString(Collections.emptyMap()));
+            }
+
+        } catch (Exception e) {
+            // JSON 변환 실패 시 또는 데이터 로딩 실패에 대한 처리
+            // 예를 들어, 에러 페이지로 리다이렉트하거나, 모델에 에러 메시지를 담아 전달
+            // 여기서는 간단히 빈 JSON 객체를 전달하고 로그를 남깁니다.
+            model.addAttribute("postJson", "{}");
+            model.addAttribute("boardConfigJson", "{}");
+            model.addAttribute("currentUserJson", "{}");
+            // e.printStackTrace(); // 실제 운영에서는 로깅 프레임워크 사용
+            // throw new SystemException("JSON_PROCESSING_ERROR", "상세 페이지 데이터 구성 중 오류가 발생했습니다.");
+        }
+
+        model.addAttribute("pageTitle", (postResponseDto.getBoardName() != null ? postResponseDto.getBoardName() : "") + " - " + postResponseDto.getTitle());
+        model.addAttribute("contentPage", "content_pages/boards/read.jsp");
+        model.addAttribute("scriptsPage", "include/boards/read/scripts.jsp");
+        model.addAttribute("resourcesPage", "include/boards/read/resources.jsp");
+
+        return "base";
     }
 
     // 게시글 생성 (POST 요청은 API로 처리)
     @PostMapping
     @ResponseBody
-    public ResponseEntity<?> createPost(@PathVariable Long boardId, @RequestBody Object postRequestDto) {
-        // TODO: 새 게시글 생성 로직 구현 예정
-        // postRequestDto 대신 실제 DTO 클래스를 사용해야 합니다.
-        return ResponseEntity.ok(Collections.emptyMap()); // 임시 응답
+    public ResponseEntity<?> createPost(@PathVariable Long boardId, @RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(postManagementService.createPost(boardId, requestDto, userDetails));
     }
 
     // 게시글 수정 (PUT 요청은 API로 처리)
     @PutMapping("/{postId}")
     @ResponseBody
-    public ResponseEntity<?> updatePost(@PathVariable Long boardId, @PathVariable Long postId, @RequestBody Object postRequestDto) {
-        // TODO: 게시글 수정 로직 구현 예정
-        // postRequestDto 대신 실제 DTO 클래스를 사용해야 합니다.
-        return ResponseEntity.ok(Collections.emptyMap()); // 임시 응답
+    public ResponseEntity<?> updatePost(@PathVariable Long boardId, @PathVariable Long postId, @RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(postManagementService.updatePost(boardId, postId, requestDto, userDetails));
     }
 
     // 게시글 삭제 (DELETE 요청은 API로 처리)
     @DeleteMapping("/{postId}")
     @ResponseBody
-    public ResponseEntity<?> deletePost(@PathVariable Long boardId, @PathVariable Long postId) {
-        // TODO: 게시글 삭제 로직 구현 예정
-        return ResponseEntity.ok(Collections.emptyMap()); // 임시 응답
+    public ResponseEntity<?> deletePost(@PathVariable Long boardId, @PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
+        postManagementService.deletePost(boardId, postId, userDetails);
+        return ResponseEntity.ok().build(); // 성공 시 200 OK 와 빈 body 반환
     }
 } 

@@ -29,7 +29,7 @@
                     <td>{{ post.likeCount >= 99 ? '99+' : (post.likeCount > 0 ? post.likeCount : '') }}</td>
                     <td class="td-separator">|</td>
                     <td>
-                        <a :href="'/boards/' + boardIdVue + '/posts/' + post.id">{{ post.title }}</a>
+                        <a :href="'/boards/' + boardIdVue + '/posts/read/' + post.id">{{ post.title }}</a>
                         <span v-if="post.commentCount > 0" class="comment-count">{{ formatCommentCount(post.commentCount) }}</span>
                          <span v-if="post.fileIncluded === 1" class="material-symbols-outlined">attach_file</span>
                          <span v-if="post.imageIncluded === 1" class="material-symbols-outlined">image</span>

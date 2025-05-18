@@ -43,6 +43,9 @@ public enum ErrorCode {
 
     // Board/Post/Comment Errors
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."),
+    POST_CREATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "게시글 생성 중 오류가 발생했습니다."),
+    POST_UPDATE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "게시글 수정 중 오류가 발생했습니다."),
+    POST_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "게시글 삭제 중 오류가 발생했습니다."),
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다.");
 
     private final HttpStatus status;

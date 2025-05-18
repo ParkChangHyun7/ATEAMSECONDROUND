@@ -1,0 +1,39 @@
+.post-content {
+    line-height: 1.8;
+    word-break: break-all;
+}
+
+.post-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1rem 0;
+}
+
+.post-content table {
+    width: 100% !important;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    overflow-x: auto;
+    display: block;
+}
+
+.post-content th,
+.post-content td {
+    border: 1px solid #dee2e6;
+    padding: 0.75rem;
+    vertical-align: top;
+}
+
+.post-content th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 960px;
+}
+
+.btn-outline-primary.me-2 {
+    margin-right: 0.5rem !important;
+}
