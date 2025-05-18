@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>ITS 실시간 이벤트 지도</title>
+  <style>
+    #map {
+      width: 100%;
+      height: 600px;
+    }
+
+    .info-window {
+      font-size: 14px;
+      line-height: 1.5;
+      padding: 10px;
+      max-width: 300px;
+      background: white;
+      word-wrap: break-word;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+  </style>
+  <!-- 카카오맵 API -->
+  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=ddc3a5089cd2e1974490b196aab220ec"></script>
+</head>
+<body>
+  <h2>ITS 실시간 이벤트 지도</h2>
+  <div id="map"></div>
+  <div id="error" class="error"></div>
+  <!-- 외부 JS 불러오기 -->
+  <script src="/js/traffic/event/eventMap.js" defer></script>
+</body>
+</html>
