@@ -158,7 +158,7 @@ public class PostController {
     }
 
     // 게시글 삭제 (DELETE 요청은 API로 처리)
-    @DeleteMapping("/{postId}")
+    @DeleteMapping("/delete/{postId}")
     @ResponseBody
     public ResponseEntity<?> deletePost(@PathVariable Long boardId, @PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
         postManagementService.deletePost(boardId, postId, userDetails);

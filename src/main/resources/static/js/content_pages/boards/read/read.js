@@ -68,7 +68,7 @@ const postReadApp = {
             // TODO: 삭제 확인 모달 또는 메시지 표시 후 삭제 API 호출
             if (post.value && confirm('게시글을 정말 삭제하시겠습니까?')) {
                 try {
-                    const response = await fetch(`/boards/${post.value.boardId}/posts/${post.value.id}`, {
+                    const response = await fetch(`/boards/${post.value.boardId}/posts/delete/${post.value.id}`, {
                         method: 'DELETE',
                     });
                     if (response.ok) {

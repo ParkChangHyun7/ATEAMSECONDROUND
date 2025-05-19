@@ -18,7 +18,7 @@
 .container {
   background-color: #ffffff;
   padding: 0 40px;
-  padding-top: 40px;
+  padding-top: 30px;
   padding-bottom: 0px;
   border-radius: 8px;
   box-shadow: 0 5px 50px rgba(0, 0, 0, 0.5);
@@ -33,19 +33,11 @@
   flex-direction: column;
 }
 
-.post-container {
-  padding-bottom: 30px;
-}
-
 .h1 {
   font-size: 33px;
   font-weight: bold;
   margin-bottom: 20px;
   text-align: left;
-}
-
-.post-header h2{
-    margin-bottom: 10px;
 }
 
 .board-info h2 {
@@ -62,7 +54,7 @@
 }
 .board-info h2 a:hover {
   color: #f1b300;
-  text-decoration: none;
+  text-decoration: underline;
 }
 
 .post-header {
@@ -77,12 +69,11 @@
   margin-bottom: 8px;
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  gap: 16px;
 }
 
 .post-meta span {
-  align-items: center;
-  margin-right: 25px;
+  margin-right: 10px;
 }
 
 .post-body {
@@ -93,18 +84,11 @@
   margin-bottom: 10px;
 }
 
-.material-symbols-outlined.read {
+.material-symbols-outlined {
   font-size: 16px;
   vertical-align: middle;
-  margin-right: 2px;
-  margin-left: 15px;
-  padding-top: 2px;
+  margin-left: 5px;
   color: #555;
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 300,
-  'GRAD' -25,
-  'opsz' 24
 }
 
 .post-content {
@@ -163,7 +147,9 @@
   .h1 {
     font-size: 24px;
   }
-
+  .board-info h2 {
+    font-size: 16px;
+  }
   .post-meta {
     font-size: 12px;
     gap: 8px;
