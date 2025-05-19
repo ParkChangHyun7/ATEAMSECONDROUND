@@ -28,13 +28,13 @@ public class PostResponseDto {
    // 게시글 상세 보기에서 파일 첨부 표시에 따라 response값이 더 필요하긴 할 건데 다운로드도 모듈화 이후 추가할 거라 현재는 여기까지만 보냄.
    private Integer writerRole; // 작성 당시 사용자의 role, role 변경 되더라도 글 수정 전 변경 안함
    private String thumbnailPath; // 썸네일 경로
-   // 썸네일 제작 모듈도 추후 만들어야돼서 현재는 미입력으로 둠.
+   // 썸네일 제작 모듈도 추후 만들어야돼서 현재는 널이나 빈 문자열로 보내고 프론트는 무시함
    private String ipAddress; // 작성자 ip 주소 앞 두 자리만 표시 (123.456.789.123 -> 123.45)
    private LocalDateTime createdAt; // 작성일
    private LocalDateTime updatedAt; // 수정일. 수정 한 일 없으면 값 없음
    // 목록에서는 수정한 경우 작성일 옆에 *을 붙였지만, 글 상세보기에서는 작성 시간과 수정 시간을 모두 보여줌
    // YYYY.MM.DD HH:MM:SS 형식으로 표시함 (24시간 기준)
-   // 작성 2025.05.18 12:32:16
-   // 2025.05.19 11:53:16 (수정됨)
+   // 작성일 2025-05-18 12:32:16
+   // 수정일 2025-05-19 11:53:32
    // 이후 수정 이력 관리 테이블도 운영할 거지만 현재는 이렇게만 표시함.
 } 

@@ -21,6 +21,7 @@ public class PostManagementServiceImpl implements PostManagementService {
 
     private final int ADMIN_ROLE_THRESHOLD = 100; // 관리자 역할 임계값 정의 (설정 파일 등에서 관리 가능)
     private final PostMapper postMapper;
+    private final PostQueryService postQueryService;
 
     @Override
     @Transactional
@@ -48,25 +49,7 @@ public class PostManagementServiceImpl implements PostManagementService {
         if (newPost.getId() == null) {
             throw new SystemException(ErrorCode.POST_CREATION_FAILED.getStatus().name(), ErrorCode.POST_CREATION_FAILED.getMessage());
         }
-        return this.getPostDetail(boardId, newPost.getId(), userDetails); 
-    }
-
-    @Override
-    @Transactional
-    public PostResponseDto getPostDetail(Long boardId, Long postId, UserDetails userDetails) {
-        // 조회수 증가 (중복 방지 로직은 추후 고려)
-        postMapper.incrementViewCount(postId);
-
-        PostResponseDto postResponse = postMapper.getPostDetail(boardId, postId);
-        if (postResponse == null) {
-            throw new SystemException(ErrorCode.POST_NOT_FOUND.getStatus().name(), ErrorCode.POST_NOT_FOUND.getMessage());
-        }
-
-        // TODO: 댓글/대댓글 정보 조회 및 PostResponseDto에 설정 (별도 CommentService 및 DTO 필요)
-        // List<CommentResponseDto> comments = commentService.getCommentsByPostId(postId);
-        // postResponse.setComments(comments); // PostResponseDto에 댓글 목록 필드 추가 가정
-
-        return postResponse;
+        return postQueryService.getPostDetail(boardId, newPost.getId(), userDetails);
     }
 
     @Override
@@ -100,7 +83,7 @@ public class PostManagementServiceImpl implements PostManagementService {
             // 게시글이 존재했으나 업데이트가 되지 않은 경우, 동시성 문제 또는 다른 이유일 수 있음
             throw new SystemException(ErrorCode.POST_UPDATE_FAILED.getStatus().name(), ErrorCode.POST_UPDATE_FAILED.getMessage());
         }
-        return this.getPostDetail(boardId, postId, userDetails);
+        return postQueryService.getPostDetail(boardId, postId, userDetails);
     }
 
     @Override

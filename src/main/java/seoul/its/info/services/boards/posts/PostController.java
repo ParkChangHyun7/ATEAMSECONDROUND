@@ -94,7 +94,7 @@ public class PostController {
     @GetMapping("/{postId}")
     @ResponseBody
     public ResponseEntity<?> getPostDetailApi(@PathVariable Long boardId, @PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(postManagementService.getPostDetail(boardId, postId, userDetails));
+        return ResponseEntity.ok(postQueryService.getPostDetail(boardId, postId, userDetails));
     }
 
     // 게시글 상세 조회 (JSP 뷰 반환)
@@ -105,7 +105,7 @@ public class PostController {
             @AuthenticationPrincipal UserDetailsImpl userDetails, // UserDetailsImpl 직접 사용
             Model model
     ) {
-        PostResponseDto postResponseDto = postManagementService.getPostDetail(boardId, postId, userDetails);
+        PostResponseDto postResponseDto = postQueryService.getPostDetail(boardId, postId, userDetails);
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -123,7 +123,6 @@ public class PostController {
             // UserDetailsImpl이 null일 수 있으므로 방어 코드 추가
             if (userDetails != null) {
                 model.addAttribute("currentUserJson", objectMapper.writeValueAsString(Map.of(
-                    "id", userDetails.getId(),
                     "username", userDetails.getUsername(),
                     "nickname", userDetails.getNickname(),
                     "role", userDetails.getRole() // UserDetailsImpl에 getRole()이 숫자나 Enum을 반환한다고 가정
@@ -133,14 +132,7 @@ public class PostController {
             }
 
         } catch (Exception e) {
-            // JSON 변환 실패 시 또는 데이터 로딩 실패에 대한 처리
-            // 예를 들어, 에러 페이지로 리다이렉트하거나, 모델에 에러 메시지를 담아 전달
-            // 여기서는 간단히 빈 JSON 객체를 전달하고 로그를 남깁니다.
             model.addAttribute("postJson", "{}");
-            model.addAttribute("boardConfigJson", "{}");
-            model.addAttribute("currentUserJson", "{}");
-            // e.printStackTrace(); // 실제 운영에서는 로깅 프레임워크 사용
-            // throw new SystemException("JSON_PROCESSING_ERROR", "상세 페이지 데이터 구성 중 오류가 발생했습니다.");
         }
 
         model.addAttribute("pageTitle", (postResponseDto.getBoardName() != null ? postResponseDto.getBoardName() : "") + " - " + postResponseDto.getTitle());

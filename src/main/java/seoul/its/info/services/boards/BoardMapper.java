@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.*;
 
 import seoul.its.info.services.boards.dto.BoardRequestDto;
 import seoul.its.info.services.boards.dto.BoardsDto;
+import seoul.its.info.services.boards.dto.BoardsRoleDto;
 
 import java.util.List;
 
@@ -15,6 +16,9 @@ public interface BoardMapper {
 
     @Select("SELECT id, name, description, category_code, is_active, write_role, read_role, is_anonymous, created_at, updated_at, updated_by FROM boards WHERE id = #{boardId}")
     BoardsDto getBoardDetail(@Param("boardId") Long boardId);
+
+    @Select("SELECT id, is_active, read_role, write_role FROM boards WHERE id = #{boardId}")
+    BoardsRoleDto getBoardRoleInfo(@Param("boardId") Long boardId);
 
     @Insert("INSERT INTO boards (name, description, category_code, is_active, write_role, read_role, is_anonymous, updated_by) " +
             "VALUES (#{boardRequestDto.name}, #{boardRequestDto.description}, #{boardRequestDto.categoryCode}, #{boardRequestDto.isActive}, #{boardRequestDto.writeRole}, #{boardRequestDto.readRole}, #{boardRequestDto.isAnonymous}, #{boardRequestDto.updatedBy})")

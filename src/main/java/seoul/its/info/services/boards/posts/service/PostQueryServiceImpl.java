@@ -3,11 +3,15 @@ package seoul.its.info.services.boards.posts.service;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import seoul.its.info.services.boards.BoardMapper;
 import seoul.its.info.services.boards.dto.BoardsDto;
 import seoul.its.info.services.boards.posts.PostMapper;
 import seoul.its.info.services.boards.posts.dto.PostListDto;
-import seoul.its.info.services.users.login.detail.UserDetailsImpl;
+import seoul.its.info.services.boards.posts.dto.PostResponseDto;
+import seoul.its.info.common.exception.SystemException;
+import seoul.its.info.common.exception.ErrorCode;
+import seoul.its.info.services.boards.service.BoardHelperService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,12 +23,17 @@ public class PostQueryServiceImpl implements PostQueryService {
 
     private final PostMapper postMapper;
     private final BoardMapper boardMapper;
+    private final ViewCountManager viewCountManager;
+    private final BoardHelperService boardHelperService;
 
-    public PostQueryServiceImpl(PostMapper postMapper, BoardMapper boardMapper) {
+    public PostQueryServiceImpl(PostMapper postMapper, BoardMapper boardMapper, ViewCountManager viewCountManager, BoardHelperService boardHelperService) {
         this.postMapper = postMapper;
         this.boardMapper = boardMapper;
+        this.viewCountManager = viewCountManager;
+        this.boardHelperService = boardHelperService;
     }
 
+    // 특정 게시판의 게시글 목록 조회 (공지 포함, 페이징 처리) 및 총 개수 반환
     @Override
     public Map<String, Object> getPostList(Long boardId, int page, int pageSize, UserDetails userDetails) {
         BoardsDto board = boardMapper.getBoardDetail(boardId);
@@ -38,29 +47,14 @@ public class PostQueryServiceImpl implements PostQueryService {
             return emptyResult;
         }
         
-        Integer userRole = 0;
-        if (userDetails instanceof UserDetailsImpl) {
-            UserDetailsImpl customUserDetails = (UserDetailsImpl) userDetails;
-            if (customUserDetails.getRole() != null) {
-                userRole = customUserDetails.getRole();
-            }
-        } else if (userDetails != null) {
-            String authority = userDetails.getAuthorities().stream()
-                                   .findFirst()
-                                   .map(auth -> auth.getAuthority())
-                                   .orElse("0");
-            try {
-                userRole = Integer.parseInt(authority);
-            } catch (NumberFormatException e) {
-                // 권한 문자열이 숫자가 아닐 경우 기본값(0) 유지 또는 로깅
-            }
+        // BoardHelperService를 통해 읽기 권한 확인
+        if (!boardHelperService.canReadBoard(boardId, userDetails)) {
+             // 게시판이 존재하지 않거나 비활성화되었거나 권한이 없는 경우
+            throw new AccessDeniedException("게시판을 읽을 권한이 없습니다."); // 상세 메시지는 BoardHelperService에서 이미 처리되므로 간결하게
         }
 
-        if (userRole < board.getReadRole()) {
-            throw new AccessDeniedException("게시판을 읽을 권한이 없습니다. 필요한 권한: " + board.getReadRole() + ", 현재 권한: " + userRole);
-        }
-
-        boolean canWrite = (userRole >= board.getWriteRole());
+        // BoardHelperService를 통해 쓰기 권한 확인
+        boolean canWrite = boardHelperService.canWriteBoard(boardId, userDetails);
 
         // 공지 게시글 목록 조회
         List<PostListDto> noticePosts = postMapper.getNoticePostListByBoardId(boardId);
@@ -105,5 +99,35 @@ public class PostQueryServiceImpl implements PostQueryService {
         result.put("boardName", board.getName());
 
         return result;
+    }
+
+    // 특정 게시글의 상세 정보 조회
+    @Override
+    @Transactional
+    public PostResponseDto getPostDetail(Long boardId, Long postId, UserDetails userDetails) {
+        // BoardHelperService를 통해 읽기 권한 확인
+        if (!boardHelperService.canReadBoard(boardId, userDetails)) {
+            throw new AccessDeniedException("게시글을 읽을 권한이 없습니다."); // 상세 메시지는 BoardHelperService에서 이미 처리되므로 간결하게
+        }
+
+        // ViewCountManager를 통해 조회수 무한 증가 방지 (3시간에 1회 가능)
+        if (viewCountManager.shouldIncrementViewCount(postId)) {
+            postMapper.incrementViewCount(postId);
+        }
+
+        PostResponseDto postResponse = postMapper.getPostDetail(boardId, postId);
+        if (postResponse == null) {
+            throw new SystemException(ErrorCode.POST_NOT_FOUND.getStatus().name(), ErrorCode.POST_NOT_FOUND.getMessage());
+        }
+
+        // TODO: fileIncluded, imageIncluded, thumbnailPath가 1일 때는 프론트에서
+        // 파일 및 이미지 링크 처리 할 수 있도록 file 테이블 정보 일부도 같이 보내주도록 수정해야됨
+        // 현재는 파일 첨부 미구현으로 둠
+
+        // TODO: 댓글/대댓글 정보 조회 및 PostResponseDto에 설정
+        // List<CommentResponseDto> comments = commentService.getCommentsByPostId(postId);
+        // postResponse.setComments(comments); // PostResponseDto에 댓글 목록 필드 추가 가정
+
+        return postResponse;
     }
 } 
