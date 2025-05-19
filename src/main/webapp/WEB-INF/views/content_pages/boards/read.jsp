@@ -27,7 +27,7 @@
                                 </span><span v-if="post.likeCount != null" class="post-likes">{{ post.likeCount }}</span>
                                 <span class="material-symbols-outlined read">
                                     bring_your_own_ip
-                                    </span><span class="post-ip">{{ maskedIpAddress }}</span>
+                                    </span><span class="post-ip">{{ post.ipAddress }}</span>
             </div>
         </div>
 
@@ -50,9 +50,8 @@
         <!-- 수정, 삭제, 목록 버튼 -->
         <div class="post-actions">
             <a :href="'/boards/' + post.boardId + '/posts'" class="btn btn-secondary">목록</a>
-            <!-- TODO: 현재 사용자가 작성자인 경우 또는 관리자인 경우에만 수정/삭제 버튼 표시 -->
-            <!-- <button v-if="canEdit" @click="editPost" class="btn btn-primary">수정</button> -->
-            <!-- <button v-if="canDelete" @click="deletePost" class="btn btn-danger">삭제</button> -->
+            <button v-if="canEdit" @click="editPost" class="btn btn-primary">수정</button>
+            <button v-if="canDelete" @click="deletePost" class="btn btn-danger">삭제</button>
         </div>
     </div>
 

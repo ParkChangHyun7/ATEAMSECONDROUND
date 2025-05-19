@@ -18,20 +18,6 @@ const postReadApp = {
             return post.value.isNotice === 1 ? '[공지] ' + post.value.title : post.value.title;
         });
 
-        // IP 주소 마스킹
-        const maskedIpAddress = computed(() => {
-            if (!post.value || !post.value.ipAddress) return '';
-            const ip = post.value.ipAddress;
-            const ipParts = ip.split('.');
-            if (ipParts.length === 4) {
-                return ipParts[0] + '.' + ipParts[1] + '.*.*';
-            } else if (ipParts.length > 0) {
-                return ipParts[0] + '.*.*.*';
-            } else {
-                return ''; // IP 형식이 예상과 다를 경우
-            }
-        });
-
         // 게시글 수정/삭제 권한 여부 판단 (TODO: 필요시 권한 로직 추가)
         const canEdit = computed(() => {
             // 예시: 현재 사용자가 작성자 본인이거나 관리자 권한이 있는지 확인
@@ -109,7 +95,6 @@ const postReadApp = {
             boardConfig,
             currentUser,
             formattedTitle,
-            maskedIpAddress,
             canEdit,
             canDelete,
             formatDisplayDate,

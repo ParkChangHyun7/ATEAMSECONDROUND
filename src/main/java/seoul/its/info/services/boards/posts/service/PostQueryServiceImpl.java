@@ -73,24 +73,6 @@ public class PostQueryServiceImpl implements PostQueryService {
         combinedList.addAll(noticePosts);
         combinedList.addAll(regularPosts);
 
-        // IP 주소 마스킹 처리
-        for (PostListDto post : combinedList) {
-            String ip = post.getIpAddress();
-            if (ip != null && !ip.isEmpty() && ip.contains(".")) {
-                String[] ipParts = ip.split("\\.");
-                if (ipParts.length == 4) {
-                    post.setIpAddress(ipParts[0] + "." + ipParts[1] + ".*.*");
-                } else {
-                    post.setIpAddress(ipParts[0] + ".*.*.*");
-                }
-            } else if (ip != null && !ip.isEmpty()) {
-                post.setIpAddress("*.*.*.*");
-            }
-            else {
-                 post.setIpAddress("*.*");
-            }
-        }
-
         // 결과 Map 생성 및 반환
         Map<String, Object> result = new HashMap<>();
         result.put("posts", combinedList);
@@ -116,6 +98,20 @@ public class PostQueryServiceImpl implements PostQueryService {
         }
 
         PostResponseDto postResponse = postMapper.getPostDetail(boardId, postId);
+        // IP 주소 마스킹 처리
+        if (postResponse != null) {
+            String ip = postResponse.getIpAddress();
+            if (ip != null && !ip.isEmpty() && ip.contains(".")) {
+                String[] ipParts = ip.split("\\.");
+                if (ipParts.length == 4) {
+                    postResponse.setIpAddress(ipParts[0] + "." + ipParts[1] + ".*.*");
+                } else {
+                    postResponse.setIpAddress("*.*.*.*");
+                }
+            } else {
+                postResponse.setIpAddress("*.*.*.*");
+            }
+        }                
         if (postResponse == null) {
             throw new SystemException(ErrorCode.POST_NOT_FOUND.getStatus().name(), ErrorCode.POST_NOT_FOUND.getMessage());
         }

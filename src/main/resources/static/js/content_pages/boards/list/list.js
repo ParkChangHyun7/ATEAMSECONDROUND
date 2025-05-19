@@ -136,6 +136,11 @@ const postListApp = {
             return count.toString();
         };
 
+        // isNotice가 1이면 [공지]를 붙여주는 함수
+        const formattedTitle = (post) => {
+            if (!post) return '';
+            return post.isNotice === 1 ? '[공지] ' + post.title : post.title;
+        };
 
         return {
             posts,
@@ -154,7 +159,8 @@ const postListApp = {
             shouldShowPagination,
             canWriteVue,
             formatViewCount,
-            formatCommentCount
+            formatCommentCount,
+            formattedTitle
         };
     }
 };

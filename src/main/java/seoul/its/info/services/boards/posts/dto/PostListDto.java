@@ -28,7 +28,6 @@ public class PostListDto {
    private String thumbnailPath; // 썸네일 경로 / 일단 미입력으로 둠. TODO: 썸네일 로직 구현 후 입력 필요
    private Integer reportStatus; // 신고 로직 작업 이후 처리 예정. 현재는 미입력으로 둠.
    // 신고 상태 0 미신고, 1신고됨 2처리중 3처리완료(변화 없음) 4처리완료(카테고리 이동) 5처리완료(삭제) 등등으로 표시 예정
-   private String ipAddress; // IP 주소 common/util/ClientIpGetHelper.java 로 받아와서 프론트에는 두 번째 ip까지만 보여줌. (123.456.789.10 = 123.456 만 보여줌)
    private LocalDateTime createdAt; // 게시글 생성 일시
    private LocalDateTime updatedAt; // 게시글 수정 일시. 리스트에는 생성일만 보여주는데 수정일이 있는 경우 작성 시간에 *을 붙임. 상세 페이지에서 수정일 보여줌.
    // 오늘 작성된 글은 24시간 기준 HH:MM (17:27 형식) 으로 표시, 하루 지난 글은 MM-DD(05-18 형식) 로 표시, 1년 경과 글은 YY-MM-DD로 표시 (24-05-17 형식)
