@@ -9,5 +9,5 @@ import seoul.its.info.services.traffic.parking.dto.ParkingDto;
 public interface ParkingService {
 
     //주차장 목록을 전체 조회하는 메서드
-    List<ParkingDto>getParkingList();
+    List<ParkingDto>getAllParkingLots();
 }

@@ -10,8 +10,10 @@ public class ParkingDto {
 
     //주차장 이름
     private String name;
+
     //주차장 위도 좌표
     private double lat;
+    
     //주차장 경도 좌표
     private double lng;
 }
