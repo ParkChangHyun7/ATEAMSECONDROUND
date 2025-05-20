@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 @RestController
 @RequestMapping("/api/traffic")
-public class ApiKeyProvider {
+public class TrafficEventsProvider {
 
    @Value("${event.api.key}")
    private String apiKey;
