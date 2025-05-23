@@ -12,5 +12,5 @@ public interface ParkingService {
      * 공영 주차장 목록 전체를 반환하는 메서드
      * @return PublicParkingDto리스트
      */
-    List<PublicParkingDto>getAllParkingLots();
+    List<PublicParkingDto>getAllPublicParking();
 }

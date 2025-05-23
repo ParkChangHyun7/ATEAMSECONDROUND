@@ -1,37 +1,53 @@
-//ParkingServiceImpl.java
-//주차장 정보 기능을 실제로 구현한 클래스
-
 package seoul.its.info.services.traffic.parking.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import seoul.its.info.services.traffic.parking.dto.PublicParkingDto;
 import org.springframework.stereotype.Service;
-import seoul.its.info.services.traffic.parking.dto.ParkingDto;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service //Service역할을 나타내는 Spring 어노테이션
+/**
+ * ParkingService 인터페이스의 구현 클래스
+ * JSON파일을 읽어서 주차장 정보를 파싱하고,DTO리스트로 반환
+ */
+@Service
 public class ParkingServiceImpl implements ParkingService {
 
     @Override
-    public List<ParkingDto>getAllParkingLots(){
-        //실제로는 DB또는 API에서 받아야 하지만,여기선 예시용 하드코딩
-        List<ParkingDto>list = new ArrayList<>();
+    public List<PublicParkingDto> getAllPublicParking() {
+        List<PublicParkingDto> result = new ArrayList<>();
 
-        ParkingDto lot1 = new ParkingDto();
-        lot1.setName("서울시청 주차장");
-        lot1.setLat(37.5665);
-        lot1.setLng(126.9780);
-        
-        ParkingDto lot2 = new ParkingDto();
-        lot2.setName("을지로입구역 공영주차장");
-        lot2.setLat(37.5678);
-        lot2.setLng(126.9825);
-        
-        list.add(lot1);
-        list.add(lot2);
+        try {
+            // JSON 파일 경로 설정
+            File file = Paths.get("src/main/data/api/json/seoulpublicdata.json").toFile();
+            ObjectMapper mapper = new ObjectMapper();
 
-        return list;
+            // 루트 노드 파싱
+            JsonNode root = mapper.readTree(file);
+
+            // 데이터 배열 추출(key: DATA)
+            JsonNode rows = root.get("DATA");
+
+            if (rows != null) {
+                for (JsonNode node : rows) {
+                    String name = node.get("PARKING_NAME").asText(); // 주차장명
+                    String addr = node.get("ADOR").asText(); // 주소
+                    double lat = node.get("LAT").asDouble(); // 위도
+                    double lng = node.get("LNG").asDouble(); // 경도
+
+                    result.add(new PublicParkingDto(name, "공영", addr, lat, lng));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); // 에러 출력
+        }
+
+        return result;
     }
+
 }
-
-
