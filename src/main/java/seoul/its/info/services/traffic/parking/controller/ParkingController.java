@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  */
 
 @Controller
-public class ParkingPageController {
+public class ParkingController {
 
     /**
      * 최초 진입 URL: http://localhost:9998/parking

@@ -18,12 +18,12 @@ import java.util.List;
 
  @RestController
  @RequestMapping("/api") //모든 요청의 앞부분은 /api로 시작
- public class ParkingController{
+ public class ParkingRestController{
 
     private final ParkingService parkingService;
 
     //생성자 주입 방식 사용
-    public ParkingController(ParkingService parkingService){
+    public ParkingRestController(ParkingService parkingService){
         this.parkingService = parkingService;
     }
 
