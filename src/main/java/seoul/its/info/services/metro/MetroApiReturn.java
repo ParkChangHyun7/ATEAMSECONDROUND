@@ -1,40 +1,55 @@
 package seoul.its.info.services.metro;
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
+import reactor.core.publisher.Mono;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import lombok.RequiredArgsConstructor;
-import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
 public class MetroApiReturn {
 
-	private final WebClient webClientForJson;
-	private final WebClient webClientForXml;
-
 	
 	// api 연결된 자료 받아오는 메소드
-	public Mono<Map> api(String searchUrl) {
-		// WebClient를 사용해 요청 보내기
-		Mono<Map> response = webClientForJson.get()
-				.uri(searchUrl) // API URL 설정
-				.retrieve()
-				.bodyToMono(Map.class); // JSON 응답을 String으로 받음
+	public Mono<Map<String, Object>> api(String searchUrl) {
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(URI.create(searchUrl))
+				.build();
 
-		// 결과 출력
-		System.out.println("API 응답 데이터: " + response);
-		return response;
+		CompletableFuture<Map<String, Object>> future = client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+				.thenApply(HttpResponse::body)
+				.thenApply(json -> {
+					try {
+						ObjectMapper mapper = new ObjectMapper();
+						return mapper.readValue(json, new TypeReference<Map<String, Object>>() {});
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+					}
+				});
 
+		return Mono.fromFuture(future);
 	}
 	
 	public Mono<String> xmlApi(String url) {
-	    return webClientForXml.get()
-	            .uri(url)
-	            .retrieve()
-	            .bodyToMono(String.class);  
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(URI.create(url))
+				.build();
+
+		CompletableFuture<String> future = client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+				.thenApply(HttpResponse::body);
+
+		return Mono.fromFuture(future);
 	}
 	
    

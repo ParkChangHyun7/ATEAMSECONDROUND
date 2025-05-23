@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @EnableCaching
+@SuppressWarnings("unchecked")
 public class MetroCacheManager {
 
 
@@ -26,7 +27,7 @@ public class MetroCacheManager {
 	//모든 지하철역 정보 불러오기
 	//캐시에 모든 데이터 저장
 	@Cacheable(value = "stationInfo")
-	public List<Map> getAllStationInfo(){
+	public List<Map<String, Object>> getAllStationInfo(){
 		
 		String searchUrl = "http://openapi.seoul.go.kr:8088/" + seoulMetroKey
 		+ "/json/subwayStationMaster/1/1000/";
@@ -35,11 +36,11 @@ public class MetroCacheManager {
 		System.out.println("캐시가 없으므로 호출함");
 	
 		
-		Map resultData = metroApiReturn.api(searchUrl).block();
+		Map<String, Object> resultData = metroApiReturn.api(searchUrl).block();
 		
-		Map items = (Map) resultData.get("subwayStationMaster");
+		Map<String, Object> items = (Map<String, Object>) resultData.get("subwayStationMaster");
 		
-		List<Map> rows = (List<Map>) items.get("row");
+		List<Map<String, Object>> rows = (List<Map<String, Object>>) items.get("row");
 		
 		return rows;
 	}

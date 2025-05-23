@@ -20,14 +20,14 @@ public class SearchStationNameService {
 		String searchValue = (String) model.getAttribute("searchValue");
 
 		// 결과를 담을 Map 객체 생성
-		List<Map> matchingRows = new ArrayList<>();
+		List<Map<String, Object>> matchingRows = new ArrayList<>();
 
 		
 		
 		// 지하철역 검색
-		List<Map> rows = metroCacheManager.getAllStationInfo();
+		List<Map<String, Object>> rows = metroCacheManager.getAllStationInfo();
 		
-		for (Map list : rows) {
+		for (Map<String, Object> list : rows) {
 			String bldnNm = (String) list.get("BLDN_NM");
 
 			if (bldnNm != null && bldnNm.contains(searchValue)) {
