@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 @RequestMapping("/api/traffic")
 public class TrafficEventsProvider {
 
-   @Value("${event.api.key}")
+	@Value("${its.api.key}")
    private String apiKey;
 
    @GetMapping("/events")
@@ -26,5 +26,31 @@ public class TrafficEventsProvider {
          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("API 호출 실패");
       }
    }
+   
+   // 🔹 CCTV 정보
+   @GetMapping("/cctv")
+   public ResponseEntity<String> getCctvInfo() {
+       String url = "https://openapi.its.go.kr:9443/cctvInfo"
+               + "?apiKey=" + apiKey
+               + "&type=its"
+               + "&cctvType=1"
+               + "&minX=126.8"
+               + "&maxX=127.89"
+               + "&minY=34.9"
+               + "&maxY=35.1"
+               + "&getType=json";
+       try {
+           RestTemplate restTemplate = new RestTemplate();
+           String response = restTemplate.getForObject(url, String.class);
+           return ResponseEntity.ok(response);
+       } catch (Exception e) {
+           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("CCTV API 호출 실패");
+       }
+   }
+   
+   
+   
+   
+   
 
 }
