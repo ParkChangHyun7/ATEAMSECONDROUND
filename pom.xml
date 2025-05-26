@@ -108,6 +108,8 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
+
+
 		<!-- MySQL Connector/J: MySQL 데이터베이스 연결 드라이버 -->
 		<dependency>
 			<groupId>com.mysql</groupId>

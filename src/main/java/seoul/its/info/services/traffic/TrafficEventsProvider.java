@@ -42,8 +42,10 @@ public class TrafficEventsProvider {
        try {
            RestTemplate restTemplate = new RestTemplate();
            String response = restTemplate.getForObject(url, String.class);
+           System.out.println("CCTV API 응답: " + response); // 디버깅 로그 추가
            return ResponseEntity.ok(response);
        } catch (Exception e) {
+           System.out.println("CCTV API 호출 실패: " + e.getMessage());
            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("CCTV API 호출 실패");
        }
    }
