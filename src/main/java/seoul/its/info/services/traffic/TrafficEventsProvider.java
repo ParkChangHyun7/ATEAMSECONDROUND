@@ -34,10 +34,10 @@ public class TrafficEventsProvider {
                + "?apiKey=" + apiKey
                + "&type=its"
                + "&cctvType=1"
-               + "&minX=126.8"
-               + "&maxX=127.89"
-               + "&minY=34.9"
-               + "&maxY=35.1"
+               + "&minX=126.76"
+               + "&maxX=127.20"
+               + "&minY=37.40"
+               + "&maxY=37.70"
                + "&getType=json";
        try {
            RestTemplate restTemplate = new RestTemplate();
