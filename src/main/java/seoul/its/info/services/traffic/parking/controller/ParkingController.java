@@ -1,33 +1,35 @@
 package seoul.its.info.services.traffic.parking.controller;
-
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-
-/**
- * 주차장 페이지(JSP)진입용 Controller
- * 이 컨트롤러는 브라우저에서 URL을 입력했을 때 JSP화면을 보여주는 역할
- * JSON데이터를 응답한는게 아니라 JSP화면을 리턴하는게 목적
- */
-
-@Controller
-public class ParkingController {
+public class ParkingController{
 
     /**
-     * 최초 진입 URL: http://localhost:9998/parking
-     * -Jsp 화면을 띄우기 위한 요청
-     * model에 contentPage값을 넣어 base.jsp가 해당 JSP를 include하도록 함
+     *  공영주차장 지도 페이지 진입 처리
      * 
-     * @param model -JSP include 대상 설정을 위핸 Model객체
-     * @return base.jsp로 이동하여 ,contentPage속성에 따라 실제 화면 로딩
+     * -클라이언트가 "/parking"주소로 GET 요청을 보내면 실행됨
+     * -base.jsp 레이아웃을 기본으로 사용하고,
+     *  그 안에 필요한 JSP페이지,리소스,스크립트 파일을 각각 include 시킴
+     *
+     * @param model JSP에 데이터를 전달하기 위한 Model객체
+     * @return base.jsp(통합 레이아웃)
      */
-    @GetMapping("/parking")
-    public String parkingPage(Model model ) {
-        //base.jsp에서 <jsp:include page="${contentPage}"/>형태로 사용될 경로
-        model.addAttribute("contentPage", "content_pages/parking/parking.jsp");
+    @GetMapping("/parking") //주소: http://localhost:포트번호/parking
+    public String parkingPage(Model model){
 
-        //base.jsp안에 위에서 설정한 contentPage를 include
-        return "base";// => views/base.jsp
+        //페이지 제목:base.jsp에서 <title>${pageTitle}</title>등에 사용 가능
+        model.addAttribute("pageTitle", "서울시 공영주차장 지도");
+
+        //본문 JSP 페이지 경로 (contentPage에 해당)
+        //base.jsp에서 <jsp:include page="${contentPage}"/>로 포함됨
+        model.addAttribute("contentPage","content_pages/traffic/parking/parking.jsp");
+
+        //JS,CSS 등 외부 리소스 경로 (resourcesPage)
+        //base.jsp에서 <c:import url="${scriptsPage}" /> 로 include됨
+        model.addAttribute("scriptsPage","include/traffic/parking/scripts.jsp");
+
+        //최종적으로 base.jsp가 렌더링됨 (통합 레이아웃)
+        return "base";
     }
+
 }
