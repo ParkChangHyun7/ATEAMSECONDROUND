@@ -1,9 +1,7 @@
-
-// cctvMap.js
 function initializeCCTVMap() {
   const mapContainer = document.getElementById('map');
   if (!mapContainer) {
-    console.error('지도 컨테이너를 찾을 수 없습니다! "map" 요소가 HTML에 존재하는지 확인하세요.');
+    console.error('지도 컨테이너를 찾을 수 없습니다.');
     return;
   }
 
@@ -11,70 +9,44 @@ function initializeCCTVMap() {
     center: new kakao.maps.LatLng(37.5665, 126.978),
     level: 7,
   });
-  console.log('지도 초기화 완료:', map);
-
-  function showError(msg) {
-    const el = document.getElementById('error');
-    if (el) {
-      el.textContent = msg;
-      el.style.color = 'red';
-    }
-  }
-
-  function defaultText(v, f = '정보 없음') {
-    if (!v) return f;
-    const s = v.trim();
-    return s === '' ? f : s;
-  }
 
   let openInfoWindow = null;
 
-  fetch('/api/traffic/cctv')
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error(`HTTP 오류: ${res.status}`);
-      }
-      return res.json();
-    })
-    .then((data) => {
-      console.log('API 응답:', data);
+  function defaultText(v, f = "정보 없음") {
+    if (!v) return f;
+    const s = String(v).trim();
+    return s === "" ? f : s;
+  }
 
-      if (!data?.response) {
-        console.error('응답에 "response" 객체가 없습니다.');
-        showError('CCTV 데이터를 불러오지 못했습니다. 응답 형식을 확인하세요.');
-        return;
-      }
+  function showError(msg) {
+    const el = document.getElementById("error");
+    if (el) {
+      el.textContent = msg;
+      el.style.color = "red";
+    }
+  }
 
+  fetch("/api/traffic/cctv")
+    .then(res => res.json())
+    .then(data => {
       const list = data?.response?.data || [];
-      if (data.response.datacount === 0) {
-        console.warn('⚠ CCTV 데이터가 없습니다. 좌표 범위나 조건을 확인하세요.');
-        showError('CCTV 데이터를 찾을 수 없습니다.');
+      if (list.length === 0) {
+        showError("CCTV 데이터가 없습니다.");
         return;
       }
 
       list.forEach((cctv, index) => {
-        console.log(`CCTV #${index + 1}:`, cctv);
+        if (!cctv?.coordx || !cctv?.coordy || !cctv?.cctvurl) return;
 
-        if (!cctv?.coordx || !cctv?.coordy || !cctv?.cctvurl) {
-          console.warn(`CCTV #${index + 1}: 좌표 또는 URL이 누락되었습니다.`, cctv);
-          return;
-        }
-
-        const lat = parseFloat(String(cctv.coordy).replace(',', '.'));
-        const lon = parseFloat(String(cctv.coordx).replace(',', '.'));
-        console.log(`CCTV #${index + 1} 파싱된 좌표: lat=${lat}, lon=${lon}`);
-
-        if (isNaN(lat) || isNaN(lon)) {
-          console.warn(`CCTV #${index + 1}: 유효하지 않은 좌표입니다.`, { lat, lon });
-          return;
-        }
+        const lat = parseFloat(String(cctv.coordy).replace(",", "."));
+        const lon = parseFloat(String(cctv.coordx).replace(",", "."));
+        if (isNaN(lat) || isNaN(lon)) return;
 
         const marker = new kakao.maps.Marker({
-          map: map,
+          map,
           position: new kakao.maps.LatLng(lat, lon),
           title: defaultText(cctv.cctvname),
         });
-        console.log(`CCTV #${index + 1}: 마커 생성 완료`, marker);
 
         const videoId = `video-${Math.random().toString(36).substring(2, 10)}`;
         const content = `
@@ -87,36 +59,37 @@ function initializeCCTVMap() {
 
         const info = new kakao.maps.InfoWindow({ content, removable: true });
 
-        kakao.maps.event.addListener(marker, 'click', () => {
+        kakao.maps.event.addListener(marker, "click", () => {
           if (openInfoWindow) openInfoWindow.close();
           info.open(map, marker);
           openInfoWindow = info;
-          console.log(`CCTV #${index + 1}: 정보 창 열림`);
 
           setTimeout(() => {
             const videoEl = document.getElementById(videoId);
-            if (!videoEl) {
-              console.error(`CCTV #${index + 1}: 비디오 요소를 찾을 수 없습니다.`, videoId);
-              return;
-            }
+            if (!videoEl) return;
 
-            const proxiedUrl = '/cctv-proxy?url=' + encodeURIComponent(cctv.cctvurl);
-            console.log(`CCTV #${index + 1}: 프록시 URL:`, proxiedUrl);
+            const proxiedUrl = "/cctv-proxy?url=" + encodeURIComponent(cctv.cctvurl);
 
-            if (typeof Hls === 'undefined') {
-              console.error('HLS.js 라이브러리가 로드되지 않았습니다. resources.jsp에 스크립트가 추가되었는지 확인하세요.');
-              videoEl.outerHTML = '<p style="color:red;">⚠ HLS.js를 로드할 수 없습니다.</p>';
-              return;
-            }
-
-            if (Hls.isSupported()) {
+            if (window.Hls && Hls.isSupported()) {
               const hls = new Hls({
                 xhrSetup: (xhr, url) => {
-                  const proxiedSegmentUrl = '/cctv-proxy?url=' + encodeURIComponent(url);
-                  console.log(`HLS 세그먼트 요청: ${url} -> ${proxiedSegmentUrl}`);
-                  xhr.open('GET', proxiedSegmentUrl, true);
-                },
+                  let shouldProxy = true;
+                  try {
+                    const decoded = decodeURIComponent(url);
+                    if (decoded.includes("/cctv-proxy?url=") || decoded.includes("localhost:9998")) {
+                      shouldProxy = false;
+                    }
+                  } catch (e) {
+                    console.warn("decodeURIComponent 실패:", url);
+                  }
+
+                  const finalUrl = shouldProxy
+                    ? "/cctv-proxy?url=" + encodeURIComponent(url)
+                    : url;
+                  xhr.open("GET", finalUrl, true);
+                }
               });
+
               hls.loadSource(proxiedUrl);
               hls.attachMedia(videoEl);
 
@@ -139,22 +112,21 @@ function initializeCCTVMap() {
         });
       });
     })
-    .catch((err) => {
-      console.error('❌ CCTV API 호출 실패:', err);
-      showError('CCTV 데이터를 불러오지 못했습니다.');
+    .catch(err => {
+      console.error("❌ CCTV API 호출 실패:", err);
+      showError("CCTV 데이터를 불러오지 못했습니다.");
     });
 
-  console.log('✅ cctvMap.js 로드 완료!');
+  console.log("✅ cctvMap.js 로드 완료!");
 }
 
-// Vue에서 호출할 수 있도록 함수 내보내기
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { initializeCCTVMap };
-} else {
-  window.initializeCCTVMap = initializeCCTVMap;
-}
-
-
+document.addEventListener("DOMContentLoaded", () => {
+  if (typeof initializeCCTVMap === "function") {
+    initializeCCTVMap();
+  } else {
+    console.error("⚠ initializeCCTVMap 함수가 정의되지 않았습니다.");
+  }
+});
 
 
 

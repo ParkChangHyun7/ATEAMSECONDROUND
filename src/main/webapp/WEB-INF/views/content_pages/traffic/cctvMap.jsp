@@ -15,7 +15,7 @@
 
   <!-- Vue 및 cctvMap.js 로드 -->
   <script src="https://unpkg.com/vue@3"></script>
-  <script src="/js/cctvMap.js"></script>
+  <script src="/js/content_pages/traffic/cctv/cctvMap.js"></script>
   <script>
     const { createApp } = Vue;
 
