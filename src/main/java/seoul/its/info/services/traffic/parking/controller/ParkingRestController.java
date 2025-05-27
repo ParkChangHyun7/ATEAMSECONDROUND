@@ -16,13 +16,13 @@ public class ParkingRestController {
     @GetMapping("/parking")
     public ResponseEntity<String> getParkingList() {
         try {
-            // ✅ 현재 프로젝트 기준으로 직접 경로 설정 (수정 가능)
+            // 현재 프로젝트 기준으로 직접 경로 설정 (수정 가능)
             Path path = Paths.get("src/main/data/api/json/parking/publicparking.json");
 
-            // ✅ 파일 내용 읽기
+            //  파일 내용 읽기
             String json = Files.readString(path);
 
-            // ✅ JSON 응답 반환
+            //  JSON 응답 반환
             return ResponseEntity.ok(json);
 
         } catch (Exception e) {
