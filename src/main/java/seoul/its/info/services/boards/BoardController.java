@@ -86,5 +86,5 @@ public class BoardController {
     //   - 여기서 `targetId` (예: boardId), `targetType` (예: "BoardsDto" 또는 클래스명), `permission` (예: "READ", "WRITE", "DELETE")을 받아
     //     DB에서 해당 객체의 권한 정보(예: Boards.readRole, Boards.writeRole)와 사용자의 역할을 비교하여 true/false 반환.
     // - Spring Expression Language (SpEL)을 사용하여 다양한 조건 조합 가능.
-    // 참고 자료: Spring Security 공식 문서의 Expression-Based Access Control 섹션
+    // 참고 자료: Spring Security 공식 문서의 Expression-Based Access Control
 } 
