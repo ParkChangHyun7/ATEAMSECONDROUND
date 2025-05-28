@@ -1,4 +1,21 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CCTV Map</title>
+  <%@ include file="/WEB-INF/views/include/traffic/cctvMap/resources.jsp" %>
+</head>
+<body>
+  <div id="map" style="width: 100%; height: 600px;"></div>
+  <%@ include file="/WEB-INF/views/include/traffic/cctvMap/scripts.jsp" %>
+</body>
+</html>
 
+
+
+
+
+<%-- 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -31,7 +48,7 @@
     }).mount('#app');
   </script>
 </body>
-</html>
+</html> --%>
 
 
 <%-- <%@ page language="java" contentType="text/html; charset=UTF-8"
