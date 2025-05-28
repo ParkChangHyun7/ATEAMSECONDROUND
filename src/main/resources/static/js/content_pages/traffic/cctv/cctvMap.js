@@ -18,7 +18,19 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(data => {
       data.forEach(cctv => {
         const position = new kakao.maps.LatLng(cctv.coordY, cctv.coordX);
-        const marker = new kakao.maps.Marker({ position, map });
+        const isEx = cctv.type === 'ex';
+/*        const markerImage = new kakao.maps.MarkerImage(
+          isEx ? 'http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png' //고속도로
+		    : 'http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_pink.png', //국도
+          new kakao.maps.Size(32, 40)
+        );
+		  */
+
+        const marker = new kakao.maps.Marker({
+          position,
+          map,
+/*          image: markerImage
+*/        });
 
         const infowindow = new kakao.maps.InfoWindow({
           content: `
@@ -36,7 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         kakao.maps.event.addListener(marker, 'click', () => {
           if (openInfoWindow) openInfoWindow.close();
-
           infowindow.open(map, marker);
           openInfoWindow = infowindow;
 

@@ -27,29 +27,7 @@ public class TrafficEventsProvider {
       }
    }
    
-   // 🔹 CCTV 정보
-   @GetMapping("/cctv")
-   public ResponseEntity<String> getCctvInfo() {
-       String url = "https://openapi.its.go.kr:9443/cctvInfo"
-               + "?apiKey=" + apiKey
-               + "&type=its"
-               + "&cctvType=1"
-               + "&minX=126.76"
-               + "&maxX=127.20"
-               + "&minY=37.40"
-               + "&maxY=37.70"
-               + "&getType=json";
-       try {
-           RestTemplate restTemplate = new RestTemplate();
-           String response = restTemplate.getForObject(url, String.class);
-           System.out.println("CCTV API 응답: " + response); // 디버깅 로그 추가
-           return ResponseEntity.ok(response);
-       } catch (Exception e) {
-           System.out.println("CCTV API 호출 실패: " + e.getMessage());
-           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("CCTV API 호출 실패");
-       }
-   }
-   
+
    
    
    
