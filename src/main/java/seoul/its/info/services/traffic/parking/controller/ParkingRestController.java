@@ -4,31 +4,36 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import seoul.its.info.services.traffic.parking.service.PublicParkingApiService;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class ParkingRestController {
 
+    //  주차장 API 호출을 담당하는 서비스 의존성 주입
+    private final PublicParkingApiService publicParkingApiService;
+
+    /**
+     *  실시간 API를 통해 서울시 공영/민영 주차장 JSON 데이터를 반환하는 엔드포인트
+     * GET http://localhost:9998/api/parking
+     */
     @GetMapping("/parking")
     public ResponseEntity<String> getParkingList() {
         try {
-            // 현재 프로젝트 기준으로 직접 경로 설정 (수정 가능)
-            Path path = Paths.get("src/main/data/api/json/parking/publicparking.json");
+            //  API 서비스로부터 JSON 문자열 받아오기
+            String json = publicParkingApiService.getParkingData();
 
-            //  파일 내용 읽기
-            String json = Files.readString(path);
-
-            //  JSON 응답 반환
+            //  성공 응답 반환 (HTTP 200)
             return ResponseEntity.ok(json);
 
         } catch (Exception e) {
             e.printStackTrace();
+
+            //  예외 발생 시 500 반환
             return ResponseEntity.internalServerError()
-                    .body("{\"error\":\"데이터를 불러오는 데 실패했습니다.\"}");
+                    .body("{\"error\":\" 데이터를 불러오는 데 실패했습니다.\"}");
         }
     }
 }
