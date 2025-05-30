@@ -188,3 +188,4 @@ node_modules/
 src/main/resources/com/json/seoulpublicdata.json
 /uploads
 src/main/data/api/json/seoulpublicdata.json
+.windsurf
