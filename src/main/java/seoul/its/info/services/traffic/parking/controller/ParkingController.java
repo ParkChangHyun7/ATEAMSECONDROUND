@@ -23,14 +23,7 @@ public class ParkingController{
 
         //본문 JSP 페이지 경로 (contentPage에 해당)
         //base.jsp에서 <jsp:include page="${contentPage}"/>로 포함됨
-        model.addAttribute("contentPage","content_pages/traffic/parking/parking.jsp");
-
-        //JS,CSS 등 외부 리소스 경로(resourcePage)
-        //base.jsp에서 <c:import url="${resourcesPage}"/>로 include됨
-        model.addAttribute("resourcesPage","include/traffic/parking/resources.jsp");
-        //주차장 지도 로직이 담긴 JS파일 경로 (scriptsPage)
-        //base.jsp에서 <c:import url="${scriptsPage}" /> 로 include됨
-        model.addAttribute("scriptsPage","include/traffic/parking/scripts.jsp");
+        model.addAttribute("contentPage","content_pages/traffic/parking/map.jsp");
 
         //최종적으로 base.jsp가 렌더링됨 (통합 레이아웃)
         return "base";

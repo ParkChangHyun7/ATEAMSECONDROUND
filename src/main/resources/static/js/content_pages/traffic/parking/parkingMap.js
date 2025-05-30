@@ -21,8 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const bounds = new kakao.maps.LatLngBounds();
 
             parkingList.forEach((parking, idx) => {
-                const lat = parseFloat(parking.PKLT_LAT);
-                const lng = parseFloat(parking.PKLT_LNG);
+                const lat = parseFloat(parking.LAT);
+                const lng = parseFloat(parking.LOT);
 
                 if (isNaN(lat) || isNaN(lng)) {
                     console.warn(`위치값 오류 → 제외됨: `, parking);

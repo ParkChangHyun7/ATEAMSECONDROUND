@@ -20,7 +20,7 @@ public class PublicParkingApiService {
     private static final String API_KEY = "674e6e41676368613734506e46676d";
 
     // 호출할 API의 URL - XML이 아닌 JSON 응답 포맷을 요청 (json 타입 지정 중요!)
-    private static final String BASE_URL = "http://openapi.seoul.go.kr:8088/" + API_KEY + "/json/GetParkingInfo/1/1000/";
+    private static final String BASE_URL = "http://openapi.seoul.go.kr:8088/674e6e41676368613734506e46676d/json/GetParkInfo/1/1000/";
 
     /**
      *  주차장 정보를 가져오는 메서드
