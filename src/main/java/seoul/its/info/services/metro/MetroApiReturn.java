@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MetroApiReturn {
 
-	
 	// api 연결된 자료 받아오는 메소드
 	public Mono<Map<String, Object>> api(String searchUrl) {
 		HttpClient client = HttpClient.newHttpClient();

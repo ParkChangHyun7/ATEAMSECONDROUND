@@ -13,7 +13,9 @@ public class MetroInfoController {
 
     @GetMapping("/metro/info")
     public String metroInfo(Model model) {
-        model.addAttribute("kakao", kakaoBusKey);
-        return "epl/metro";
+        model.addAttribute("contentPage", "content_pages/metro/metro.jsp");
+        model.addAttribute("scriptsPage", "include/metro/scripts.jsp");
+        model.addAttribute("resourcesPage", "include/metro/resources.jsp");
+        return "base";
     }
 }

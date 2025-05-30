@@ -2,14 +2,6 @@
 	pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakao}&libraries=services&autoload=false"></script>
-
-<title>metro_body</title>
-</head>
-
-
-<body>
 	<div class="box">
 		<div id="search">
 			<h1>지하철역 정보</h1>
