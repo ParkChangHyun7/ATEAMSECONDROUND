@@ -209,10 +209,13 @@ public class PostController {
             @AuthenticationPrincipal UserDetails userDetails,
             HttpServletRequest request
             ) {
+        
         // 클라이언트 IP 주소 가져오기
         String clientIp = clientIpGetHelper.getClientIpAddress(request);
-        // IP 주소를 서비스 메서드로 전달
-        return ResponseEntity.ok(postManagementService.createPost(boardId, requestDto, userDetails, clientIp));
+
+        // PostManagementService를 통해 게시글 생성 (temporaryPostId 인자 제거)
+        PostResponseDto createdPost = postManagementService.createPost(boardId, requestDto, userDetails, clientIp);
+        return ResponseEntity.ok(createdPost);
     }
 
     // 게시글 수정 (PUT 요청은 API로 처리)

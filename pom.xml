@@ -236,6 +236,14 @@
 			<artifactId>bucket4j-core</artifactId>
 			<version>8.10.1</version>
 		</dependency>
+
+		<!-- OWASP Antisamy for XSS sanitization -->
+		<dependency>
+			<groupId>org.owasp.antisamy</groupId>
+			<artifactId>antisamy</artifactId>
+			<version>1.7.4</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

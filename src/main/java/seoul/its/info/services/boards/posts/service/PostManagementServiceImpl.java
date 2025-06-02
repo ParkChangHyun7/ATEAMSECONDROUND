@@ -14,6 +14,16 @@ import seoul.its.info.services.boards.posts.PostMapper;
 import seoul.its.info.services.users.login.detail.UserDetailsImpl; // 임포트 경로 수정
 import seoul.its.info.common.exception.SystemException; // SystemException 임포트
 import seoul.its.info.common.exception.ErrorCode;     // ErrorCode 임포트
+import seoul.its.info.common.util.file.imageupload.ImageUploadService; // ImageUploadService 임포트 추가
+
+// OWASP Antisamy 임포트
+import org.owasp.validator.html.AntiSamy;
+import org.owasp.validator.html.Policy;
+import org.owasp.validator.html.PolicyException;
+import org.owasp.validator.html.ScanException;
+
+// PostConstruct 임포트
+import jakarta.annotation.PostConstruct;
 
 @Service
 @RequiredArgsConstructor
@@ -22,22 +32,52 @@ public class PostManagementServiceImpl implements PostManagementService {
     private final int ADMIN_ROLE_THRESHOLD = 100; // 관리자 역할 임계값 정의 (설정 파일 등에서 관리 가능)
     private final PostMapper postMapper;
     private final PostQueryService postQueryService;
+    private final ImageUploadService imageUploadService; // ImageUploadService 주입 추가
+
+    // OWASP Antisamy 정책 로드
+    private Policy policy;
+
+    // @PostConstruct 어노테이션을 사용하여 의존성 주입 완료 후 정책 로드
+    @PostConstruct
+    private void loadAntisamyPolicy() {
+        try {
+            // 기본 정책 파일 로드 (antisamy.xml은 classpath에 있어야 함)
+            policy = Policy.getInstance(getClass().getClassLoader().getResourceAsStream("antisamy.xml"));
+        } catch (PolicyException e) {
+            // 애플리케이션 시작 시 정책 파일 로드 실패는 심각한 문제임. 로깅 후 예외를 다시 던지거나
+            // 애플리케이션을 종료하는 등의 처리를 고려해야 함.
+            System.err.println("Critical: Failed to load Antisamy policy file. " + e.getMessage());
+            throw new RuntimeException("Failed to load Antisamy policy file", e);
+        }
+    }
 
     @Override
     @Transactional
     public PostResponseDto createPost(Long boardId, PostRequestDto requestDto, UserDetails userDetails, String clientIp) {
         UserDetailsImpl principal = (UserDetailsImpl) userDetails;
-        Long currentUserId = principal.getId(); // Long 타입 userId 가져오기
+        if (principal == null) {
+            throw new SystemException(ErrorCode.AUTHENTICATION_FAILED.getStatus().name(), "사용자 인증 정보를 찾을 수 없습니다.");
+        }
+
+        Long currentUserId = principal.getId();
         String writerName = principal.getNickname();
+        if (writerName == null) {
+            writerName = "Unknown";
+        }
 
         PostsDto newPost = new PostsDto();
         newPost.setBoardId(boardId);
-        newPost.setUserId(currentUserId); // Long 타입 userId 설정
+        newPost.setUserId(currentUserId);
         newPost.setWriter(writerName);
+
+        if (requestDto == null) {
+            throw new SystemException(ErrorCode.INVALID_INPUT_VALUE.getStatus().name(), "요청 데이터가 비어있습니다.");
+        }
         newPost.setTitle(requestDto.getTitle());
-        newPost.setContent(requestDto.getContent());
-        // Integer 비교 수정: 0 또는 1과 같은 특정 값과 비교
-        // 공지사항 등록은 관리자만 가능하도록 체크
+
+        String cleanedContent = sanitizeHtml(requestDto.getContent());
+        newPost.setContent(cleanedContent);
+
         if (requestDto.getIsNotice() != null && requestDto.getIsNotice() == 1) {
             boolean isAdmin = principal.getRole() != null && principal.getRole() >= ADMIN_ROLE_THRESHOLD;
             if (!isAdmin) {
@@ -46,17 +86,17 @@ public class PostManagementServiceImpl implements PostManagementService {
         }
         newPost.setIsNotice(requestDto.getIsNotice() != null && requestDto.getIsNotice() == 1 ? 1 : 0);
         newPost.setIsAnonymous(requestDto.getIsAnonymous() != null && requestDto.getIsAnonymous() == 1 ? 1 : 0);
-        // TODO: fileIncluded, imageIncluded 설정 (PostRequestDto에 필드 추가 필요)
-        // TODO: writerRole 설정 (principal.getRole() 사용)
         newPost.setWriterRole(principal.getRole());
-        // TODO: ipAddress 설정 (Controller에서 HttpServletRequest 주입받아 처리 또는 AOP 활용)
-        newPost.setIpAddress(clientIp); // IP 주소 설정
+        newPost.setIpAddress(clientIp);
 
         postMapper.createPost(newPost);
 
         if (newPost.getId() == null) {
             throw new SystemException(ErrorCode.POST_CREATION_FAILED.getStatus().name(), ErrorCode.POST_CREATION_FAILED.getMessage());
         }
+
+        imageUploadService.assignPostIdToTemporaryImages(currentUserId, 0, boardId, newPost.getId());
+
         return postQueryService.getPostDetail(boardId, newPost.getId(), userDetails);
     }
 
@@ -80,7 +120,11 @@ public class PostManagementServiceImpl implements PostManagementService {
 
         PostsDto postToUpdate = new PostsDto();
         postToUpdate.setTitle(requestDto.getTitle());
-        postToUpdate.setContent(requestDto.getContent());
+
+        // XSS 클린징 적용
+        String cleanedContent = sanitizeHtml(requestDto.getContent());
+        postToUpdate.setContent(cleanedContent);
+
         postToUpdate.setIsNotice(requestDto.getIsNotice() != null && requestDto.getIsNotice() == 1 ? 1 : 0);
         postToUpdate.setIsAnonymous(requestDto.getIsAnonymous() != null && requestDto.getIsAnonymous() == 1 ? 1 : 0);
         // TODO: fileIncluded, imageIncluded 등 변경 가능한 다른 필드 설정
@@ -121,5 +165,20 @@ public class PostManagementServiceImpl implements PostManagementService {
         // TODO: 관련된 데이터(댓글, 좋아요 등) 처리 로직 (CASCADE 설정이 없다면 Mapper에서, 아니면 여기서 서비스 호출)
         // commentService.deleteCommentsByPostId(postId);
         // likeService.deleteLikesByPostId(postId);
+    }
+
+    // HTML 내용을 XSS 공격으로부터 안전하게 클린징하는 헬퍼 메서드
+    private String sanitizeHtml(String html) {
+        if (html == null || html.trim().isEmpty()) {
+            return "";
+        }
+        try {
+            AntiSamy as = new AntiSamy();
+            return as.scan(html, policy).getCleanHTML();
+        } catch (ScanException | PolicyException e) {
+            System.err.println("Error sanitizing HTML: " + e.getMessage());
+            // e.printStackTrace(); // 스택 트레이스 로깅은 필요에 따라 추가함.
+            return "";
+        }
     }
 } 

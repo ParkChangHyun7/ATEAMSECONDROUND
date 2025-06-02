@@ -10,11 +10,17 @@ import org.springframework.http.HttpStatus;
 
 import seoul.its.info.common.security.useranomaly.RateLimitingInterceptor;
 
+// Value 임포트
+import org.springframework.beans.factory.annotation.Value;
+
 @Configuration
 public class CommonConfig implements WebMvcConfigurer {
 
         private final TimeoutInterceptor timeoutInterceptor;
         private final RateLimitingInterceptor rateLimitingInterceptor;
+
+        @Value("${app.image.upload-dir}")
+        private String uploadDir;
 
         public CommonConfig(TimeoutInterceptor timeoutInterceptor, RateLimitingInterceptor rateLimitingInterceptor) {
                 this.timeoutInterceptor = timeoutInterceptor;
@@ -83,5 +89,14 @@ public class CommonConfig implements WebMvcConfigurer {
                 registry.addResourceHandler("/videos/**")
                                 .addResourceLocations("classpath:/static/videos/")
                                 .setCachePeriod(60 * 60);
+
+                // 업로드 이미지 파일 리소스 핸들러 설정
+                String resolvedUploadDir = uploadDir.replace("\\", "/"); // Windows 경로 구분자를 '/'로 통일
+                if (!resolvedUploadDir.endsWith("/")) {
+                    resolvedUploadDir += "/";
+                }
+                registry.addResourceHandler("/uploads/**")
+                        .addResourceLocations("file:" + resolvedUploadDir) // 'file:' 접두사 사용
+                        .setCachePeriod(30); // 개발 중에는 짧게 (예: 30초 또는 0)
         }
 }
