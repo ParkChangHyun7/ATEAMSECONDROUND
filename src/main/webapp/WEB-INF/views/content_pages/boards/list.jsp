@@ -66,7 +66,7 @@
                 <%-- TODO: 검색 기능 추가 예정 --%>
             </div>
             <div class="write-button-container" v-if="canWriteVue">
-                <a :href="'/boards/' + boardIdVue + '/write'" class="btn btn-primary">글쓰기</a>
+                <a :href="'/boards/' + boardIdVue + '/posts/write'" class="btn btn-primary">글쓰기</a>
             </div>
         </div>
 
