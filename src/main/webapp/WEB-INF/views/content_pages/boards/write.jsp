@@ -14,7 +14,10 @@
         
         <div class="form-group">
             <label for="content">내용</label>
-            <textarea id="content" v-model="post.content" class="form-control" rows="10" required></textarea>
+            <%-- Quill 에디터가 들어갈 div --%>
+            <div id="editor" style="height: 300px; resize: vertical; overflow: auto;"></div>
+            <%-- 원래의 textarea는 Quill 에디터 사용으로 필요 없으므로 숨기거나 삭제 --%>
+            <%-- <textarea id="content" v-model="post.content" class="form-control" rows="10" required></textarea> --%>
         </div>
         
         <div class="form-group form-check" v-if="boardConfig.isAnonymous === 1">

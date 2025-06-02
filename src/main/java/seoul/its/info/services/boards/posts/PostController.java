@@ -12,6 +12,7 @@ import seoul.its.info.services.boards.posts.service.PostManagementService;
 import seoul.its.info.services.boards.posts.dto.PostRequestDto;
 import seoul.its.info.services.boards.posts.dto.PostResponseDto;
 import seoul.its.info.services.users.login.detail.UserDetailsImpl;
+import seoul.its.info.common.util.ClientIpGetHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -20,6 +21,7 @@ import java.util.Collections;
 // import java.util.List; // 더 이상 직접 사용하지 않음
 import java.util.HashMap;
 import java.util.Map;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/boards/{boardId}/posts") // 게시판 ID를 포함한 기본 경로 설정
@@ -27,10 +29,12 @@ public class PostController {
 
     private final PostQueryService postQueryService;
     private final PostManagementService postManagementService;
+    private final ClientIpGetHelper clientIpGetHelper;
 
-    public PostController(PostQueryService postQueryService, PostManagementService postManagementService) {
+    public PostController(PostQueryService postQueryService, PostManagementService postManagementService, ClientIpGetHelper clientIpGetHelper) {
         this.postQueryService = postQueryService;
         this.postManagementService = postManagementService;
+        this.clientIpGetHelper = clientIpGetHelper;
     }
 
     // 글쓰기 페이지 표시
@@ -199,8 +203,16 @@ public class PostController {
     // 게시글 생성 (POST 요청은 API로 처리)
     @PostMapping
     @ResponseBody
-    public ResponseEntity<?> createPost(@PathVariable Long boardId, @RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(postManagementService.createPost(boardId, requestDto, userDetails));
+    public ResponseEntity<?> createPost(
+            @PathVariable Long boardId,
+            @RequestBody PostRequestDto requestDto,
+            @AuthenticationPrincipal UserDetails userDetails,
+            HttpServletRequest request
+            ) {
+        // 클라이언트 IP 주소 가져오기
+        String clientIp = clientIpGetHelper.getClientIpAddress(request);
+        // IP 주소를 서비스 메서드로 전달
+        return ResponseEntity.ok(postManagementService.createPost(boardId, requestDto, userDetails, clientIp));
     }
 
     // 게시글 수정 (PUT 요청은 API로 처리)

@@ -1,4 +1,4 @@
-import { createApp, ref } from 'vue';
+import { createApp, ref, onMounted } from 'vue';
 
 const writeApp = {
     setup() {
@@ -21,8 +21,66 @@ const writeApp = {
             isNotice: 0
         });
 
+        let quill = null; // Quill 에디터 인스턴스를 저장할 변수
+
+        // Quill에서 사용할 사용자 지정 폰트 목록을 정의합니다.
+        const availableFonts = {
+            '': 'Default', // 기본 폰트
+            'noto-sans-kr': 'Noto Sans KR',
+            'nanum-gothic': 'Nanum Gothic',
+            'spoqa-han-sans-neo': 'Spoqa Han Sans Neo'
+        };
+
+        // Quill의 Font 모듈에 사용자 지정 폰트들을 등록합니다.
+        const Font = Quill.import('formats/font');
+        Font.whitelist = Object.keys(availableFonts);
+        Quill.register(Font, true);
+
+        // Vue 컴포넌트가 마운트된 후 Quill 초기화
+        const initializeQuill = () => {
+             // Quill 에디터 초기화
+            quill = new Quill('#editor', {
+                theme: 'snow', // 'snow' 또는 'bubble' 테마 선택
+                placeholder: '내용을 입력하세요...',
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                        [{ 'font': Object.keys(availableFonts) }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'color': [] }, { 'background': [] }],
+                        [{ 'script': 'sub' }, { 'script': 'super' }],
+                        ['blockquote', 'code-block'],
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                        [{ 'indent': '-1' }, { 'indent': '+1' }],
+                        [{ 'direction': 'rtl' }],
+                        [{ 'align': [] }],
+                        ['link', 'image', 'video'],
+                        ['clean']
+                    ]
+                }
+            });
+
+            // Quill 에디터 내용이 변경될 때 Vue 데이터 업데이트
+            quill.on('text-change', () => {
+                post.value.content = quill.root.innerHTML; // HTML 내용을 가져와 저장
+            });
+             // 초기값 설정 (만약 수정 모드라면)
+             // if (post.value.content) {
+             //    quill.root.innerHTML = post.value.content;
+             // }
+        };
+        
+        // 컴포넌트가 마운트된 후에 Quill 초기화
+        onMounted(() => {
+            initializeQuill();
+        });
+
+
         // 폼 제출 처리
         const submitForm = async () => {
+            // Quill 에디터의 내용을 post.content에 최종적으로 반영
+            post.value.content = quill.root.innerHTML; // 제출 직전에 한번 더 업데이트
+
             try {
                 const response = await fetch(`/boards/${boardConfig.value.boardId}/posts`, {
                     method: 'POST',

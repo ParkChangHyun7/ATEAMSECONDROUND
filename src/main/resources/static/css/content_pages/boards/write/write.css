@@ -89,6 +89,40 @@ textarea.form-control {
     background-color: #5a6268;
 }
 
+/* Quill Editor Font Styles */
+.ql-font-noto-sans-kr {
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.ql-font-nanum-gothic {
+  font-family: 'Nanum Gothic', sans-serif;
+}
+
+.ql-font-spoqa-han-sans-neo {
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
+}
+
+/* Quill Font Dropdown Display Names */
+.ql-picker.ql-font .ql-picker-label[data-value="noto-sans-kr"]::before,
+.ql-picker.ql-font .ql-picker-item[data-value="noto-sans-kr"]::before {
+  content: 'Noto Sans KR';
+}
+
+.ql-picker.ql-font .ql-picker-label[data-value="nanum-gothic"]::before,
+.ql-picker.ql-font .ql-picker-item[data-value="nanum-gothic"]::before {
+  content: '나눔고딕';
+}
+
+.ql-picker.ql-font .ql-picker-label[data-value="spoqa-han-sans-neo"]::before,
+.ql-picker.ql-font .ql-picker-item[data-value="spoqa-han-sans-neo"]::before {
+  content: 'Spoqa Han Sans Neo';
+}
+
+.ql-picker.ql-font .ql-picker-label[data-value=""]::before,
+.ql-picker.ql-font .ql-picker-item[data-value=""]::before {
+  content: '기본 폰트';
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     #post-write-app {

@@ -25,7 +25,7 @@ public class PostManagementServiceImpl implements PostManagementService {
 
     @Override
     @Transactional
-    public PostResponseDto createPost(Long boardId, PostRequestDto requestDto, UserDetails userDetails) {
+    public PostResponseDto createPost(Long boardId, PostRequestDto requestDto, UserDetails userDetails, String clientIp) {
         UserDetailsImpl principal = (UserDetailsImpl) userDetails;
         Long currentUserId = principal.getId(); // Long 타입 userId 가져오기
         String writerName = principal.getNickname();
@@ -50,6 +50,7 @@ public class PostManagementServiceImpl implements PostManagementService {
         // TODO: writerRole 설정 (principal.getRole() 사용)
         newPost.setWriterRole(principal.getRole());
         // TODO: ipAddress 설정 (Controller에서 HttpServletRequest 주입받아 처리 또는 AOP 활용)
+        newPost.setIpAddress(clientIp); // IP 주소 설정
 
         postMapper.createPost(newPost);
 

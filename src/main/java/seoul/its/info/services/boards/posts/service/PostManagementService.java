@@ -12,9 +12,10 @@ public interface PostManagementService {
      * @param boardId      게시판 ID
      * @param requestDto   게시글 생성 요청 데이터
      * @param userDetails  현재 인증된 사용자 정보
+     * @param clientIp     요청을 보낸 클라이언트의 IP 주소
      * @return 생성된 게시글 정보
      */
-    PostResponseDto createPost(Long boardId, PostRequestDto requestDto, UserDetails userDetails);
+    PostResponseDto createPost(Long boardId, PostRequestDto requestDto, UserDetails userDetails, String clientIp);
 
     /**
      * 특정 게시글을 수정합니다.
