@@ -24,7 +24,8 @@ public class ParkingController{
         //본문 JSP 페이지 경로 (contentPage에 해당)
         //base.jsp에서 <jsp:include page="${contentPage}"/>로 포함됨
         model.addAttribute("contentPage","content_pages/traffic/parking/map.jsp");
-
+        model.addAttribute("resourcesPage", "include/traffic/parking/resources.jsp");
+        model.addAttribute("scriptsPage", "include/traffic/parking/scripts.jsp");
         //최종적으로 base.jsp가 렌더링됨 (통합 레이아웃)
         return "base";
     }
