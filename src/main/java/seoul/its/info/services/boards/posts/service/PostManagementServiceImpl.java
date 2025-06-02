@@ -25,7 +25,7 @@ public class PostManagementServiceImpl implements PostManagementService {
 
     @Override
     @Transactional
-    public PostResponseDto createPost(Long boardId, PostRequestDto requestDto, UserDetails userDetails) {
+    public PostResponseDto createPost(Long boardId, PostRequestDto requestDto, UserDetails userDetails, String clientIp) {
         UserDetailsImpl principal = (UserDetailsImpl) userDetails;
         Long currentUserId = principal.getId(); // Long 타입 userId 가져오기
         String writerName = principal.getNickname();
@@ -37,12 +37,20 @@ public class PostManagementServiceImpl implements PostManagementService {
         newPost.setTitle(requestDto.getTitle());
         newPost.setContent(requestDto.getContent());
         // Integer 비교 수정: 0 또는 1과 같은 특정 값과 비교
+        // 공지사항 등록은 관리자만 가능하도록 체크
+        if (requestDto.getIsNotice() != null && requestDto.getIsNotice() == 1) {
+            boolean isAdmin = principal.getRole() != null && principal.getRole() >= ADMIN_ROLE_THRESHOLD;
+            if (!isAdmin) {
+                throw new SystemException(ErrorCode.AUTHORIZATION_FAILED.getStatus().name(), "공지사항 등록은 관리자 권한이 필요합니다.");
+            }
+        }
         newPost.setIsNotice(requestDto.getIsNotice() != null && requestDto.getIsNotice() == 1 ? 1 : 0);
         newPost.setIsAnonymous(requestDto.getIsAnonymous() != null && requestDto.getIsAnonymous() == 1 ? 1 : 0);
         // TODO: fileIncluded, imageIncluded 설정 (PostRequestDto에 필드 추가 필요)
         // TODO: writerRole 설정 (principal.getRole() 사용)
-        // newPost.setWriterRole(principal.getRole());
+        newPost.setWriterRole(principal.getRole());
         // TODO: ipAddress 설정 (Controller에서 HttpServletRequest 주입받아 처리 또는 AOP 활용)
+        newPost.setIpAddress(clientIp); // IP 주소 설정
 
         postMapper.createPost(newPost);
 

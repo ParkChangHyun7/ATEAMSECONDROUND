@@ -6,18 +6,22 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import seoul.its.info.services.boards.posts.service.PostQueryService;
 import seoul.its.info.services.boards.posts.service.PostManagementService;
 import seoul.its.info.services.boards.posts.dto.PostRequestDto;
 import seoul.its.info.services.boards.posts.dto.PostResponseDto;
 import seoul.its.info.services.users.login.detail.UserDetailsImpl;
+import seoul.its.info.common.util.ClientIpGetHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.util.Collections;
 // import java.util.List; // 더 이상 직접 사용하지 않음
+import java.util.HashMap;
 import java.util.Map;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/boards/{boardId}/posts") // 게시판 ID를 포함한 기본 경로 설정
@@ -25,10 +29,63 @@ public class PostController {
 
     private final PostQueryService postQueryService;
     private final PostManagementService postManagementService;
+    private final ClientIpGetHelper clientIpGetHelper;
 
-    public PostController(PostQueryService postQueryService, PostManagementService postManagementService) {
+    public PostController(PostQueryService postQueryService, PostManagementService postManagementService, ClientIpGetHelper clientIpGetHelper) {
         this.postQueryService = postQueryService;
         this.postManagementService = postManagementService;
+        this.clientIpGetHelper = clientIpGetHelper;
+    }
+
+    // 글쓰기 페이지 표시
+    @GetMapping("/write")
+    public String showWritePage(
+            @PathVariable Long boardId,
+            @AuthenticationPrincipal UserDetails userDetails,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+        
+        // 로그인 여부 확인
+        if (userDetails == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "로그인이 필요한 서비스입니다.");
+            return "redirect:/boards/" + boardId + "/posts";
+        }
+        
+        UserDetailsImpl userDetailsImpl = (UserDetailsImpl) userDetails;
+        
+        // 사용자 역할 확인
+        if (userDetailsImpl.getRole() == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "사용자 역할이 설정되지 않았습니다. 관리자에게 문의해주세요.");
+            return "redirect:/boards/" + boardId + "/posts";
+        }
+        
+        // 게시판 설정 정보 조회 (예시로 간단히 구현)
+        Map<String, Object> boardConfig = new HashMap<>();
+        boardConfig.put("boardId", boardId);
+        boardConfig.put("isAnonymous", 0); // 기본값, 실제로는 DB에서 조회 필요
+        
+        // 현재 사용자 정보 설정 (관리자 여부 확인용)
+        Map<String, Object> currentUser = new HashMap<>();
+        currentUser.put("username", userDetailsImpl.getUsername());
+        currentUser.put("nickname", userDetailsImpl.getNickname());
+        currentUser.put("role", userDetailsImpl.getRole());
+        
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            // JSON 문자열로 변환하여 전달
+            model.addAttribute("boardConfig", objectMapper.writeValueAsString(boardConfig));
+            model.addAttribute("currentUser", objectMapper.writeValueAsString(currentUser));
+        } catch (Exception e) {
+            model.addAttribute("boardConfig", "{}");
+            model.addAttribute("currentUser", "null");
+        }
+        
+        model.addAttribute("pageTitle", "글쓰기");
+        model.addAttribute("contentPage", "content_pages/boards/write.jsp");
+        model.addAttribute("scriptsPage", "include/boards/write/scripts.jsp");
+        model.addAttribute("resourcesPage", "include/boards/write/resources.jsp");
+        
+        return "base";
     }
 
     // 게시글 목록 조회 (JSP 뷰 반환)
@@ -146,8 +203,16 @@ public class PostController {
     // 게시글 생성 (POST 요청은 API로 처리)
     @PostMapping
     @ResponseBody
-    public ResponseEntity<?> createPost(@PathVariable Long boardId, @RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(postManagementService.createPost(boardId, requestDto, userDetails));
+    public ResponseEntity<?> createPost(
+            @PathVariable Long boardId,
+            @RequestBody PostRequestDto requestDto,
+            @AuthenticationPrincipal UserDetails userDetails,
+            HttpServletRequest request
+            ) {
+        // 클라이언트 IP 주소 가져오기
+        String clientIp = clientIpGetHelper.getClientIpAddress(request);
+        // IP 주소를 서비스 메서드로 전달
+        return ResponseEntity.ok(postManagementService.createPost(boardId, requestDto, userDetails, clientIp));
     }
 
     // 게시글 수정 (PUT 요청은 API로 처리)
