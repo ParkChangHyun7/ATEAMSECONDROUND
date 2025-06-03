@@ -11,7 +11,7 @@ import java.util.Map;
 @Controller
 public class TrafficFlowMapController {
 
-    @GetMapping("/traffic/trafficFlowMap")
+    @GetMapping("/traffic/trafficflowmap")
     public String showTrafficFlowMap(Model model) {
         model.addAttribute("contentPage", "content_pages/traffic/trafficFlowMap.jsp");
         model.addAttribute("resourcesPage", "include/traffic/trafficflowmap/resources.jsp");
