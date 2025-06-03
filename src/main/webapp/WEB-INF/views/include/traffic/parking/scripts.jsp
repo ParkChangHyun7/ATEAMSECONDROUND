@@ -6,14 +6,13 @@ createApp({
   setup() {
     onMounted(async () => {
       const container = document.getElementById('map')
+      if (!container) return
 
-      const options = {
-        center: new kakao.maps.LatLng(37.5665, 126.9780), // 서울시청
-        level: 5,
-        disableWheel: true
-      }
+      const map = new kakao.maps.Map(container, {
+        center: new kakao.maps.LatLng(37.5665, 126.9780),
+        level: 5
+      })
 
-      const map = new kakao.maps.Map(container, options)
       const bounds = new kakao.maps.LatLngBounds()
 
       try {
@@ -28,13 +27,7 @@ createApp({
 
         for (const p of parkingList) {
           const rawLat = String(p.LAT || '').trim()
-          const rawLng = String(p.LNG || '').trim()
-
-          // 디버깅 출력
-          console.log('📌 ADDR:', p.ADDR, '위도:', rawLat, '경도:', rawLng)
-
-          // 유효한 좌표값 필터링
-          if (!rawLat || !rawLng || rawLat === '0' || rawLng === '0') continue
+          const rawLng = String(p.LOT || '').trim()
 
           const lat = parseFloat(rawLat)
           const lng = parseFloat(rawLng)
@@ -43,14 +36,17 @@ createApp({
 
           const latlng = new kakao.maps.LatLng(lat, lng)
 
-          const marker = new kakao.maps.Marker({
-            map,
-            position: latlng
-          })
+          const marker = new kakao.maps.Marker({ position: latlng, map })
 
-          const infowindow = new kakao.maps.InfoWindow({
-            content: `<div style="padding:5px;">${p.PKPL_NM || '이름없음'}</div>`
-          })
+          const content = `
+            <div style="padding:5px; font-size:13px;">
+              <b>${p.PKLT_NM || '이름없음'}</b><br>
+              ${p.ADDR || '주소없음'}<br>
+              ${p.TELNO ? p.TELNO + '<br>' : ''}
+              기본요금: ${p.PRK_HM || '-'}분 / 추가요금: ${p.ADD_CRG || '-'}원
+            </div>`
+
+          const infowindow = new kakao.maps.InfoWindow({ content })
 
           kakao.maps.event.addListener(marker, 'mouseover', () => infowindow.open(map, marker))
           kakao.maps.event.addListener(marker, 'mouseout', () => infowindow.close())
@@ -59,14 +55,11 @@ createApp({
           validCount++
         }
 
-        if (validCount > 0) {
-          map.setBounds(bounds)
-        } else {
-          console.warn('✅ 유효 마커 없음: map.setBounds() 생략됨')
-        }
+        if (validCount > 0) map.setBounds(bounds)
+        else console.warn('유효한 마커가 없습니다.')
 
       } catch (e) {
-        console.error('❌ 마커 표시 중 오류 발생:', e)
+        console.error('마커 로딩 실패:', e)
       }
     })
   }
