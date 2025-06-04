@@ -3,6 +3,7 @@ const app = Vue.createApp({
     return {
       trafficFlowLinks: [],
       trafficData: [],
+      map: null
     };
   },
   mounted() {
@@ -13,24 +14,45 @@ const app = Vue.createApp({
     initMap() {
       this.map = new kakao.maps.Map(document.getElementById("map"), {
         center: new kakao.maps.LatLng(37.55, 126.98),
-        level: 7,
+        level: 7
       });
     },
     loadData() {
       Promise.all([
-        fetch('/data/trafficflowmap_links2.geojson').then(res => res.json()),
+        fetch('/api/trafficflowmap_geojson').then(res => res.json()),
         fetch('/api/traffic/trafficflowmap').then(res => res.json())
-      ]).then(([geoJson, trafficData]) => {
+      ])
+      .then(([geoJson, trafficData]) => {
+        console.log('GeoJSON:', geoJson);
+        console.log('TrafficData:', trafficData);
+
+        // GeoJSON → Features 적용
         this.trafficFlowLinks = geoJson.features;
-        this.trafficData = trafficData.items.item; // ITS API 구조상 item 배열임!
+
+        // TrafficData 구조 유연하게 처리
+        if (trafficData.body && trafficData.body.items) {
+          this.trafficData = trafficData.body.items.item;
+        } else if (trafficData.items) {
+          this.trafficData = trafficData.items.item;
+        } else {
+          console.error('TrafficData 구조 오류:', trafficData);
+          this.trafficData = [];
+        }
+
         this.drawTrafficFlowLines();
+      })
+      .catch(error => {
+        console.error('데이터 로드 오류:', error);
       });
     },
     drawTrafficFlowLines() {
+      console.log('drawTrafficFlowLines 호출');
+
       this.trafficData.forEach(item => {
         const feature = this.trafficFlowLinks.find(f =>
           f.properties.LINK_ID === item.linkId
         );
+
         if (feature) {
           const path = feature.geometry.coordinates.map(coord =>
             new kakao.maps.LatLng(coord[1], coord[0])
