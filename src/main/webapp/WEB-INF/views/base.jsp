@@ -131,7 +131,9 @@
                     <!-- 여기까지가 임시코드 끝 -->
                 </c:if>
                 <!-- 컨텐츠 영역 -->
+               <main>
                 <jsp:include page="${contentPage}" />
+               </main>
                 <!-- 푸터 영역 -->
                 <jsp:include page="common/footer.jsp" />
             </div>
