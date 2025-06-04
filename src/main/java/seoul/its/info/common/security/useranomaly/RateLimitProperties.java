@@ -14,7 +14,7 @@ import java.util.Map;
 @Data
 public class RateLimitProperties {
 
-   private boolean enabled = true; // 기본값 true
+   private boolean enabled = false; // 기본값 true
    private LimitConfig defaults = new LimitConfig(100, 1);
    private LimitConfig authenticated = new LimitConfig(100, 1);
    private LimitConfig anonymous = new LimitConfig(50, 1);
