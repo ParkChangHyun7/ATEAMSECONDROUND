@@ -72,4 +72,8 @@
         height: 250px;
         flex: none;
     }
+
+    .weather-info{
+        padding-right: 0px;
+    }
 } 

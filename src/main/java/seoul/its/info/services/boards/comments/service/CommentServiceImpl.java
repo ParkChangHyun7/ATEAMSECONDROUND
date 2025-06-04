@@ -49,7 +49,7 @@ public class CommentServiceImpl implements CommentService {
         // 대댓글인 경우 부모 댓글 존재 여부 확인
         if (requestDto.getParentCommentId() != null) {
             commentMapper.findById(requestDto.getParentCommentId())
-                    .orElseThrow(() -> new CommentNotFoundException("부모 댓글을 찾을 수 없습니다."));
+                    .orElseThrow(() -> new CommentNotFoundException("상위 댓글을 찾을 수 없습니다."));
         }
 
         CommentDto commentDto = CommentDto.builder()
@@ -130,7 +130,7 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new CommentNotFoundException("삭제할 댓글을 찾을 수 없습니다."));
         
         // 작성자 또는 관리자만 삭제 가능
-        if (!isOwnerOrAdmin(existingComment, userDetails)) {
+        if (!canUserDeleteComment(existingComment, userDetails)) {
             throw new CommentPermissionDeniedException("댓글 삭제 권한이 없습니다.");
         }
 
@@ -178,12 +178,34 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private boolean isOwnerOrAdmin(CommentDto comment, UserDetailsImpl userDetails) {
-        return comment.getUserId().equals(userDetails.getId()) || 
-               (userDetails.getRole() != null && userDetails.getRole() >= ADMIN_ROLE_THRESHOLD);
+        return comment.getUserId().equals(userDetails.getId());
     }
 
     private boolean hasReplies(Long parentId) {
         return commentMapper.countByParentId(parentId) > 0;
+    }
+
+    private boolean canUserDeleteComment(CommentDto comment, UserDetailsImpl userDetails) {
+        // 본인 댓글은 항상 삭제 가능함.
+        if (comment.getUserId().equals(userDetails.getId())) {
+            return true;
+        }
+
+        // 관리자 권한 확인 (레벨 100 이상인 경우).
+        if (userDetails.getRole() != null && userDetails.getRole() >= ADMIN_ROLE_THRESHOLD) {
+            try {
+                int commentWriterRole = 0; // USER 역할인 경우 기본값 0으로 처리함.
+                if (comment.getWriterRole() != null && !comment.getWriterRole().equals("USER")) {
+                    commentWriterRole = Integer.parseInt(comment.getWriterRole());
+                }
+                // 현재 관리자 레벨이 댓글 작성자의 레벨보다 같거나 높은 경우 삭제 가능함.
+                return userDetails.getRole() >= commentWriterRole;
+            } catch (NumberFormatException e) {
+                log.warn("댓글 작성자 역할 파싱 오류: {}", comment.getWriterRole());
+                return false; // 파싱 오류 시 삭제 불가 처리함.
+            }
+        }
+        return false; // 본인도 아니고 관리자도 아닌 경우 삭제 불가함.
     }
 
     private CommentResponseDto convertToResponseDto(CommentDto comment, List<CommentDto> allComments) {

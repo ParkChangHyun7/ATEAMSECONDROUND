@@ -12,16 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class MainController {
 
-	@Value("${vworld.api.key}")
-	private String vworldApiKey;
-
-	@Value("${open.api.base.key}")
-	private String openApiKey;
+	@Value("${kakao.api.js.key}")
+	private String kakaoApiKey;
 
 	@GetMapping("/")
 	public String index(@ModelAttribute("message") String message,Model model) {
-		model.addAttribute("vworldApiKey", vworldApiKey);
-		model.addAttribute("openApiKey", openApiKey);
+		model.addAttribute("kakaoApiKey", kakaoApiKey);
 		model.addAttribute("pageTitle", "메인");
 		model.addAttribute("contentPage", "content_pages/index.jsp");
 		model.addAttribute("resourcesPage", "include/index/resources.jsp");

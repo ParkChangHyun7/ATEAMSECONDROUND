@@ -59,7 +59,7 @@ main {
 /* 반응형 스타일 */
 @media screen and (max-width: 768px) {
     .base-wrapper {
-        max-width: 650px;
+        max-width: 768;
         width: 100%;
     }
 } 

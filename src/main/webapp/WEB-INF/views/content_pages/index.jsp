@@ -16,7 +16,7 @@
             <div class="top-section">
                 <div class="yellow-top">
                     <!-- 날씨 정보 -->
-                    <div class="weather-info">
+                    <div class="weather-info" id="weather-app">
                         <div class="weather-temp-sky-rain">
                             <span class="weather-temp"></span>
                             <div class="weather-sky"></div>

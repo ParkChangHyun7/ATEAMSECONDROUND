@@ -1,3 +1,14 @@
+/* 기본 CSS 재설정 및 박스 모델 설정 */
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* 가로 스크롤바 방지함. */
+}
+
+* {
+    box-sizing: border-box; /* 패딩과 보더가 너비에 포함되도록 설정함. */
+}
+
 .map_container {
     width: 100%;
     height: 625px;
