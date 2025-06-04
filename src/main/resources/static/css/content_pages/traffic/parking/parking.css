@@ -1,0 +1,51 @@
+/* 주차장 지도 페이지 전용 스타일 */
+
+/* 공통 초기화 */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* 페이지 전체를 감싸는 레이아웃 */
+.base-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 메인 콘텐츠 영역 (map을 포함한 부분) */
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* 지도 영역 */
+#map {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #ccc;
+}
+
+/* 지도 확대/축소 버튼 컨트롤 */
+#controls {
+  margin-top: 10px;
+  text-align: center;
+}
+#controls button {
+  margin: 0 5px;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* 반응형 대응 */
+@media screen and (max-width: 768px) {
+  .base-wrapper {
+    max-width: 768px;
+    width: 100%;
+  }
+}

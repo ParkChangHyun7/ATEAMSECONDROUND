@@ -19,7 +19,7 @@ public class ParkingRestController {
      *  실시간 API를 통해 서울시 공영/민영 주차장 JSON 데이터를 반환하는 엔드포인트
      * GET http://localhost:9998/api/parking
      */
-    @GetMapping("/parking")
+    @GetMapping(value = "/parking", produces = "application/json; charset=UTF-8")
     public ResponseEntity<String> getParkingList() {
         try {
             //  API 서비스로부터 JSON 문자열 받아오기
