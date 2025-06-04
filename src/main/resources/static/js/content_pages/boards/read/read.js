@@ -18,24 +18,25 @@ const postReadApp = {
             return post.value.isNotice === 1 ? '[공지] ' + post.value.title : post.value.title;
         });
 
-        // 게시글 수정/삭제 권한 여부 판단 (TODO: 필요시 권한 로직 추가)
+        // 게시글 수정/삭제 권한 여부 판단
         const canEdit = computed(() => {
-            // 예시: 현재 사용자가 작성자 본인이거나 관리자 권한이 있는지 확인
-            // 실제 권한 로직은 서버에서 더 정확히 판단해야 하지만, 여기서는 UI 표시용으로 간단히 구현
-            if (!post.value || !currentUser.value || currentUser.value.role == null) return false; // currentUser 또는 role이 없으면 false
+            if (!post.value || !currentUser.value || currentUser.value.userId == null) return false;
 
-            // 관리자 역할 임계값 (예: 100) 이상이면 수정/삭제 가능
-            const isAdmin = currentUser.value.role >= 100;
-
-            // 작성자 본인인지 확인 (익명글이 아닌 경우)
+            // 수정은 '본인이 작성한 글일 경우'가 유일한 조건 (익명글이 아닌 경우)
             const isAuthor = post.value.isAnonymous !== 1 && post.value.userId === currentUser.value.userId;
-
-            return isAdmin || isAuthor;
+            return isAuthor;
         });
 
         const canDelete = computed(() => {
-            // 수정 권한과 동일하게 설정하거나 별도 로직 구현
-            return canEdit.value; // 예시로 수정 권한과 동일하게 설정
+            if (!post.value || !currentUser.value || currentUser.value.role == null || currentUser.value.userId == null) return false;
+
+            const isAdmin = currentUser.value.role >= 100;
+            const isAuthor = post.value.isAnonymous !== 1 && post.value.userId === currentUser.value.userId;
+
+            // 삭제는 '본인이 작성한 글일 경우' 또는 '관리자이면서 작성자 레벨이 본인 레벨보다 낮거나 같은 경우'
+            const canAdminDelete = isAdmin && post.value.writerRole != null && post.value.writerRole <= currentUser.value.role;
+
+            return isAuthor || canAdminDelete;
         });
 
         // 날짜 형식 변환 함수 (항상 YYYY-MM-DD hh:mm:ss)
@@ -68,16 +69,13 @@ const postReadApp = {
             // TODO: 삭제 확인 모달 또는 메시지 표시 후 삭제 API 호출
             if (post.value && confirm('게시글을 정말 삭제하시겠습니까?')) {
                 try {
-                    const response = await fetch(`/boards/${post.value.boardId}/posts/delete/${post.value.id}`, {
-                        method: 'DELETE',
-                    });
-                    if (response.ok) {
+                    const response = await window.apiService.deleteRequest(`/boards/${post.value.boardId}/posts/${post.value.id}`);
+                    if (response.success) {
                         alert('게시글이 삭제되었습니다.');
                         // 목록 페이지로 이동
                         window.location.href = `/boards/${post.value.boardId}/posts`;
                     } else {
-                        const errorText = await response.text();
-                        alert(`게시글 삭제 실패: ${errorText}`);
+                        alert(`게시글 삭제 실패: ${response.message}`);
                     }
                 } catch (error) {
                     console.error('게시글 삭제 중 오류 발생:', error);

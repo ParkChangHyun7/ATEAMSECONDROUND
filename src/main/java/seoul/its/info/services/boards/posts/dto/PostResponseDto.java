@@ -13,6 +13,7 @@ public class PostResponseDto {
    private Long id; // 게시글 고유 번호
    private Long boardId; // 게시판 고유 번호
    private String boardName; // 게시판 이름 (추가)
+   private Long userId; // 게시글 작성자 고유 번호 (추가)
    private String writer; // 게시글 작성자 이름 (회원 게시판은 회원 닉네임 그대로, 익명 게시판 or 익명 글은 닉네임 표시 안 함)
    private String title; // 게시글 제목
    private String content; // 게시글 내용

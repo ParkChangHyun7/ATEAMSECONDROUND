@@ -1,4 +1,3 @@
-// src/main/resources/static/vue.js/common/apiService.js
 const apiService = {
   csrfToken: null,
   csrfHeader: null,
@@ -15,28 +14,61 @@ const apiService = {
     }
   },
 
-  async postRequest(endpoint, bodyData) {
-    const baseHeaders = { "Content-Type": "application/json" };
-    const csrfHeaders = window.MyApp?.utils?.getCsrfHeadersAsObject(); // Optional chaining
+  _prepareRequestOptions(method, bodyData) {
+    let headers = {};
+    let body = bodyData;
 
-    if (!csrfHeaders) {
-      console.warn(`${endpoint} 요청에 CSRF 헤더 정보를 추가할 수 없습니다.`);
+    // CSRF 헤더 추가
+    const csrfHeaders = window.MyApp?.utils?.getCsrfHeadersAsObject();
+    if (csrfHeaders) {
+      headers = { ...headers, ...csrfHeaders };
+    } else {
+      console.warn(`요청에 CSRF 헤더 정보를 추가할 수 없습니다. (메소드: ${method})`);
     }
 
-    const headers = { ...baseHeaders, ...(csrfHeaders || {}) }; // CSRF 헤더 병합 (존재할 경우)
+    // FormData 여부에 따라 Content-Type 및 body 처리
+    if (bodyData instanceof FormData) {
+      // FormData를 사용하는 경우, Content-Type 헤더를 명시적으로 설정하지 않음. 브라우저가 자동으로 multipart/form-data로 설정함.
+    } else {
+      // JSON 데이터인 경우
+      headers['Content-Type'] = 'application/json';
+      body = JSON.stringify(bodyData);
+    }
 
+    return {
+      method: method,
+      headers: headers,
+      body: body,
+    };
+  },
+
+  async postRequest(endpoint, bodyData) {
+    const options = this._prepareRequestOptions('POST', bodyData);
+    return this._sendRequest(endpoint, options);
+  },
+
+  async putRequest(endpoint, bodyData) {
+    const options = this._prepareRequestOptions('PUT', bodyData);
+    return this._sendRequest(endpoint, options);
+  },
+
+  async deleteRequest(endpoint, bodyData = {}) {
+    const options = this._prepareRequestOptions('DELETE', bodyData);
+    return this._sendRequest(endpoint, options);
+  },
+
+  async _sendRequest(endpoint, options) {
     try {
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify(bodyData),
-      });
+      const response = await fetch(endpoint, options);
 
       let responseData = null;
+      // 응답이 JSON 형식이 아닐 수 있으므로 파싱 시도
       try {
         responseData = await response.json();
       } catch (e) {
-        console.warn(`${endpoint} 로부터의 JSON 응답 파싱 실패`);
+        console.warn(`${endpoint} 로부터의 JSON 응답 파싱 실패 또는 응답 없음.`);
+        // JSON 파싱 실패 시, 응답 텍스트를 메시지로 사용
+        responseData = { message: await response.text() };
       }
 
       if (!response.ok) {
@@ -54,4 +86,7 @@ const apiService = {
   }
 };
 
-apiService.initialize(); 
+apiService.initialize();
+
+// 외부에서 apiService 객체에 접근할 수 있도록 내보냅니다.
+window.apiService = apiService; 

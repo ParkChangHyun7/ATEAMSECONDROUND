@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.HtmlUtils;
 import seoul.its.info.services.boards.posts.service.PostQueryService;
 import seoul.its.info.services.boards.posts.service.PostManagementService;
 import seoul.its.info.services.boards.posts.dto.PostRequestDto;
@@ -72,9 +73,9 @@ public class PostController {
         
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            // JSON 문자열로 변환하여 전달
-            model.addAttribute("boardConfig", objectMapper.writeValueAsString(boardConfig));
-            model.addAttribute("currentUser", objectMapper.writeValueAsString(currentUser));
+            // JSON 문자열로 변환하여 전달 및 HTML 이스케이프
+            model.addAttribute("boardConfig", HtmlUtils.htmlEscape(objectMapper.writeValueAsString(boardConfig)));
+            model.addAttribute("currentUser", HtmlUtils.htmlEscape(objectMapper.writeValueAsString(currentUser)));
         } catch (Exception e) {
             model.addAttribute("boardConfig", "{}");
             model.addAttribute("currentUser", "null");
@@ -110,8 +111,8 @@ public class PostController {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
         try {
-            // posts 데이터를 JSON 문자열로 변환
-            model.addAttribute("postsJson", objectMapper.writeValueAsString(result.get("posts")));
+            // posts 데이터를 JSON 문자열로 변환 및 HTML 이스케이프
+            model.addAttribute("postsJson", HtmlUtils.htmlEscape(objectMapper.writeValueAsString(result.get("posts"))));
         } catch (Exception e) {
             // JSON 변환 실패 시 빈 배열 또는 에러 메시지 전달 (혹은 로깅)
             model.addAttribute("postsJson", "[]");
@@ -169,23 +170,24 @@ public class PostController {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
         try {
-            model.addAttribute("postJson", objectMapper.writeValueAsString(postResponseDto));
+            model.addAttribute("postJson", HtmlUtils.htmlEscape(objectMapper.writeValueAsString(postResponseDto)));
             
             Map<String, Object> boardConfig = Map.of(
                 "id", postResponseDto.getBoardId(),
                 "name", postResponseDto.getBoardName() != null ? postResponseDto.getBoardName() : "게시판"
             );
-            model.addAttribute("boardConfigJson", objectMapper.writeValueAsString(boardConfig));
+            model.addAttribute("boardConfigJson", HtmlUtils.htmlEscape(objectMapper.writeValueAsString(boardConfig)));
 
             // UserDetailsImpl이 null일 수 있으므로 방어 코드 추가
             if (userDetails != null) {
-                model.addAttribute("currentUserJson", objectMapper.writeValueAsString(Map.of(
+                model.addAttribute("currentUserJson", HtmlUtils.htmlEscape(objectMapper.writeValueAsString(Map.of(
                     "username", userDetails.getUsername(),
                     "nickname", userDetails.getNickname(),
-                    "role", userDetails.getRole() // UserDetailsImpl에 getRole()이 숫자나 Enum을 반환한다고 가정
-                )));
+                    "role", userDetails.getRole(), // UserDetailsImpl에 getRole()이 숫자나 Enum을 반환한다고 가정
+                    "userId", userDetails.getId() // userId 추가
+                ))));
             } else {
-                model.addAttribute("currentUserJson", objectMapper.writeValueAsString(Collections.emptyMap()));
+                model.addAttribute("currentUserJson", HtmlUtils.htmlEscape(objectMapper.writeValueAsString(Collections.emptyMap())));
             }
 
         } catch (Exception e) {
@@ -196,6 +198,81 @@ public class PostController {
         model.addAttribute("contentPage", "content_pages/boards/read.jsp");
         model.addAttribute("scriptsPage", "include/boards/read/scripts.jsp");
         model.addAttribute("resourcesPage", "include/boards/read/resources.jsp");
+
+        return "base";
+    }
+
+    // 게시글 수정 페이지 표시
+    @GetMapping("/modify/{postId}")
+    public String showModifyPage(
+            @PathVariable Long boardId,
+            @PathVariable Long postId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+
+        // 1. 게시글 데이터 로드 및 권한 확인
+        PostResponseDto postResponseDto = null;
+        try {
+            postResponseDto = postQueryService.getPostDetail(boardId, postId, userDetails);
+
+            // 게시글 작성자 또는 관리자(공지사항인 경우)만 수정 페이지 접근 가능하도록 서버에서 최종 검증
+            Long currentUserId = (userDetails != null) ? userDetails.getId() : null;
+            boolean isAdmin = (userDetails != null && userDetails.getRole() != null && userDetails.getRole() >= 100);
+
+            if (postResponseDto == null || !postResponseDto.getBoardId().equals(boardId)) {
+                redirectAttributes.addFlashAttribute("errorMessage", "게시글을 찾을 수 없습니다.");
+                return "redirect:/boards/" + boardId + "/posts/read/" + postId;
+            }
+
+            if (!postResponseDto.getUserId().equals(currentUserId) && !(isAdmin && postResponseDto.getIsNotice() == 1)) {
+                redirectAttributes.addFlashAttribute("errorMessage", "게시글 수정 권한이 없습니다.");
+                return "redirect:/boards/" + boardId + "/posts/read/" + postId;
+            }
+
+        } catch (Exception e) {
+            // 게시글 조회 중 오류 발생 시
+            redirectAttributes.addFlashAttribute("errorMessage", "게시글을 불러오는 중 오류가 발생했습니다: " + e.getMessage());
+            return "redirect:/boards/" + boardId + "/posts";
+        }
+
+        // 2. JSON 데이터 준비 (read.jsp와 유사)
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+        try {
+            model.addAttribute("postJson", HtmlUtils.htmlEscape(objectMapper.writeValueAsString(postResponseDto)));
+
+            Map<String, Object> boardConfig = Map.of(
+                "id", postResponseDto.getBoardId(),
+                "name", postResponseDto.getBoardName() != null ? postResponseDto.getBoardName() : "게시판"
+            );
+            model.addAttribute("boardConfigJson", HtmlUtils.htmlEscape(objectMapper.writeValueAsString(boardConfig)));
+
+            if (userDetails != null) {
+                model.addAttribute("currentUserJson", HtmlUtils.htmlEscape(objectMapper.writeValueAsString(Map.of(
+                    "username", userDetails.getUsername(),
+                    "nickname", userDetails.getNickname(),
+                    "role", userDetails.getRole()
+                ))));
+            } else {
+                model.addAttribute("currentUserJson", HtmlUtils.htmlEscape(objectMapper.writeValueAsString(Collections.emptyMap())));
+            }
+
+        } catch (Exception e) {
+            // JSON 변환 실패 시
+            model.addAttribute("postJson", "{}");
+            model.addAttribute("boardConfigJson", "{}");
+            model.addAttribute("currentUserJson", "{}");
+            System.err.println("Error preparing JSON for modify page: " + e.getMessage());
+        }
+
+        // 3. 뷰 정보 설정
+        model.addAttribute("pageTitle", "글 수정");
+        model.addAttribute("contentPage", "content_pages/boards/modify.jsp");
+        model.addAttribute("scriptsPage", "include/boards/modify/scripts.jsp");
+        model.addAttribute("resourcesPage", "include/boards/modify/resources.jsp");
 
         return "base";
     }
@@ -226,7 +303,7 @@ public class PostController {
     }
 
     // 게시글 삭제 (DELETE 요청은 API로 처리)
-    @DeleteMapping("/delete/{postId}")
+    @DeleteMapping("/{postId}")
     @ResponseBody
     public ResponseEntity<?> deletePost(@PathVariable Long boardId, @PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
         postManagementService.deletePost(boardId, postId, userDetails);

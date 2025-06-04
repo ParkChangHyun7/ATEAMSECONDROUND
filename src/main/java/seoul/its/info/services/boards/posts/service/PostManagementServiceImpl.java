@@ -114,7 +114,8 @@ public class PostManagementServiceImpl implements PostManagementService {
         }
 
         boolean isAdmin = principal.getRole() != null && principal.getRole() >= ADMIN_ROLE_THRESHOLD;
-        if (!existingPost.getUserId().equals(currentUserId) && !isAdmin) {
+        // 수정 권한 확인: 본인 게시물이거나, 공지사항(isNotice == 1)이면서 관리자 권한이 있는 경우만 허용
+        if (!existingPost.getUserId().equals(currentUserId) && !(isAdmin && existingPost.getIsNotice() == 1)) {
             throw new SystemException(ErrorCode.AUTHORIZATION_FAILED.getStatus().name(), ErrorCode.AUTHORIZATION_FAILED.getMessage());
         }
 

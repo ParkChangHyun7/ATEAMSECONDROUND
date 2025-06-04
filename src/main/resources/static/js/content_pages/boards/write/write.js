@@ -158,22 +158,13 @@ const writeApp = {
                     formData.append('uploadFrom', 0); // 0: 게시글
                     formData.append('parentId', 0); // 최종 게시글 ID를 아직 모르므로 임시값 0 사용
 
-                    return fetch('/api/upload/image', {
-                        method: 'POST',
-                        headers: {
-                            [csrfHeader]: csrfToken
-                        },
-                        body: formData
-                    })
+                    return window.apiService.postRequest('/api/upload/image', formData)
                     .then(response => {
-                        if (!response.ok) {
-                            return response.json().then(err => Promise.reject(err));
+                        if (!response.success) {
+                            return Promise.reject(new Error(response.message || 'Unknown upload error'));
                         }
-                        return response.json();
-                    })
-                    .then(result => {
                         // 업로드된 이미지 URL을 원래 imageFiles 객체에 추가
-                        imageData.serverUrl = result.imageUrl; 
+                        imageData.serverUrl = response.data.imageUrl; 
                         // imageData.fileId = result.fileId; // 필요하다면 파일 ID도 저장
                         return imageData; // 서버 URL이 추가된 imageData 반환
                     });
@@ -207,27 +198,19 @@ const writeApp = {
             }
 
             try {
-                const response = await fetch(`/boards/${boardConfig.value.boardId}/posts`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        [csrfHeader]: csrfToken
-                    },
-                    body: JSON.stringify({
-                        ...post.value,
-                        boardId: boardConfig.value.boardId,
-                        isAnonymous: post.value.isAnonymous ? 1 : 0,
-                        isNotice: post.value.isNotice ? 1 : 0
-                        // tempPostId 전송 코드 제거
-                    })
+                const response = await window.apiService.postRequest(`/boards/${boardConfig.value.boardId}/posts`, {
+                    ...post.value,
+                    boardId: boardConfig.value.boardId,
+                    isAnonymous: post.value.isAnonymous ? 1 : 0,
+                    isNotice: post.value.isNotice ? 1 : 0
+                    // tempPostId 전송 코드 제거
                 });
                 
-                if (response.ok) {
-                    const result = await response.json();
+                if (response.success) {
+                    // const result = await response.json(); // apiService에서 이미 json 파싱함
                     window.location.href = `/boards/${boardConfig.value.boardId}/posts`;
                 } else {
-                    const error = await response.json();
-                    alert('글 작성 중 오류가 발생했습니다: ' + (error.message || '알 수 없는 오류'));
+                    alert('글 작성 중 오류가 발생했습니다: ' + (response.message || '알 수 없는 오류'));
                 }
             } catch (error) {
                 console.error('Error:', error);
