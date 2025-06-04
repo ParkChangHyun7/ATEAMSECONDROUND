@@ -1,10 +1,13 @@
 package seoul.its.info.services.boards.comments.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class CommentResponseDto {
     private Long id; // 댓글 고유 번호
     private Long postId; // 댓글이 달린 게시글 고유번호
@@ -21,4 +24,5 @@ public class CommentResponseDto {
     private LocalDateTime createdAt; // 댓글 작성 시간
     private LocalDateTime updatedAt; // 댓글 수정 시간 (있으면 수정된 거고 수정 시간 표시, 없으면 작성시간 표시)
     private String ipAddress; // IP정보 응답은 전체 IP가 아니라 앞 두 자리만 응답함 (예: 123.45.678.910 -> 123.45)
+    private List<CommentResponseDto> replies; // 대댓글 목록
 }
