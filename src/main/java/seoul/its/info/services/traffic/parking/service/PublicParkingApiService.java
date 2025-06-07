@@ -55,9 +55,8 @@ public class PublicParkingApiService {
 
         // 5. JSON 응답 로그 출력 (디버깅용)
         String json = sb.toString();
-        System.out.println("🔍 [서울시 주차장 API 응답 내용 - EUC-KR]:");
-        System.out.println(json);
-        System.out.println("================================================");
+        System.out.println(json.substring(0, 1000));
+        System.out.println("Json 내용 받아온 뒤 1,000글자 출력 완료");
 
         return json;
     }
