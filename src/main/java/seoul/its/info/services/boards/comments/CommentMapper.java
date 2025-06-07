@@ -2,7 +2,6 @@ package seoul.its.info.services.boards.comments;
 
 import org.apache.ibatis.annotations.*;
 import seoul.its.info.services.boards.comments.dto.CommentDto;
-import seoul.its.info.services.boards.comments.dto.CommentResponseDto;
 
 import java.util.List;
 import java.util.Optional;

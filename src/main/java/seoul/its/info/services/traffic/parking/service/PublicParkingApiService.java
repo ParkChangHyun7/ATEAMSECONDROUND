@@ -8,9 +8,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- *  서울시 공공데이터포털의 공영/민영 주차장 API를 호출하는 서비스 클래스
- *  - 외부 API로부터 실시간 데이터를 받아오기 위한 역할 수행
- *  - JSON 응답 문자열을 반환
+ * 서울시 공공데이터포털의 공영/민영 주차장 API를 호출하는 서비스 클래스
+ * - 외부 API로부터 실시간 데이터를 받아오기 위한 역할 수행
+ * - JSON 응답 문자열을 반환
  */
 @Service
 public class PublicParkingApiService {
@@ -34,10 +34,13 @@ public class PublicParkingApiService {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
 
-        //  핵심 수정: EUC-KR로 응답 읽기 (서울시 API가 종종 이 인코딩을 사용함)
+        // 핵심 수정: EUC-KR로 응답 읽기 (서울시 API가 종종 이 인코딩을 사용함)
+        // EUC-KR 사용 안 함. 한국 공공기관은 거의 대부분 UTF-8로 인코딩 함.
         BufferedReader reader = new BufferedReader(
-            new InputStreamReader(conn.getInputStream(), "EUC-KR")  // ★ 여기만 바꾸면 됨!
+                new InputStreamReader(conn.getInputStream(), "UTF-8") // ★ 여기만 바꾸면 됨!
         );
+        // 직접Json 파일 받아봐서 EUC-KR로 읽어오는 거 인코딩 상태 확인했으면
+        // AI가 알려주는데에만 의지하고서 코드 작성해서 한글 깨지는 상태는 안 왔음
 
         // 3. 응답 읽기
         StringBuilder sb = new StringBuilder();
