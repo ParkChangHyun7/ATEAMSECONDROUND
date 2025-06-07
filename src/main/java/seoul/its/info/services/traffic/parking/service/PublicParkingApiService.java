@@ -35,7 +35,7 @@ public class PublicParkingApiService {
         conn.setRequestMethod("GET");
 
         // 핵심 수정: EUC-KR로 응답 읽기 (서울시 API가 종종 이 인코딩을 사용함)
-        // EUC-KR 사용 안 함. 한국 공공기관은 거의 대부분 UTF-8로 인코딩 함.
+        // EUC-KR과 UTF-8 공용으로 사용하네요 다시 찾아보니!
         BufferedReader reader = new BufferedReader(
                 new InputStreamReader(conn.getInputStream(), "UTF-8") // ★ 여기만 바꾸면 됨!
         );
