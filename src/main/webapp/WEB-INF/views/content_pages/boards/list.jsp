@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <div class="topdiv-list">
     <%-- Controller에서 넘겨준 초기 데이터를 data-* 속성으로 Vue 앱에 전달 --%>
     <div class="container" id="post-list-app" v-cloak
-         data-posts='${postsJson}'
+         data-posts='${fn:escapeXml(postsJson)}'
          data-total-regular-posts='${totalRegularPosts}'
          data-current-page='${currentPage}'
          data-page-size='${pageSize}'
