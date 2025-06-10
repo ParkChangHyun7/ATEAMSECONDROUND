@@ -134,7 +134,7 @@ CREATE TABLE comments (
     report_status TINYINT DEFAULT 0,
     ip_address VARCHAR(50),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (parent_comment_id) REFERENCES comments(id),
     FOREIGN KEY (login_id) REFERENCES users(login_id),
     FOREIGN KEY (post_id) REFERENCES posts(id),
