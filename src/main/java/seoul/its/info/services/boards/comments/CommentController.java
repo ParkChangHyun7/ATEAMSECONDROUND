@@ -10,6 +10,10 @@ import seoul.its.info.services.users.login.detail.UserDetailsImpl;
 import seoul.its.info.services.boards.comments.dto.CommentRequestDto;
 import seoul.its.info.services.boards.comments.dto.CommentResponseDto;
 import seoul.its.info.services.boards.comments.service.CommentService;
+import seoul.its.info.services.boards.comments.exception.CommentPermissionDeniedException;
+import org.springframework.http.HttpStatus;
+import java.util.Map;
+import java.util.HashMap;
 
 import java.util.List;
 
@@ -38,33 +42,73 @@ public class CommentController {
      * 댓글 작성
      */
     @PostMapping
-    public ResponseEntity<CommentResponseDto> createComment(
+    public ResponseEntity<?> createComment(
             @PathVariable Long boardId,
             @PathVariable Long postId,
             @RequestBody CommentRequestDto requestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             HttpServletRequest request) {
         if (userDetails == null) {
-            throw new SecurityException("로그인이 필요합니다.");
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", true);
+            errorResponse.put("message", "로그인이 필요합니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
         }
         String clientIp = clientIpGetHelper.getClientIpAddress(request);
-        return ResponseEntity.ok(commentService.createComment(boardId, postId, requestDto, userDetails, clientIp));
+        try {
+            CommentResponseDto createdComment = commentService.createComment(boardId, postId, requestDto, userDetails, clientIp);
+            Map<String, Object> successResponse = new HashMap<>();
+            successResponse.put("success", true);
+            successResponse.put("data", createdComment);
+            successResponse.put("message", "댓글 작성 성공");
+            return ResponseEntity.ok(successResponse);
+        } catch (CommentPermissionDeniedException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", true);
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", true);
+            errorResponse.put("message", "댓글 작성 중 알 수 없는 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
     }
 
     /**
      * 댓글 수정
      */
     @PutMapping("/{commentId}")
-    public ResponseEntity<CommentResponseDto> updateComment(
+    public ResponseEntity<?> updateComment(
             @PathVariable Long boardId,
             @PathVariable Long postId,
             @PathVariable Long commentId,
             @RequestBody CommentRequestDto requestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         if (userDetails == null) {
-            throw new SecurityException("로그인이 필요합니다.");
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", true);
+            errorResponse.put("message", "로그인이 필요합니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
         }
-        return ResponseEntity.ok(commentService.updateComment(commentId, requestDto, userDetails));
+        try {
+            CommentResponseDto updatedComment = commentService.updateComment(commentId, requestDto, userDetails);
+            Map<String, Object> successResponse = new HashMap<>();
+            successResponse.put("success", true);
+            successResponse.put("data", updatedComment);
+            successResponse.put("message", "댓글 수정 성공");
+            return ResponseEntity.ok(successResponse);
+        } catch (CommentPermissionDeniedException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", true);
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", true);
+            errorResponse.put("message", "댓글 수정 중 알 수 없는 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
     }
 
     /**
