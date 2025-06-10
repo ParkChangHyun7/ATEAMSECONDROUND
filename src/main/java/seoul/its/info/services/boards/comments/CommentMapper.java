@@ -34,10 +34,10 @@ public interface CommentMapper {
     // 댓글 생성
     @Insert("INSERT INTO comments (post_id, user_id, login_id, writer, content, is_parent, parent_comment_id, " +
             "is_parent_secret, post_writer_only, post_writer_id, is_anonymous, is_blinded, is_deleted, deleted_by_post, " +
-            "image_included, writer_role, report_status, ip_address, created_at, updated_at, like_count) " +
+            "image_included, writer_role, report_status, ip_address, created_at, like_count) " +
             "VALUES (#{postId}, #{userId}, #{loginId}, #{writer}, #{content}, #{isParent}, #{parentCommentId}, " +
             "#{isParentSecret}, #{postWriterOnly}, #{postWriterId}, #{isAnonymous}, #{isBlinded}, #{isDeleted}, #{deletedByPost}, " +
-            "#{imageIncluded}, #{writerRole}, #{reportStatus}, #{ipAddress}, NOW(), NOW(), #{likeCount})")
+            "#{imageIncluded}, #{writerRole}, #{reportStatus}, #{ipAddress}, NOW(), #{likeCount})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void save(CommentDto commentDto);
     
