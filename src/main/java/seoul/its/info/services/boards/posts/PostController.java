@@ -148,12 +148,12 @@ public class PostController {
         return ResponseEntity.ok(result);
     }
 
-    // 게시글 상세 조회 (API 반환)
-    @GetMapping("/{postId}")
-    @ResponseBody
-    public ResponseEntity<?> getPostDetailApi(@PathVariable Long boardId, @PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(postQueryService.getPostDetail(boardId, postId, userDetails));
-    }
+    // // 게시글 상세 조회 (API 반환)
+    // @GetMapping("/{postId}")
+    // @ResponseBody
+    // public ResponseEntity<?> getPostDetailApi(@PathVariable Long boardId, @PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
+    //     return ResponseEntity.ok(postQueryService.getPostDetail(boardId, postId, userDetails));
+    // }
 
     // 게시글 상세 조회 (JSP 뷰 반환)
     @GetMapping("/read/{postId}")
