@@ -11,7 +11,7 @@ import java.util.List;
 public interface PostMapper {
 
     // 특정 게시판의 게시글 목록 조회
-    @Select("SELECT id, board_id, user_id, writer, title, content, view_count, comment_count, like_count, report_count, is_notice, is_anonymous, is_blinded, is_deleted, file_included, image_included, writer_role, thumbnail_path, report_status, ip_address, created_at, updated_at FROM posts WHERE board_id = #{boardId} AND is_deleted = 0")
+    @Select("SELECT id, board_id, user_id, writer, title, content, view_count, comment_count, like_count, report_count, is_notice, is_anonymous, is_blinded, is_deleted, file_included, image_included, writer_role, thumbnail_path, report_status, ip_address, created_at, updated_at, no_reply FROM posts WHERE board_id = #{boardId} AND is_deleted = 0")
     List<PostListDto> getPostListByBoardId(@Param("boardId") Long boardId);
 
     // 게시글 상세 조회
@@ -19,20 +19,20 @@ public interface PostMapper {
             "p.view_count, p.comment_count, p.like_count, p.report_count, " +
             "p.is_notice, p.is_anonymous, p.is_blinded, p.is_deleted, " +
             "p.file_included, p.image_included, p.writer_role, p.thumbnail_path, " +
-            "p.report_status, p.ip_address, p.created_at, p.updated_at " +
+            "p.report_status, p.ip_address, p.created_at, p.updated_at, p.no_reply " +
             "FROM posts p LEFT JOIN boards b ON p.board_id = b.id " +
             "WHERE p.id = #{postId} AND p.board_id = #{boardId} AND p.is_deleted = 0")
     PostResponseDto getPostDetail(@Param("boardId") Long boardId, @Param("postId") Long postId);
 
     // 게시글 생성
-    @Insert("INSERT INTO posts (board_id, user_id, writer, title, content, is_anonymous, is_notice, file_included, image_included, writer_role, ip_address, created_at, updated_at) " +
-            "VALUES (#{post.boardId}, #{post.userId}, #{post.writer}, #{post.title}, #{post.content}, #{post.isAnonymous}, #{post.isNotice}, #{post.fileIncluded}, #{post.imageIncluded}, #{post.writerRole}, #{post.ipAddress}, NOW(), NOW())")
+    @Insert("INSERT INTO posts (board_id, user_id, writer, title, content, is_anonymous, is_notice, file_included, image_included, writer_role, ip_address, created_at, updated_at, no_reply) " +
+            "VALUES (#{post.boardId}, #{post.userId}, #{post.writer}, #{post.title}, #{post.content}, #{post.isAnonymous}, #{post.isNotice}, #{post.fileIncluded}, #{post.imageIncluded}, #{post.writerRole}, #{post.ipAddress}, NOW(), NOW(), #{post.noReply})")
     @Options(useGeneratedKeys = true, keyProperty = "post.id")
     int createPost(@Param("post") PostsDto post);
 
     // 게시글 수정
     @Update("UPDATE posts SET title = #{postDto.title}, content = #{postDto.content}, is_anonymous = #{postDto.isAnonymous}, is_notice = #{postDto.isNotice}, " +
-            "file_included = #{postDto.fileIncluded}, image_included = #{postDto.imageIncluded}, updated_at = NOW() WHERE id = #{postId} AND board_id = #{boardId} AND is_deleted = 0")
+            "file_included = #{postDto.fileIncluded}, image_included = #{postDto.imageIncluded}, no_reply = #{postDto.noReply}, updated_at = NOW() WHERE id = #{postId} AND board_id = #{boardId} AND is_deleted = 0")
     int updatePost(@Param("boardId") Long boardId, @Param("postId") Long postId, @Param("postDto") PostsDto postDto);
 
     // 게시글 삭제 (논리적 삭제)
@@ -44,8 +44,8 @@ public interface PostMapper {
     int incrementViewCount(@Param("postId") Long postId);
 
     // 삭제된 게시글 정보 deleted_posts 테이블에 삽입
-    @Insert("INSERT INTO deleted_posts (id, board_id, user_id, login_id, writer, title, content, view_count, comment_count, like_count, report_count, is_notice, is_anonymous, is_blinded, is_deleted, file_included, writer_role, thumbnail_path, report_status, ip_address, created_at, updated_at, deleted_at, deleted_by_user_id) " +
-            "VALUES (#{post.id}, #{post.boardId}, #{post.userId}, #{post.loginId}, #{post.writer}, #{post.title}, #{post.content}, #{post.viewCount}, #{post.commentCount}, #{post.likeCount}, #{post.reportCount}, #{post.isNotice}, #{post.isAnonymous}, #{post.isBlinded}, #{post.isDeleted}, #{post.fileIncluded}, #{post.writerRole}, #{post.thumbnailPath}, #{post.reportStatus}, #{post.ipAddress}, #{post.createdAt}, #{post.updatedAt}, NOW(), #{deletedByUserId})")
+    @Insert("INSERT INTO deleted_posts (id, board_id, user_id, login_id, writer, title, content, view_count, comment_count, like_count, report_count, is_notice, is_anonymous, is_blinded, is_deleted, file_included, writer_role, thumbnail_path, report_status, ip_address, created_at, updated_at, deleted_at, deleted_by_user_id, no_reply) " +
+            "VALUES (#{post.id}, #{post.boardId}, #{post.userId}, #{post.loginId}, #{post.writer}, #{post.title}, #{post.content}, #{post.viewCount}, #{post.commentCount}, #{post.likeCount}, #{post.reportCount}, #{post.isNotice}, #{post.isAnonymous}, #{post.isBlinded}, #{post.isDeleted}, #{post.fileIncluded}, #{post.writerRole}, #{post.thumbnailPath}, #{post.reportStatus}, #{post.ipAddress}, #{post.createdAt}, #{post.updatedAt}, NOW(), #{deletedByUserId}, #{post.noReply})")
     int insertDeletedPost(@Param("post") PostsDto post, @Param("deletedByUserId") Long deletedByUserId);
 
     // 게시글 물리적 삭제
@@ -53,11 +53,11 @@ public interface PostMapper {
     int hardDeletePost(@Param("boardId") Long boardId, @Param("postId") Long postId);
 
     // 특정 게시판의 공지사항 게시글 목록 조회
-    @Select("SELECT id, board_id, user_id, login_id, writer, title, content, view_count, comment_count, like_count, report_count, is_notice, is_anonymous, is_blinded, is_deleted, file_included, image_included, writer_role, thumbnail_path, report_status, ip_address, created_at, updated_at FROM posts WHERE board_id = #{boardId} AND is_deleted = 0 AND is_notice = 1 ORDER BY id DESC")
+    @Select("SELECT id, board_id, user_id, login_id, writer, title, content, view_count, comment_count, like_count, report_count, is_notice, is_anonymous, is_blinded, is_deleted, file_included, image_included, writer_role, thumbnail_path, report_status, ip_address, created_at, updated_at, no_reply FROM posts WHERE board_id = #{boardId} AND is_deleted = 0 AND is_notice = 1 ORDER BY id DESC")
     List<PostListDto> getNoticePostListByBoardId(@Param("boardId") Long boardId);
 
     // 특정 게시판의 페이징 처리된 일반 게시글 목록 조회
-    @Select("SELECT id, board_id, user_id, login_id, writer, title, content, view_count, comment_count, like_count, report_count, is_notice, is_anonymous, is_blinded, is_deleted, file_included, image_included, writer_role, thumbnail_path, report_status, ip_address, created_at, updated_at FROM posts WHERE board_id = #{boardId} AND is_deleted = 0 AND is_notice = 0 ORDER BY id DESC LIMIT #{limit} OFFSET #{offset}")
+    @Select("SELECT id, board_id, user_id, login_id, writer, title, content, view_count, comment_count, like_count, report_count, is_notice, is_anonymous, is_blinded, is_deleted, file_included, image_included, writer_role, thumbnail_path, report_status, ip_address, created_at, updated_at, no_reply FROM posts WHERE board_id = #{boardId} AND is_deleted = 0 AND is_notice = 0 ORDER BY id DESC LIMIT #{limit} OFFSET #{offset}")
     List<PostListDto> getRegularPostListByBoardId(@Param("boardId") Long boardId, @Param("offset") int offset, @Param("limit") int limit);
 
     // 특정 게시판의 일반 게시글 총 개수 조회

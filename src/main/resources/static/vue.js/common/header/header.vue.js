@@ -14,7 +14,6 @@ createApp({
   },
   methods: {
     async checkUserStatus() {
-      console.log("사용자 인증 상태 확인 중...");
       try {
         // CSRF 헤더 가져오기
         const csrfHeaders = window.MyApp?.utils?.getCsrfHeadersAsObject();
@@ -40,8 +39,7 @@ createApp({
         if (response.ok && responseData?.success) {
           this.isLoggedIn = true;
           this.nickname = responseData.nickname || null;
-          this.role = responseData.role || null; // role 값 저장
-          console.log("사용자 로그인 상태, 닉네임, 역할 확인 완료: 닉네임=", this.nickname, ", 레벨=", this.role);
+          this.role = responseData.role || null;
         } else {
           console.log("사용자 로그인 상태 확인: 로그아웃 상태 또는 오류 발생");
           this.isLoggedIn = false;

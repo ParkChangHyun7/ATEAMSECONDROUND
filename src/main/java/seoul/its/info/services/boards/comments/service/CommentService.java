@@ -30,13 +30,14 @@ public interface CommentService {
     
     /**
      * 댓글 작성
+     * @param boardId 게시판 ID
      * @param postId 게시글 ID
      * @param requestDto 댓글 작성 요청 DTO
      * @param userDetails 사용자 정보
      * @param ipAddress 클라이언트 IP 주소
      * @return 생성된 댓글 응답 DTO
      */
-    CommentResponseDto createComment(Long postId, CommentRequestDto requestDto, UserDetailsImpl userDetails, String ipAddress);
+    CommentResponseDto createComment(Long boardId, Long postId, CommentRequestDto requestDto, UserDetailsImpl userDetails, String ipAddress);
     
     /**
      * 댓글 수정

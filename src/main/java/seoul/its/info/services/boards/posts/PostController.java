@@ -170,6 +170,7 @@ public class PostController {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
         try {
+            postResponseDto.setNoReply(postResponseDto.getNoReply() != null ? postResponseDto.getNoReply() : 0); // null 값 방지
             model.addAttribute("postJson", objectMapper.writeValueAsString(postResponseDto));
             
             Map<String, Object> boardConfig = Map.of(
@@ -187,7 +188,7 @@ public class PostController {
                     "userId", userDetails.getId() // userId 추가
                 )));
             } else {
-                model.addAttribute("currentUserJson", objectMapper.writeValueAsString(Collections.emptyMap()));
+                model.addAttribute("currentUserJson", "null");
             }
 
         } catch (Exception e) {

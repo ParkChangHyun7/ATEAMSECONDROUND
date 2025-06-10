@@ -10,8 +10,6 @@ window.MyApp.utils = (function () {
 
     if (initialized) return;
 
-    console.log("CSRF 토큰 초기화 중...");
-
     const tokenMeta = document.querySelector('meta[name="_csrf"]');
     const headerMeta = document.querySelector('meta[name="_csrf_header"]');
 
@@ -19,8 +17,6 @@ window.MyApp.utils = (function () {
       csrfToken = tokenMeta.getAttribute("content");
       csrfHeader = headerMeta.getAttribute("content");
       initialized = true;
-      console.log("CSRF 토큰 인식 완료: ", csrfToken);
-      console.log("CSRF 헤더 인식 완료: ", csrfHeader);
     } else {
       console.error(
         "CSRF 토큰/헤더 메타 태그를 찾을 수 없습니다. HTML을 확인하세요."

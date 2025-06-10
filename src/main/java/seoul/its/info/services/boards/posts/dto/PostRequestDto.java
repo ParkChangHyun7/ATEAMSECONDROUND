@@ -19,4 +19,5 @@ public class PostRequestDto {
     private Integer fileIncluded; // 파일 첨부 여부 0 = 파일 첨부 아님, 1 = 파일 첨부
     private Integer imageIncluded; // 이미지 첨부 여부 0 = 이미지 첨부 아님, 1 = 이미지 첨부
     // 파일 첨부 기능은 나중에 구현 또는 연동 예정
+    private Integer noReply; // 댓글 금지 여부 (0: 허용, 1: 금지)
 } 

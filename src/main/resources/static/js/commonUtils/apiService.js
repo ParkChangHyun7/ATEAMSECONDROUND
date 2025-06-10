@@ -57,6 +57,20 @@ const apiService = {
     return this._sendRequest(endpoint, options);
   },
 
+  async getRequest(endpoint) {
+    const options = {
+      method: 'GET',
+      headers: {},
+    };
+    const csrfHeaders = window.MyApp?.utils?.getCsrfHeadersAsObject();
+    if (csrfHeaders) {
+      options.headers = { ...options.headers, ...csrfHeaders };
+    } else {
+      console.warn(`요청에 CSRF 헤더 정보를 추가할 수 없습니다. (메소드: GET)`);
+    }
+    return this._sendRequest(endpoint, options);
+  },
+
   async _sendRequest(endpoint, options) {
     try {
       const response = await fetch(endpoint, options);

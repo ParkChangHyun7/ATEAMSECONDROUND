@@ -11,6 +11,8 @@ import seoul.its.info.services.boards.comments.dto.CommentResponseDto;
 import seoul.its.info.services.boards.comments.exception.CommentNotFoundException;
 import seoul.its.info.services.boards.comments.exception.CommentPermissionDeniedException;
 import seoul.its.info.services.users.login.detail.UserDetailsImpl;
+import seoul.its.info.services.boards.posts.service.PostQueryService;
+import seoul.its.info.services.boards.posts.dto.PostResponseDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentMapper commentMapper;
+    private final PostQueryService postQueryService;
     private static final int ADMIN_ROLE_THRESHOLD = 100; // 관리자 역할 임계값
 
     @Override
@@ -29,7 +32,7 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentResponseDto> getCommentsByPostId(Long postId) {
         List<CommentDto> comments = commentMapper.findByPostIdOrderByCreatedAtAsc(postId);
         return comments.stream()
-                .filter(comment -> comment.getIsParent() == 0) // 부모 댓글만 필터링
+                .filter(comment -> comment.getIsParent() != null && comment.getIsParent() == 0) // 부모 댓글만 필터링
                 .map(comment -> convertToResponseDto(comment, comments))
                 .collect(Collectors.toList());
     }
@@ -38,14 +41,23 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public CommentResponseDto createComment(Long postId, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
         // 기본 IP 주소로 네 개의 매개변수를 가진 메서드 호출
-        return createComment(postId, requestDto, userDetails, "0.0.0.0");
+        return createComment(null, postId, requestDto, userDetails, "0.0.0.0"); // boardId는 여기서 알 수 없으므로 null 전달
     }
 
     @Override
     @Transactional
-    public CommentResponseDto createComment(Long postId, CommentRequestDto requestDto, UserDetailsImpl userDetails, String ipAddress) {
+    public CommentResponseDto createComment(Long boardId, Long postId, CommentRequestDto requestDto, UserDetailsImpl userDetails, String ipAddress) {
         validateUser(userDetails);
-        
+
+        // 게시글의 댓글 금지 여부 확인 (no_reply)
+        PostResponseDto post = postQueryService.getPostDetail(boardId, postId, userDetails); // boardId를 정확히 전달
+        if (post != null && post.getNoReply() != null && post.getNoReply() != 0) {
+            // 댓글 금지 게시글이고, 사용자가 관리자가 아닌 경우
+            if (userDetails.getRole() == null || userDetails.getRole() < ADMIN_ROLE_THRESHOLD) {
+                throw new CommentPermissionDeniedException("댓글 작성이 금지된 게시글입니다.");
+            }
+        }
+
         // 대댓글인 경우 부모 댓글 존재 여부 확인
         if (requestDto.getParentCommentId() != null) {
             commentMapper.findById(requestDto.getParentCommentId())
@@ -58,18 +70,20 @@ public class CommentServiceImpl implements CommentService {
                 .loginId(userDetails.getUsername())
                 .writer(userDetails.getNickname())
                 .content(requestDto.getContent())
-                .isParent(requestDto.getParentCommentId() == null ? 1 : 0)  // 부모 댓글이면 1, 대댓글이면 0
+                .isParent(requestDto.getParentCommentId() == null ? 0 : 1)  // 부모 댓글이면 0, 대댓글이면 1 (CommentDto 정의에 맞춤)
                 .parentCommentId(requestDto.getParentCommentId())
+                .isParentSecret(0) // 기본값 0으로 설정. (추후 기능 추가 시 requestDto에서 받도록 수정 가능)
                 .postWriterOnly(0)  // 기본값
                 .postWriterId(null) // 원글 작성자 ID는 서비스에서 설정
                 .isAnonymous(requestDto.getIsAnonymous() != null ? requestDto.getIsAnonymous() : 0)
                 .isBlinded(0)  // 기본값
                 .isDeleted(0)   // 삭제되지 않음
-                .deletedByPostStatus(0)  // 게시글 상태로 인한 삭제 아님
+                .deletedByPost(0)  // 게시글 상태로 인한 삭제 아님 (필드명 변경)
                 .imageIncluded(0)  // 기본값
                 .writerRole(userDetails.getRole() != null ? userDetails.getRole().toString() : "USER")
                 .reportStatus(0)  // 신고 상태 없음
                 .ipAddress(ipAddress)  // 클라이언트 IP 주소 설정
+                .likeCount(0) // 기본값 0으로 설정
                 .build();
 
         commentMapper.save(commentDto);
@@ -86,8 +100,8 @@ public class CommentServiceImpl implements CommentService {
         CommentDto existingComment = commentMapper.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException("수정할 댓글을 찾을 수 없습니다."));
         
-        // 작성자 또는 관리자만 수정 가능
-        if (!isOwnerOrAdmin(existingComment, userDetails)) {
+        // 작성자 본인만 수정 가능
+        if (!isOwner(existingComment, userDetails)) {
             throw new CommentPermissionDeniedException("댓글 수정 권한이 없습니다.");
         }
 
@@ -101,18 +115,20 @@ public class CommentServiceImpl implements CommentService {
                 .content(requestDto.getContent()) // 내용만 업데이트
                 .isParent(existingComment.getIsParent())
                 .parentCommentId(existingComment.getParentCommentId())
+                .isParentSecret(existingComment.getIsParentSecret())
                 .postWriterOnly(existingComment.getPostWriterOnly())
                 .postWriterId(existingComment.getPostWriterId())
                 .isAnonymous(existingComment.getIsAnonymous())
                 .isBlinded(existingComment.getIsBlinded())
                 .isDeleted(existingComment.getIsDeleted())
-                .deletedByPostStatus(existingComment.getDeletedByPostStatus())
+                .deletedByPost(existingComment.getDeletedByPost()) // 필드명 변경
                 .imageIncluded(existingComment.getImageIncluded())
                 .writerRole(existingComment.getWriterRole())
                 .reportStatus(existingComment.getReportStatus())
                 .ipAddress(existingComment.getIpAddress())
                 .createdAt(existingComment.getCreatedAt())
                 .updatedAt(LocalDateTime.now()) // 수정 시간 업데이트
+                .likeCount(existingComment.getLikeCount())
                 .build();
 
         commentMapper.update(updatedComment);
@@ -146,18 +162,20 @@ public class CommentServiceImpl implements CommentService {
                     .content("삭제된 댓글입니다.")
                     .isParent(existingComment.getIsParent())
                     .parentCommentId(existingComment.getParentCommentId())
+                    .isParentSecret(existingComment.getIsParentSecret())
                     .postWriterOnly(existingComment.getPostWriterOnly())
                     .postWriterId(existingComment.getPostWriterId())
                     .isAnonymous(existingComment.getIsAnonymous())
                     .isBlinded(existingComment.getIsBlinded())
                     .isDeleted(1) // 삭제 상태로 설정
-                    .deletedByPostStatus(existingComment.getDeletedByPostStatus())
+                    .deletedByPost(existingComment.getDeletedByPost()) // 필드명 변경
                     .imageIncluded(0) // 이미지 제거
                     .writerRole(existingComment.getWriterRole())
                     .reportStatus(0) // 신고 상태 초기화
                     .ipAddress(existingComment.getIpAddress())
                     .createdAt(existingComment.getCreatedAt())
                     .updatedAt(LocalDateTime.now())
+                    .likeCount(existingComment.getLikeCount())
                     .build();
             
             commentMapper.update(deletedComment);
@@ -177,7 +195,7 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
-    private boolean isOwnerOrAdmin(CommentDto comment, UserDetailsImpl userDetails) {
+    private boolean isOwner(CommentDto comment, UserDetailsImpl userDetails) {
         return comment.getUserId().equals(userDetails.getId());
     }
 
@@ -221,14 +239,19 @@ public class CommentServiceImpl implements CommentService {
                 .content(comment.getContent())
                 .isParent(comment.getIsParent())
                 .parentCommentId(comment.getParentCommentId())
-                .postWriterOnly(0) // 기본값
+                .isParentSecret(comment.getIsParentSecret())
+                .postWriterOnly(comment.getPostWriterOnly()) // 기존값 유지
                 .isAnonymous(comment.getIsAnonymous())
                 .isBlinded(comment.getIsBlinded())
+                .isDeleted(comment.getIsDeleted()) // isDeleted 추가
+                .deletedByPost(comment.getDeletedByPost()) // deletedByPost 추가
                 .imageIncluded(comment.getImageIncluded())
                 .writerRole(comment.getWriterRole())
+                .reportStatus(comment.getReportStatus()) // reportStatus 추가
+                .ipAddress(comment.getIpAddress()) // IP는 마스킹해서 반환 (기존값 유지)s
                 .createdAt(comment.getCreatedAt())
                 .updatedAt(comment.getUpdatedAt())
-                .ipAddress(comment.getIpAddress()) // IP는 마스킹해서 반환
+                .likeCount(comment.getLikeCount()) // likeCount 추가
                 .replies(replies)
                 .build();
     }

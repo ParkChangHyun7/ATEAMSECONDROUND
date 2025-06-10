@@ -10,18 +10,34 @@ import java.util.Optional;
 public interface CommentMapper {
     
     // 게시글 ID로 댓글 목록 조회 (대댓글 포함)
-    @Select("SELECT * FROM comments WHERE post_id = #{postId} AND is_deleted = 0 ORDER BY created_at ASC")
+    @Select("SELECT " +
+            "id, post_id, user_id, login_id, writer, content, " +
+            "is_parent, parent_comment_id, is_parent_secret, " +
+            "post_writer_only, post_writer_id, is_anonymous, " +
+            "is_blinded, is_deleted, deleted_by_post, image_included, " +
+            "writer_role, report_status, ip_address, " +
+            "created_at, updated_at, like_count " +
+            "FROM comments WHERE post_id = #{postId} AND is_deleted = 0 ORDER BY created_at ASC")
     List<CommentDto> findByPostIdOrderByCreatedAtAsc(@Param("postId") Long postId);
     
     // 댓글 ID로 조회
-    @Select("SELECT * FROM comments WHERE id = #{id} AND is_deleted = 0")
+    @Select("SELECT " +
+            "id, post_id, user_id, login_id, writer, content, " +
+            "is_parent, parent_comment_id, is_parent_secret, " +
+            "post_writer_only, post_writer_id, is_anonymous, " +
+            "is_blinded, is_deleted, deleted_by_post, image_included, " +
+            "writer_role, report_status, ip_address, " +
+            "created_at, updated_at, like_count " +
+            "FROM comments WHERE id = #{id} AND is_deleted = 0")
     Optional<CommentDto> findById(@Param("id") Long id);
     
     // 댓글 생성
-    @Insert("INSERT INTO comments (post_id, user_id, writer, content, is_parent, parent_comment_id, " +
-            "is_anonymous, is_blinded, image_included, writer_role, ip_address, created_at, updated_at) " +
-            "VALUES (#{postId}, #{userId}, #{writer}, #{content}, #{isParent}, #{parentCommentId}, " +
-            "#{isAnonymous}, #{isBlinded}, #{imageIncluded}, #{writerRole}, #{ipAddress}, NOW(), NOW())")
+    @Insert("INSERT INTO comments (post_id, user_id, login_id, writer, content, is_parent, parent_comment_id, " +
+            "is_parent_secret, post_writer_only, post_writer_id, is_anonymous, is_blinded, is_deleted, deleted_by_post, " +
+            "image_included, writer_role, report_status, ip_address, created_at, updated_at, like_count) " +
+            "VALUES (#{postId}, #{userId}, #{loginId}, #{writer}, #{content}, #{isParent}, #{parentCommentId}, " +
+            "#{isParentSecret}, #{postWriterOnly}, #{postWriterId}, #{isAnonymous}, #{isBlinded}, #{isDeleted}, #{deletedByPost}, " +
+            "#{imageIncluded}, #{writerRole}, #{reportStatus}, #{ipAddress}, NOW(), NOW(), #{likeCount})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void save(CommentDto commentDto);
     

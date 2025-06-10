@@ -48,7 +48,7 @@ public class CommentController {
             throw new SecurityException("로그인이 필요합니다.");
         }
         String clientIp = clientIpGetHelper.getClientIpAddress(request);
-        return ResponseEntity.ok(commentService.createComment(postId, requestDto, userDetails, clientIp));
+        return ResponseEntity.ok(commentService.createComment(boardId, postId, requestDto, userDetails, clientIp));
     }
 
     /**

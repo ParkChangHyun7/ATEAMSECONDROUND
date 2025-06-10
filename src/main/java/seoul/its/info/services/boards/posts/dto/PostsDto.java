@@ -29,4 +29,5 @@ public class PostsDto {
    private String ipAddress; // 작성자 ip 주소 앞 두 자리만 표시 (123.456.789.123 -> 123.45)
    private LocalDateTime createdAt; // 작성일
    private LocalDateTime updatedAt; // 수정일. 수정 한 일 없으면 값 없음
+   private Integer noReply; // 댓글 금지 여부 (0: 허용, 1: 금지)
 } 
