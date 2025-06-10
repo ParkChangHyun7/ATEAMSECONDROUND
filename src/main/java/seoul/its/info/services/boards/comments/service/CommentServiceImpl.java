@@ -14,6 +14,7 @@ import seoul.its.info.services.users.login.detail.UserDetailsImpl;
 import seoul.its.info.services.boards.posts.service.PostQueryService;
 import seoul.its.info.services.boards.posts.dto.PostResponseDto;
 import seoul.its.info.common.util.ProfanityFilter;
+import seoul.its.info.services.boards.posts.PostMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,6 +28,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentMapper commentMapper;
     private final PostQueryService postQueryService;
     private final ProfanityFilter profanityFilter;
+    private final PostMapper postMapper;
     private static final int ADMIN_ROLE_THRESHOLD = 100; // 관리자 역할 임계값
 
     @Override
@@ -95,6 +97,7 @@ public class CommentServiceImpl implements CommentService {
                 .build();
 
         commentMapper.save(commentDto);
+        postMapper.updateCommentCount(postId, 1);
         log.info("새 댓글 생성 - 댓글 ID: {}, 작성자: {}, IP: {}", commentDto.getId(), userDetails.getNickname(), ipAddress);
         
         return convertToResponseDto(commentDto, List.of());
@@ -199,6 +202,7 @@ public class CommentServiceImpl implements CommentService {
             commentMapper.deleteById(commentId);
             log.info("댓글 완전 삭제 - 댓글 ID: {}", commentId);
         }
+        postMapper.updateCommentCount(existingComment.getPostId(), -1);
     }
 
     // ====== 내부 유틸리티 메서드 ======

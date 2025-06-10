@@ -43,6 +43,10 @@ public interface PostMapper {
     @Update("UPDATE posts SET view_count = view_count + 1 WHERE id = #{postId}")
     int incrementViewCount(@Param("postId") Long postId);
 
+    // 댓글 수 증가/감소
+    @Update("UPDATE posts SET comment_count = comment_count + #{delta} WHERE id = #{postId}")
+    int updateCommentCount(@Param("postId") Long postId, @Param("delta") int delta);
+
     // 삭제된 게시글 정보 deleted_posts 테이블에 삽입
     @Insert("INSERT INTO deleted_posts (id, board_id, user_id, login_id, writer, title, content, view_count, comment_count, like_count, report_count, is_notice, is_anonymous, is_blinded, is_deleted, file_included, writer_role, thumbnail_path, report_status, ip_address, created_at, updated_at, deleted_at, deleted_by_user_id, no_reply) " +
             "VALUES (#{post.id}, #{post.boardId}, #{post.userId}, #{post.loginId}, #{post.writer}, #{post.title}, #{post.content}, #{post.viewCount}, #{post.commentCount}, #{post.likeCount}, #{post.reportCount}, #{post.isNotice}, #{post.isAnonymous}, #{post.isBlinded}, #{post.isDeleted}, #{post.fileIncluded}, #{post.writerRole}, #{post.thumbnailPath}, #{post.reportStatus}, #{post.ipAddress}, #{post.createdAt}, #{post.updatedAt}, NOW(), #{deletedByUserId}, #{post.noReply})")
