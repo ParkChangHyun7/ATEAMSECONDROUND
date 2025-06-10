@@ -76,19 +76,30 @@ const apiService = {
       const response = await fetch(endpoint, options);
 
       let responseData = null;
-      // 응답이 JSON 형식이 아닐 수 있으므로 파싱 시도
-      try {
-        responseData = await response.json();
-      } catch (e) {
-        console.warn(`${endpoint} 로부터의 JSON 응답 파싱 실패 또는 응답 없음.`);
-        // JSON 파싱 실패 시, 응답 텍스트를 메시지로 사용
-        responseData = { message: await response.text() };
+
+      // 응답 상태 코드가 204 No Content이면 본문이 없으므로 파싱 시도하지 않음
+      if (response.status === 204) {
+        responseData = {}; // 빈 객체 또는 null로 설정하여 성공적인 처리로 간주함.
+      } else {
+        // 응답이 JSON 형식이 아닐 수 있으므로 파싱 시도
+        try {
+          responseData = await response.json();
+        } catch (e) {
+          console.warn(`${endpoint} 로부터의 JSON 응답 파싱 실패 또는 응답 없음.`);
+          // JSON 파싱 실패 시, 응답 텍스트를 메시지로 사용
+          responseData = { message: await response.text() };
+        }
       }
 
       if (!response.ok) {
         const message = responseData?.message || response.statusText || `${response.status} 상태로 요청 실패`;
         console.error(`API 오류 (${endpoint}): ${response.status} - ${message}`);
         return { success: false, status: response.status, message: message, data: responseData };
+      }
+
+      if (responseData && responseData.error === true) {
+          console.error(`API 오류 (응답 데이터에 error: true): ${endpoint} - ${responseData.message}`);
+          return { success: false, status: response.status, message: responseData.message, data: responseData };
       }
 
       return { success: true, status: response.status, message: responseData?.message, data: responseData };
