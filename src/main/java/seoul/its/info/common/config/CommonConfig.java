@@ -16,14 +16,14 @@ import org.springframework.beans.factory.annotation.Value;
 @Configuration
 public class CommonConfig implements WebMvcConfigurer {
 
-        private final TimeoutInterceptor timeoutInterceptor;
+        //private final TimeoutInterceptor timeoutInterceptor;
         private final RateLimitingInterceptor rateLimitingInterceptor;
 
         @Value("${app.image.upload-dir}")
         private String uploadDir;
 
-        public CommonConfig(TimeoutInterceptor timeoutInterceptor, RateLimitingInterceptor rateLimitingInterceptor) {
-                this.timeoutInterceptor = timeoutInterceptor;
+        public CommonConfig(RateLimitingInterceptor rateLimitingInterceptor) {
+                //this.timeoutInterceptor = timeoutInterceptor;
                 this.rateLimitingInterceptor = rateLimitingInterceptor;
         }
 
@@ -31,10 +31,10 @@ public class CommonConfig implements WebMvcConfigurer {
         public void addInterceptors(InterceptorRegistry registry) {
                 System.out.println("CommonConfig: 인터셉터 등록 중...");
 
-                registry.addInterceptor(timeoutInterceptor)
-                                .addPathPatterns("/**")
-                                .excludePathPatterns("/css/**", "/js/**", "/images/**", "/fonts/**", "/api/**",
-                                                "/vue.js/**", "*/favicon.ico");
+                // registry.addInterceptor(timeoutInterceptor)
+                //                .addPathPatterns("/**")
+                //                .excludePathPatterns("/css/**", "/js/**", "/images/**", "/fonts/**", "/api/**",
+                //                                "/vue.js/**", "*/favicon.ico");
 
                 registry.addInterceptor(rateLimitingInterceptor)
                                 .addPathPatterns("/**")
