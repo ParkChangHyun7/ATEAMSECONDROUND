@@ -13,6 +13,7 @@ import seoul.its.info.services.boards.comments.exception.CommentPermissionDenied
 import seoul.its.info.services.users.login.detail.UserDetailsImpl;
 import seoul.its.info.services.boards.posts.service.PostQueryService;
 import seoul.its.info.services.boards.posts.dto.PostResponseDto;
+import seoul.its.info.common.util.ProfanityFilter;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,6 +26,7 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentMapper commentMapper;
     private final PostQueryService postQueryService;
+    private final ProfanityFilter profanityFilter;
     private static final int ADMIN_ROLE_THRESHOLD = 100; // 관리자 역할 임계값
 
     @Override
@@ -56,6 +58,12 @@ public class CommentServiceImpl implements CommentService {
             if (userDetails.getRole() == null || userDetails.getRole() < ADMIN_ROLE_THRESHOLD) {
                 throw new CommentPermissionDeniedException("댓글 작성이 금지된 게시글입니다.");
             }
+        }
+
+        // 금칙어 검사 추가
+        String forbiddenWord = profanityFilter.getFirstProfanity(requestDto.getContent());
+        if (forbiddenWord != null) {
+            throw new CommentPermissionDeniedException("댓글 내용에 금칙어 '" + forbiddenWord + "'(이)가 포함되어 있습니다. 해당 단어는 입력할 수 없습니다.");
         }
 
         // 대댓글인 경우 부모 댓글 존재 여부 확인
@@ -103,6 +111,12 @@ public class CommentServiceImpl implements CommentService {
         // 작성자 본인만 수정 가능
         if (!isOwner(existingComment, userDetails)) {
             throw new CommentPermissionDeniedException("댓글 수정 권한이 없습니다.");
+        }
+
+        // 금칙어 검사 추가 (수정 시에도 적용)
+        String forbiddenWord = profanityFilter.getFirstProfanity(requestDto.getContent());
+        if (forbiddenWord != null) {
+            throw new CommentPermissionDeniedException("댓글 내용에 금칙어 '" + forbiddenWord + "'(이)가 포함되어 있습니다. 해당 단어는 입력할 수 없습니다.");
         }
 
         // 기존 댓글 정보로 새 DTO 생성 (내용만 업데이트)
@@ -235,6 +249,7 @@ public class CommentServiceImpl implements CommentService {
         return CommentResponseDto.builder()
                 .id(comment.getId())
                 .postId(comment.getPostId())
+                .userId(comment.getUserId())
                 .writer(comment.getWriter())
                 .content(comment.getContent())
                 .isParent(comment.getIsParent())
@@ -248,7 +263,7 @@ public class CommentServiceImpl implements CommentService {
                 .imageIncluded(comment.getImageIncluded())
                 .writerRole(comment.getWriterRole())
                 .reportStatus(comment.getReportStatus()) // reportStatus 추가
-                .ipAddress(comment.getIpAddress()) // IP는 마스킹해서 반환 (기존값 유지)s
+                .ipAddress(comment.getIpAddress()) // IP는 마스킹해서 반환 (기존값 유지)
                 .createdAt(comment.getCreatedAt())
                 .updatedAt(comment.getUpdatedAt())
                 .likeCount(comment.getLikeCount()) // likeCount 추가
