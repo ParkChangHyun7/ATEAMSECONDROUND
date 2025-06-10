@@ -114,12 +114,20 @@ uri="http://java.sun.com/jsp/jstl/core" %>
                 <div class="comment-header">
                     <span class="comment-writer">{{ comment.isAnonymous === 1 ? '익명' : comment.writer }}</span>
                     <span class="comment-date">{{ formatDisplayDate(comment.createdAt) }}</span>
-                    <span v-if="comment.updatedAt" class="comment-date-updated" style="color: #cecece">( {{ formatDisplayDate(comment.updatedAt) }} 수정됨 )</span>
+                    <span v-if="comment.updatedAt" class="comment-date-updated">( {{ formatDisplayDate(comment.updatedAt) }} 수정됨 )</span>
                 </div>
-                <div class="comment-content" v-html="comment.content"></div>
+                <div v-if="editingCommentId === comment.id" class="comment-form">
+                    <textarea v-model="editedCommentContent" rows="3"></textarea>
+                    <div v-if="commentErrorMessage" class="comment-error-message" style="color: red; margin-top: 5px;">{{ commentErrorMessage }}</div>
+                    <div class="comment-edit-actions">
+                        <button @click="saveCommentEdit(comment.id)" :disabled="!editedCommentContent.trim()" class="btn btn-primary">저장</button>
+                        <button @click="cancelEdit" class="btn btn-secondary">취소</button>
+                    </div>
+                </div>
+                <div v-else class="comment-content" v-html="comment.content"></div>
                 <div class="comment-actions">
-                    <button v-if="currentUser && currentUser.userId === comment.userId" @click="editComment(comment)" class="btn btn-sm btn-info">수정</button>
-                    <button v-if="currentUser && (currentUser.userId === comment.userId || (currentUser.role != null && currentUser.role >= 100))" @click="deleteComment(comment.id)" class="btn btn-sm btn-danger">삭제</button>
+                    <button v-if="currentUser && currentUser.userId === comment.userId && editingCommentId !== comment.id" @click="editComment(comment)" class="btn btn-sm btn-info">수정</button>
+                    <button v-if="currentUser && (currentUser.userId === comment.userId || (currentUser.role != null && currentUser.role >= 100)) && editingCommentId !== comment.id" @click="deleteComment(comment.id)" class="btn btn-sm btn-danger">삭제</button>
                 </div>
             </div>
         </div>
