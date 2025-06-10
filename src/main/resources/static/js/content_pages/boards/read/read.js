@@ -98,6 +98,8 @@ const postReadApp = {
         const comments = ref([]);
         const newCommentContent = ref('');
         const commentErrorMessage = ref('');
+        const editingCommentId = ref(null);
+        const editedCommentContent = ref('');
 
         // 댓글 목록을 가져옴
         const fetchComments = async () => {
@@ -160,8 +162,47 @@ const postReadApp = {
 
         // 댓글을 수정함
         const editComment = (comment) => {
-            console.log('댓글 수정 버튼 클릭:', comment);
-            alert('댓글 수정 기능은 아직 구현되지 않았습니다.');
+            editingCommentId.value = comment.id;
+            editedCommentContent.value = comment.content;
+        };
+
+        const cancelEdit = () => {
+            editingCommentId.value = null;
+            editedCommentContent.value = '';
+        };
+
+        const saveCommentEdit = async (commentId) => {
+            if (!post.value || !post.value.boardId || !post.value.id || !editedCommentContent.value.trim()) {
+                commentErrorMessage.value = '수정할 댓글 내용이 유효하지 않습니다.';
+                return;
+            }
+
+            if (editedCommentContent.value.trim().length < 4) {
+                commentErrorMessage.value = '댓글은 4글자 이상 작성해야 합니다.';
+                return;
+            }
+
+            commentErrorMessage.value = '';
+
+            const commentData = {
+                content: editedCommentContent.value,
+            };
+
+            try {
+                const url = `/boards/${post.value.boardId}/posts/${post.value.id}/comments/${commentId}`;
+                const response = await window.apiService.putRequest(url, commentData);
+                if (response.success) {
+                    alert('댓글이 성공적으로 수정되었습니다.');
+                    cancelEdit(); // 편집 모드 종료
+                    fetchComments(); // 댓글 목록 새로고침
+                } else {
+                    // 백엔드에서 error: true를 보낸 경우 메시지 사용
+                    commentErrorMessage.value = `댓글 수정 실패: ${response.message || '알 수 없는 오류'}`;
+                }
+            } catch (error) {
+                console.error('댓글 수정 중 오류 발생:', error);
+                commentErrorMessage.value = '댓글 수정 중 오류가 발생했습니다.';
+            }
         };
 
         // 댓글을 삭제함
@@ -200,8 +241,12 @@ const postReadApp = {
             comments,
             newCommentContent,
             commentErrorMessage,
+            editingCommentId,
+            editedCommentContent,
             submitComment,
             editComment,
+            cancelEdit,
+            saveCommentEdit,
             deleteComment,
         };
     }
