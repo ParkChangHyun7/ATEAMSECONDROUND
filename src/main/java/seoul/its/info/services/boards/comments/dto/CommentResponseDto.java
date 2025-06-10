@@ -11,6 +11,7 @@ import lombok.Data;
 public class CommentResponseDto {
     private Long id; // 댓글 고유 번호
     private Long postId; // 댓글이 달린 게시글 고유번호
+    private Long userId; // 사용자 고유 번호
     private String writer; // 댓글 작성자 이름 (회원 nickname) 익명 게시판은 닉네임 표시 안함
     // 익명 게시판은 response에도 값 안 담아서 보냄
     private String content; // 댓글 내용
