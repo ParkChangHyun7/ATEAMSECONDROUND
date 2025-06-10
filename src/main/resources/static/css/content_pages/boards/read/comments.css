@@ -1,0 +1,196 @@
+.comments-section {
+    background-color: #f8f9fa; /* read.css의 body 배경색과 유사하게 */
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.comments-section h3 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #1d3b5b; /* 게시판 이름 색상과 통일 */
+}
+
+.comments-section hr {
+    border: 0;
+    border-top: 1px solid #eaeaea;
+    margin-bottom: 20px;
+}
+
+.comment-count {
+    font-size: 18px;
+    color: #f1b300; /* 강조 색상 */
+    margin-left: 5px;
+}
+
+.comment-form {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.comment-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    resize: vertical;
+    font-size: 14px;
+    box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
+}
+
+.comment-form .btn-primary {
+    align-self: flex-end; /* 버튼을 오른쪽 정렬 */
+    background-color: #1d3b5b;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.comment-form .btn-primary:hover {
+    background-color: #f1b300;
+    color: #1d3b5b;
+}
+
+.comment-form .btn-primary:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.comment-login-prompt {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.comment-login-prompt a {
+    color: #1d3b5b;
+    text-decoration: underline;
+}
+
+.comment-list {
+    border-top: 1px solid #eaeaea;
+    padding-top: 20px;
+}
+
+.comment-item {
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.08);
+    position: relative;
+}
+
+.comment-item:last-child {
+    margin-bottom: 0;
+}
+
+.comment-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: #888;
+    flex-wrap: wrap;
+}
+
+.comment-writer {
+    font-weight: bold;
+    color: #333;
+    margin-right: 10px;
+}
+
+.comment-date,
+.comment-date-updated {
+    margin-right: 10px;
+}
+
+.comment-content {
+    font-size: 15px;
+    color: #333;
+    line-height: 1.6;
+    word-break: break-all;
+    margin-bottom: 10px;
+}
+
+.comment-actions {
+    text-align: right;
+}
+
+.comment-actions .btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 3px;
+    margin-left: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.comment-actions .btn-info {
+    background-color: #2196f3; /* 파란색 계열 */
+    color: #fff;
+    border: 1px solid #2196f3;
+}
+
+.comment-actions .btn-info:hover {
+    background-color: #1976d2;
+    border-color: #1976d2;
+}
+
+.comment-actions .btn-danger {
+    background-color: #f44336; /* 붉은색 계열 */
+    color: #fff;
+    border: 1px solid #f44336;
+}
+
+.comment-actions .btn-danger:hover {
+    background-color: #d32f2f;
+    border-color: #d32f2f;
+}
+
+.no-comments {
+    text-align: center;
+    color: #888;
+    padding: 20px 0;
+    font-size: 15px;
+}
+
+@media (max-width: 768px) {
+    .comments-section {
+        padding: 15px;
+    }
+    .comments-section h3 {
+        font-size: 20px;
+    }
+    .comment-form textarea {
+        font-size: 13px;
+    }
+    .comment-form .btn-primary {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+    .comment-item {
+        padding: 10px;
+    }
+    .comment-writer {
+        font-size: 12px;
+    }
+    .comment-content {
+        font-size: 14px;
+    }
+    .comment-actions .btn {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+    .comment-header span {
+        font-size: 11px;
+    }
+}

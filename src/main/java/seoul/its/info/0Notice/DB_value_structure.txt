@@ -78,6 +78,7 @@ CREATE TABLE posts (
     is_anonymous TINYINT DEFAULT 0,
     is_blinded TINYINT DEFAULT 0,
     is_deleted TINYINT DEFAULT 0,
+    not_repliable TINYINT DEFAULT 0,
     file_included TINYINT DEFAULT 0, -- 파일 첨부 여부, 인덱싱 용도 & 분기 구분 용도
     image_included TINYINT DEFAULT 0, -- 이미지 첨부 여부
     writer_role TINYINT NOT NULL, -- 작성 당시 사용자의 role, role 변경 되더라 글 수정 전 변경 안함

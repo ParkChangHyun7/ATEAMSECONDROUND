@@ -112,7 +112,7 @@ public class PostController {
 
         try {
             // posts 데이터를 JSON 문자열로 변환 및 HTML 이스케이프
-            model.addAttribute("postsJson", HtmlUtils.htmlEscape(objectMapper.writeValueAsString(result.get("posts"))));
+            model.addAttribute("postsJson", objectMapper.writeValueAsString(result.get("posts")));
         } catch (Exception e) {
             // JSON 변환 실패 시 빈 배열 또는 에러 메시지 전달 (혹은 로깅)
             model.addAttribute("postsJson", "[]");
@@ -170,24 +170,24 @@ public class PostController {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
         try {
-            model.addAttribute("postJson", HtmlUtils.htmlEscape(objectMapper.writeValueAsString(postResponseDto)));
+            model.addAttribute("postJson", objectMapper.writeValueAsString(postResponseDto));
             
             Map<String, Object> boardConfig = Map.of(
                 "id", postResponseDto.getBoardId(),
                 "name", postResponseDto.getBoardName() != null ? postResponseDto.getBoardName() : "게시판"
             );
-            model.addAttribute("boardConfigJson", HtmlUtils.htmlEscape(objectMapper.writeValueAsString(boardConfig)));
+            model.addAttribute("boardConfigJson", objectMapper.writeValueAsString(boardConfig));
 
             // UserDetailsImpl이 null일 수 있으므로 방어 코드 추가
             if (userDetails != null) {
-                model.addAttribute("currentUserJson", HtmlUtils.htmlEscape(objectMapper.writeValueAsString(Map.of(
+                model.addAttribute("currentUserJson", objectMapper.writeValueAsString(Map.of(
                     "username", userDetails.getUsername(),
                     "nickname", userDetails.getNickname(),
                     "role", userDetails.getRole(), // UserDetailsImpl에 getRole()이 숫자나 Enum을 반환한다고 가정
                     "userId", userDetails.getId() // userId 추가
-                ))));
+                )));
             } else {
-                model.addAttribute("currentUserJson", HtmlUtils.htmlEscape(objectMapper.writeValueAsString(Collections.emptyMap())));
+                model.addAttribute("currentUserJson", objectMapper.writeValueAsString(Collections.emptyMap()));
             }
 
         } catch (Exception e) {
@@ -242,22 +242,22 @@ public class PostController {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
         try {
-            model.addAttribute("postJson", HtmlUtils.htmlEscape(objectMapper.writeValueAsString(postResponseDto)));
+            model.addAttribute("postJson", objectMapper.writeValueAsString(postResponseDto));
 
             Map<String, Object> boardConfig = Map.of(
                 "id", postResponseDto.getBoardId(),
                 "name", postResponseDto.getBoardName() != null ? postResponseDto.getBoardName() : "게시판"
             );
-            model.addAttribute("boardConfigJson", HtmlUtils.htmlEscape(objectMapper.writeValueAsString(boardConfig)));
+            model.addAttribute("boardConfigJson", objectMapper.writeValueAsString(boardConfig));
 
             if (userDetails != null) {
-                model.addAttribute("currentUserJson", HtmlUtils.htmlEscape(objectMapper.writeValueAsString(Map.of(
+                model.addAttribute("currentUserJson", objectMapper.writeValueAsString(Map.of(
                     "username", userDetails.getUsername(),
                     "nickname", userDetails.getNickname(),
                     "role", userDetails.getRole()
-                ))));
+                )));
             } else {
-                model.addAttribute("currentUserJson", HtmlUtils.htmlEscape(objectMapper.writeValueAsString(Collections.emptyMap())));
+                model.addAttribute("currentUserJson", objectMapper.writeValueAsString(Collections.emptyMap()));
             }
 
         } catch (Exception e) {
