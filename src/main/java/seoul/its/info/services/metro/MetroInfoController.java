@@ -1,21 +1,44 @@
 package seoul.its.info.services.metro;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.Map;
 
 @Controller
 public class MetroInfoController {
 
-    @Value("${kakao.bus.key}")
-    private String kakaoBusKey;
 
-    @GetMapping("/metro/info")
-    public String metroInfo(Model model) {
-        model.addAttribute("contentPage", "content_pages/metro/metro.jsp");
-        model.addAttribute("scriptsPage", "include/metro/scripts.jsp");
-        model.addAttribute("resourcesPage", "include/metro/resources.jsp");
+    @GetMapping("/metro/accidents")
+    public String ShowAccidentsChart(Model model)throws JsonProcessingException {
+        List<Map<String, Object>> accidentData = List.of(
+
+        Map.of("yes","2019","type","출입문","count",3),
+        Map.of("year","2020","type","출입문","count",5),
+        Map.of("year","2020","type","출입문","count",7),
+        Map.of("year","2020","type","출입문","count",6),
+        Map.of("year","2020","type","출입문","count",4)
+
+        );
+
+        ObjectMapper mapper = new ObjectMapper();
+        model.addAttribute ("accdients", mapper.writeValueAsString(accidentData));
+        model.addAttribute("countentPage","content_pages/metro/accident/accidents.jsp");
+        model.addAttribute("resourcesPage","include/metro/accident/resources.jsp" );
+        model.addAttribute("scriptsPage", "incldue/metro/accident/scripts.jsp");
+
         return "base";
     }
+    
+
 }

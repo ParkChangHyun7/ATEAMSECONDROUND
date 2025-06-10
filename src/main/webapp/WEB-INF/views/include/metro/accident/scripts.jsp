@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type ="module">
     import {createApp, ref, onMounted} from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
