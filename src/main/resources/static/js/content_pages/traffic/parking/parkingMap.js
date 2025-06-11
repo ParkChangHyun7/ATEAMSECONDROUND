@@ -18,7 +18,7 @@ createApp({
       // 지도의 마커 영역 자동 조정용 경계 객체
       const bounds = new kakao.maps.LatLngBounds()
 
-      // ✅ 현재 열려 있는 InfoWindow 추적용 변수 (하나만 열리게 하기 위함)
+      // 현재 열려 있는 InfoWindow 추적용 변수 (하나만 열리게 하기 위함)
       let currentInfoWindow = null
 
       // 운영시간 표기를 사람이 읽을 수 있게 HHMM → HH:MM으로 변환하는 함수
@@ -110,7 +110,7 @@ createApp({
 
           // 📍 마커 클릭 시 InfoWindow 열기 (이전 창 닫기)
           kakao.maps.event.addListener(marker, 'click', () => {
-            if (currentInfoWindow) currentInfoWindow.close() // ✅ 기존 창 닫기
+            if (currentInfoWindow) currentInfoWindow.close() //  기존 창 닫기
             infowindow.open(map, marker)                     // 새 창 열기
             currentInfoWindow = infowindow                   // 현재 창으로 설정
           })
