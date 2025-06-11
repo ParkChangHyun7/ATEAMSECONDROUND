@@ -23,6 +23,10 @@ pageEncoding="UTF-8" %>
             <ul>
               <li><a href="/about">소개</a></li>
               <li><a href="/parking">주차장정보</a></li>
+              <li><a href="/traffic/cctvMap">CCTV</a></li>
+              <li><a href="/traffic/eventMap">돌발정보</a></li>
+              <li><a href="/traffic/trafficflowMap">소통정보</a></li>
+              <li><a href="/busstop">버스정류장</a></li>
               <li><a href="/transport">대중교통정보</a></li>
               <li><a href="/contact">문의하기</a></li>
               <li><a href="/boards/1/posts">커뮤니티</a></li>
