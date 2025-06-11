@@ -32,29 +32,29 @@ createApp({
         for (const p of parkingList) {
           const rawLat = String(p.LAT || '').trim()
           const rawLng = String(p.LOT || '').trim()
-
           const lat = parseFloat(rawLat)
           const lng = parseFloat(rawLng)
           if (isNaN(lat) || isNaN(lng)) continue
 
           const latlng = new kakao.maps.LatLng(lat, lng)
-
-          // ✅ 버스 전용 여부
           const isBusOnly = (p.PKLT_KND_NM || '').includes('버스') || (p.PKLT_NM || '').includes('버스')
+          const isFree = (p.CHGD_FREE_NM || '').includes('무료')
 
-          const markerImage = new kakao.maps.MarkerImage(
-            isBusOnly ? '/images/bus-parking.png' : '/images/parking-lot.png',
-            new kakao.maps.Size(32, 32),
-            { offset: new kakao.maps.Point(16, 32) }
-          )
+          const defaultImageSrc = isBusOnly ? '/images/bus-parking.png' : '/images/parking-lot.png'
+          const hoverImageSrc = isBusOnly ? '/images/bus-parking-hover.png' : '/images/parking-lot-hover.png'
+
+          const defaultImageSize = new kakao.maps.Size(32, 32)
+          const hoverImageSize = new kakao.maps.Size(64, 64)
+
+          const markerImage = new kakao.maps.MarkerImage(defaultImageSrc, defaultImageSize, {
+            offset: new kakao.maps.Point(16, 32)
+          })
 
           const marker = new kakao.maps.Marker({
             position: latlng,
             map,
             image: markerImage
           })
-
-          const isFree = (p.CHGD_FREE_NM || '').includes('무료')
 
           const basicChargeRow = !isFree && p.ADD_CRG && p.PRK_HM
             ? `<tr><td style="padding:4px; border:1px solid #ccc;">기본요금</td><td style="padding:4px; border:1px solid #ccc;">${p.ADD_CRG}원 / ${p.PRK_HM}분</td></tr>`
@@ -79,8 +79,7 @@ createApp({
               max-width: 350px;
               box-sizing: border-box;
               word-break: break-word;
-              white-space: normal;
-            ">
+              white-space: normal;">
               <b style="font-size:14px;">${p.PKLT_NM || '이름없음'}</b>
               <table style="border-collapse: collapse; width: 100%; margin-top: 6px;">
                 <tr><td style="padding:4px; border:1px solid #ccc;">주소</td><td style="padding:4px; border:1px solid #ccc;">${p.ADDR || '-'}</td></tr>
@@ -97,11 +96,25 @@ createApp({
                   주말: ${formatTime(p.HLDY_BGNG_TM)} ~ ${formatTime(p.HLDY_END_TM)}
                 </td></tr>
               </table>
-            </div>
-          `
+            </div>`
 
           const infowindow = new kakao.maps.InfoWindow({ content })
+
           kakao.maps.event.addListener(marker, 'click', () => infowindow.open(map, marker))
+
+          kakao.maps.event.addListener(marker, 'mouseover', () => {
+            const hoverImage = new kakao.maps.MarkerImage(hoverImageSrc, hoverImageSize, {
+              offset: new kakao.maps.Point(24, 48)
+            })
+            marker.setImage(hoverImage)
+          })
+
+          kakao.maps.event.addListener(marker, 'mouseout', () => {
+            const originalImage = new kakao.maps.MarkerImage(defaultImageSrc, defaultImageSize, {
+              offset: new kakao.maps.Point(16, 32)
+            })
+            marker.setImage(originalImage)
+          })
 
           bounds.extend(latlng)
           validCount++
@@ -109,7 +122,6 @@ createApp({
 
         if (validCount > 0) map.setBounds(bounds)
         else console.warn('유효한 마커가 없습니다.')
-
       } catch (e) {
         console.error('마커 로딩 실패:', e)
       }
