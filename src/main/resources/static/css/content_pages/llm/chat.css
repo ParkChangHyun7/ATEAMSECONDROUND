@@ -1,0 +1,105 @@
+body {
+   font-family: 'Noto Sans KR', sans-serif;
+   background-color: #e0e7ee;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   min-height: 100vh;
+   margin: 0;
+   color: #333;
+}
+.chat-container {
+   background-color: #ffffff;
+   border-radius: 12px;
+   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+   width: 420px;
+   max-width: 95%;
+   display: flex;
+   flex-direction: column;
+   overflow: hidden;
+   max-height: 80vh;
+}
+.chat-header {
+   background-color: #6a0dad; /* Deep Purple */
+   color: white;
+   padding: 18px;
+   text-align: center;
+   font-size: 1.3em;
+   font-weight: bold;
+   border-bottom: 1px solid #5a0ca0;
+}
+.chat-messages {
+   flex-grow: 1;
+   padding: 20px;
+   overflow-y: auto;
+   max-height: calc(80vh - 120px); /* 헤더, 푸터 높이 고려 */
+   border-bottom: 1px solid #eee;
+   display: flex;
+   flex-direction: column;
+}
+.message {
+   margin-bottom: 12px;
+   padding: 10px 15px;
+   border-radius: 20px;
+   max-width: 75%;
+   word-wrap: break-word;
+   line-height: 1.6;
+   font-size: 0.95em;
+   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+.message.user {
+   background-color: #e3f2fd; /* Light Blue */
+   align-self: flex-end;
+   margin-left: auto;
+   color: #212121;
+}
+.message.bot {
+   background-color: #fce4ec; /* Light Pink */
+   align-self: flex-start;
+   margin-right: auto;
+   color: #212121;
+}
+.chat-input {
+   display: flex;
+   padding: 15px;
+   background-color: #f9f9f9;
+   border-top: 1px solid #eee;
+   gap: 10px;
+}
+.chat-input input {
+   flex-grow: 1;
+   padding: 12px 18px;
+   border: 1px solid #dcdcdc;
+   border-radius: 25px;
+   outline: none;
+   font-size: 1em;
+   transition: border-color 0.3s ease;
+}
+.chat-input input:focus {
+   border-color: #6a0dad;
+}
+.chat-input button {
+   background-color: #6a0dad; /* Deep Purple */
+   color: white;
+   border: none;
+   padding: 12px 20px;
+   border-radius: 25px;
+   cursor: pointer;
+   font-size: 1em;
+   font-weight: bold;
+   transition: background-color 0.3s ease;
+}
+.chat-input button:hover {
+   background-color: #5a0ca0;
+}
+/* 스크롤바 커스터마이징 */
+.chat-messages::-webkit-scrollbar {
+   width: 8px;
+}
+.chat-messages::-webkit-scrollbar-thumb {
+   background-color: #ccc;
+   border-radius: 10px;
+}
+.chat-messages::-webkit-scrollbar-track {
+   background-color: #f1f1f1;
+}
