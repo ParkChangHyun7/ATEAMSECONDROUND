@@ -22,12 +22,28 @@ pageEncoding="UTF-8" %>
           <nav class="navs">
             <ul>
               <li><a href="/about">소개</a></li>
-              <li><a href="/parking">주차장정보</a></li>
+
+              <!--  주차장 드롭다운 -->
+              <li class="dropdown">
+                <a href="#">주차장정보</a>
+                <ul class="dropdown-menu">
+                  <li><a href="/parking">공영주차장</a></li>
+                  <li><a href="/private-parking">민영주차장</a></li>
+                </ul>
+              </li>
+
               <li><a href="/traffic/cctvMap">CCTV</a></li>
               <li><a href="/traffic/eventMap">돌발정보</a></li>
               <li><a href="/traffic/trafficflowMap">소통정보</a></li>
-              <li><a href="/busstop">버스정류장위치정보</a></li>
-              <li><a href="/transport">대중교통정보</a></li>
+
+              <!--  대중교통 드롭다운 -->
+              <li class="dropdown">
+                <a href="/transport">대중교통정보</a>
+                <ul class="dropdown-menu">
+                  <li><a href="/busstop">버스정류장위치정보</a></li>
+                </ul>
+              </li>
+
               <li><a href="/contact">문의하기</a></li>
               <li><a href="/boards/1/posts">커뮤니티</a></li>
             </ul>
