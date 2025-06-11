@@ -1,7 +1,7 @@
 import { createApp, onMounted } from 'vue'
 
 createApp({
-  template: '<div></div>', // 실제 Vue 템플릿은 JSP에 있기 때문에 비워둠
+  template: '<div></div>',
 
   setup() {
     onMounted(async () => {
@@ -14,9 +14,9 @@ createApp({
       })
 
       const bounds = new kakao.maps.LatLngBounds()
-      let currentInfoWindow = null // 하나만 열리게 하기 위한 전역 변수
+      let currentInfoWindow = null
 
-      // 지도 클릭 시 열린 창 닫기
+      // 지도 클릭 시 InfoWindow 닫기
       kakao.maps.event.addListener(map, 'click', () => {
         if (currentInfoWindow) {
           currentInfoWindow.close()
@@ -56,7 +56,6 @@ createApp({
           const isBusOnly = (p.PKLT_KND_NM || '').includes('버스') || (p.PKLT_NM || '').includes('버스')
           const isFree = (p.CHGD_FREE_NM || '').includes('무료')
 
-          // 캐시 방지용 쿼리 추가
           const defaultImageSrc = isBusOnly
             ? '/images/parking/bus-parking.png?v=1'
             : '/images/parking/parking-lot.png?v=1'
@@ -79,29 +78,29 @@ createApp({
           })
 
           const basicChargeRow = !isFree && p.ADD_CRG && p.PRK_HM
-            ? `<tr><td>기본요금</td><td>${p.ADD_CRG}원 / ${p.PRK_HM}분</td></tr>` : ''
+            ? `<tr><td style="border:1px solid #ccc; padding:4px;">기본요금</td><td style="border:1px solid #ccc; padding:4px;">${p.ADD_CRG}원 / ${p.PRK_HM}분</td></tr>` : ''
 
           const extraChargeRow = !isFree && p.ADD_CRG && p.ADD_UNIT_TM
-            ? `<tr><td>추가요금</td><td>${p.ADD_CRG}원 / ${p.ADD_UNIT_TM}분</td></tr>` : ''
+            ? `<tr><td style="border:1px solid #ccc; padding:4px;">추가요금</td><td style="border:1px solid #ccc; padding:4px;">${p.ADD_CRG}원 / ${p.ADD_UNIT_TM}분</td></tr>` : ''
 
           const monthlyChargeRow = p.MONTLY_CMMT_CHRG_AMT && p.MONTLY_CMMT_CHRG_AMT !== '0'
-            ? `<tr><td>월정기권금액</td><td>${p.MONTLY_CMMT_CHRG_AMT}원</td></tr>` : ''
+            ? `<tr><td style="border:1px solid #ccc; padding:4px;">월정기권금액</td><td style="border:1px solid #ccc; padding:4px;">${p.MONTLY_CMMT_CHRG_AMT}원</td></tr>` : ''
 
           const content = `
             <div style="padding:10px; font-size:13px; background:white; border-radius:8px;
                         box-shadow:0 2px 6px rgba(0,0,0,0.2); min-width:280px; max-width:350px;">
               <b style="font-size:14px;">${p.PKLT_NM || '이름없음'}</b>
               <table style="width:100%; margin-top:6px; border-collapse:collapse;">
-                <tr><td>주소</td><td>${p.ADDR || '-'}</td></tr>
-                <tr><td>전화</td><td>${p.TELNO || '-'}</td></tr>
-                <tr><td>주차장 구분</td><td>${p.PKLT_KND_NM || '-'}</td></tr>
-                <tr><td>운영 구분</td><td>${p.OPER_SE_NM || '-'}</td></tr>
-                <tr><td>총 주차면</td><td>${p.TPKCT || '-'}</td></tr>
-                <tr><td>유료 여부</td><td>${p.CHGD_FREE_NM || '-'}</td></tr>
+                <tr><td style="border:1px solid #ccc; padding:4px;">주소</td><td style="border:1px solid #ccc; padding:4px;">${p.ADDR || '-'}</td></tr>
+                <tr><td style="border:1px solid #ccc; padding:4px;">전화</td><td style="border:1px solid #ccc; padding:4px;">${p.TELNO || '-'}</td></tr>
+                <tr><td style="border:1px solid #ccc; padding:4px;">주차장 구분</td><td style="border:1px solid #ccc; padding:4px;">${p.PKLT_KND_NM || '-'}</td></tr>
+                <tr><td style="border:1px solid #ccc; padding:4px;">운영 구분</td><td style="border:1px solid #ccc; padding:4px;">${p.OPER_SE_NM || '-'}</td></tr>
+                <tr><td style="border:1px solid #ccc; padding:4px;">총 주차면</td><td style="border:1px solid #ccc; padding:4px;">${p.TPKCT || '-'}</td></tr>
+                <tr><td style="border:1px solid #ccc; padding:4px;">유료 여부</td><td style="border:1px solid #ccc; padding:4px;">${p.CHGD_FREE_NM || '-'}</td></tr>
                 ${basicChargeRow}
                 ${extraChargeRow}
                 ${monthlyChargeRow}
-                <tr><td>운영시간</td><td>
+                <tr><td style="border:1px solid #ccc; padding:4px;">운영시간</td><td style="border:1px solid #ccc; padding:4px;">
                   평일: ${formatTime(p.WD_OPER_BGNG_TM)} ~ ${formatTime(p.WD_OPER_END_TM)}<br>
                   주말: ${formatTime(p.HLDY_BGNG_TM)} ~ ${formatTime(p.HLDY_END_TM)}
                 </td></tr>
