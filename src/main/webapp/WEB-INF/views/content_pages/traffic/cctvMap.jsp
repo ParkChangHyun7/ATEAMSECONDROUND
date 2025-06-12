@@ -4,65 +4,38 @@
 <head>
   <title>CCTV Map</title>
   <%@ include file="/WEB-INF/views/include/traffic/cctvMap/resources.jsp" %>
+  <style>
+    #searchBox {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 999;
+      background: white;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      display: block; /* 명시적으로 표시 설정 */
+    }
+    #map {
+      width: 100%;
+      height: 600px;
+      position: relative; /* 검색창이 지도 위에 오도록 설정 */
+    }
+  </style>
 </head>
 <body>
-  <div id="map" style="width: 100%; height: 600px;"></div>
-  <%@ include file="/WEB-INF/views/include/traffic/cctvMap/scripts.jsp" %>
-</body>
-</html>
 
-
-
-
-
-<%-- 
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-  <title>CCTV Map</title>
-  <!-- resources.jsp 포함 -->
-  <%@ include file="/WEB-INF/views/include/traffic/cctvMap/resources.jsp" %>
-</head>
-<body>
-  <div id="app">
-    <div id="map" style="width: 100%; height: 500px;"></div>
-    <div id="error" style="color: red;"></div>
+  <!-- 🔍 검색창 -->
+  <div id="searchBox">
+    <input type="text" id="searchKeyword" placeholder="도로명이나 장소 검색" />
+    <button id="searchButton">검색</button>
   </div>
 
-  <!-- Vue 및 cctvMap.js 로드 -->
-  <script src="https://unpkg.com/vue@3"></script>
-  <script src="/js/content_pages/traffic/cctv/cctvMap.js"></script>
-  <script>
-    const { createApp } = Vue;
+  <!-- 🗺️ 지도 -->
+  <div id="map"></div>
 
-    createApp({
-      mounted() {
-        // cctvMap.js의 초기화 함수 호출
-        if (typeof initializeCCTVMap === 'function') {
-          initializeCCTVMap();
-        } else {
-          console.error('initializeCCTVMap 함수를 찾을 수 없습니다. cctvMap.js가 로드되었는지 확인하세요.');
-        }
-      },
-    }).mount('#app');
-  </script>
-</body>
-</html> --%>
-
-
-<%-- <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-
-<!-- 지도 컨테이너 -->
-<div id="map" style="width: 100%; height: 600px;"></div>
+  <%@ include file="/WEB-INF/views/include/traffic/cctvMap/scripts.jsp" %>
 
 </body>
-</html> --%>
+</html>

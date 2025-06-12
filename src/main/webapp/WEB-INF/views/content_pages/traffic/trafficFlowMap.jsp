@@ -2,16 +2,10 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<%@ include file="/WEB-INF/views/include/sidebar/sidebar.jsp" %>
 
 
-<!-- 사이드바 추가하는 코드 -->
-<link rel="stylesheet" href="/css/common/sidebar/sidebar.css">
-<style>
-  #map {
-    position: relative; /* 이게 있어야 sidebar의 absolute 위치가 지도 기준이 됨 */
-  }
-</style>
+
+
 
 
 

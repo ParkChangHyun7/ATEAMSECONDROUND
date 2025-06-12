@@ -34,7 +34,7 @@ pageEncoding="UTF-8" %>
 
               <li><a href="/traffic/cctvMap">CCTV</a></li>
               <li><a href="/traffic/eventMap">돌발정보</a></li>
-              <li><a href="/traffic/trafficflowMap">소통정보</a></li>
+              <li><a href="/traffic/trafficflowmap">소통정보</a></li>
 
               <!--  대중교통 드롭다운 -->
               <li class="dropdown">

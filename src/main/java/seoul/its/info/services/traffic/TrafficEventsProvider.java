@@ -17,8 +17,8 @@ public class TrafficEventsProvider {
 
    @GetMapping("/events")
    public ResponseEntity<String> getTrafficEvents() {
-      String url = "https://openapi.its.go.kr:9443/eventInfo?apiKey=" + apiKey + "&type=all&eventType=all&getType=json";
-      try {
+      String url = "https://openapi.its.go.kr:9443/eventInfo?apiKey=" + apiKey + "&type=all&eventType=all&minX=126.7&maxX=127.2&minY=37.4&maxY=37.7&getType=json";
+      try {      
          RestTemplate restTemplate = new RestTemplate();
          String response = restTemplate.getForObject(url, String.class);
          return ResponseEntity.ok(response);

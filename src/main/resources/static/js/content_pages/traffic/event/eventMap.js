@@ -81,3 +81,32 @@ document.addEventListener("DOMContentLoaded", () => {
       showError("데이터를 불러오지 못했습니다. 다시 시도해주세요.");
     });
 });
+
+// ✅ 장소 검색 기능 추가
+const placesService = new kakao.maps.services.Places();
+const searchInput = document.getElementById("searchKeyword");
+const searchButton = document.getElementById("searchButton");
+let marker = new kakao.maps.Marker({ map: map });
+
+if (searchButton && searchInput) {
+  searchButton.addEventListener("click", () => {
+    const keyword = searchInput.value.trim();
+    if (!keyword) {
+      alert("검색어를 입력하세요.");
+      return;
+    }
+
+    placesService.keywordSearch(keyword, (data, status) => {
+      if (status === kakao.maps.services.Status.OK) {
+        const place = data[0];
+        const latlng = new kakao.maps.LatLng(place.y, place.x);
+        map.setCenter(latlng);
+        marker.setPosition(latlng);
+      } else {
+        alert("검색 결과가 없습니다.");
+      }
+    });
+  });
+}
+
+

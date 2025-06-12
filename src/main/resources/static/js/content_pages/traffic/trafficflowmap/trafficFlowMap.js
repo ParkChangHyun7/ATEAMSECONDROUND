@@ -1,8 +1,3 @@
-
-
-
-
-
 document.addEventListener("DOMContentLoaded", () => {
   const mapContainer = document.getElementById("map");
   if (!mapContainer) return;
@@ -12,24 +7,20 @@ document.addEventListener("DOMContentLoaded", () => {
     level: 6,
   });
 
-  // 줌 컨트롤 추가
   const zoomControl = new kakao.maps.ZoomControl();
   map.addControl(zoomControl, kakao.maps.ControlPosition.BOTTOMRIGHT);
 
-  // 지도 타입 컨트롤 추가
   const mapTypeControl = new kakao.maps.MapTypeControl();
   map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
 
-  // ✅ 교통 흐름 오버레이 추가
   map.addOverlayMapTypeId(kakao.maps.MapTypeId.TRAFFIC);
-});
 
-
-  // ✅ 장소 검색 기능 추가
+  // ✅ 장소 검색 기능
   const placesService = new kakao.maps.services.Places();
   const searchInput = document.getElementById("searchKeyword");
   const searchButton = document.getElementById("searchButton");
-  let marker = new kakao.maps.Marker({ map: map });
+
+  let marker = null; // ✅ 마커를 처음부터 생성하지 않음
 
   if (searchButton && searchInput) {
     searchButton.addEventListener("click", () => {
@@ -44,11 +35,19 @@ document.addEventListener("DOMContentLoaded", () => {
           const place = data[0];
           const latlng = new kakao.maps.LatLng(place.y, place.x);
           map.setCenter(latlng);
-          marker.setPosition(latlng);
+
+          if (marker) {
+            marker.setPosition(latlng);
+          } else {
+            marker = new kakao.maps.Marker({
+              position: latlng,
+              map: map,
+            });
+          }
         } else {
           alert("검색 결과가 없습니다.");
         }
       });
     });
   }
-
+});
