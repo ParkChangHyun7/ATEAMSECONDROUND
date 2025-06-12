@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
 <!-- 지도 영역 -->
 <div class="map-wrapper">
   <div class="map_container" id="mapContainer">
@@ -10,7 +11,7 @@
 <!-- 메인 콘텐츠 영역 -->
 <main class="main">
   <div class="middle-section">
-    <!-- 배경 색상 레이어 -->
+    <!-- 배경 색상 바 -->
     <div class="background-section">
       <div class="yellow-bg"></div>
       <div class="navy-bg"></div>
@@ -37,7 +38,7 @@
     </div>
   </div>
 
-  <!-- 3개 박스 영역 -->
+  <!-- 3개 박스 콘텐츠 -->
   <div class="content-section">
     <!-- 공지사항 -->
     <div class="content-box">
@@ -49,7 +50,7 @@
       <div class="index-box"><span>●</span><span>●</span><span>●</span></div>
     </div>
 
-    <!-- 대기오염 정보 (여기에 Vue가 mount됨) -->
+    <!-- 대기오염 정보 -->
     <div class="content-box">
       <div class="index-box"><span>●</span><span>●</span><span>●</span></div>
       <div id="air-info-box"></div>

@@ -12,12 +12,12 @@ const mapApp = createApp({
           level: 6,
         };
         const map = new kakao.maps.Map(mapContainer, mapOption);
+
         map.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.BOTTOMRIGHT);
         map.addControl(new kakao.maps.MapTypeControl(), kakao.maps.ControlPosition.TOP);
         map.addOverlayMapTypeId(kakao.maps.MapTypeId.TRAFFIC);
       });
 
-      // 지도 전체보기 버튼
       const btn = document.getElementById("map-toggle-btn");
       const mapContainer = document.getElementById("mapContainer");
       if (btn && mapContainer) {
@@ -37,11 +37,8 @@ const airApp = createApp({
     const airData = ref([]);
 
     const fetchAirQuality = async () => {
-      const key = "466b566d6f636861343879484c5773"; // ← 실제 발급받은 인증키
-      const url = `https://openapi.seoul.go.kr:8088/${key}/json/RealtimeCityAir/1/25/`;
-
       try {
-        const res = await fetch(url);
+        const res = await fetch("/api/air"); // Spring 프록시 컨트롤러 호출
         const json = await res.json();
         airData.value = json.RealtimeCityAir.row;
       } catch (e) {
@@ -51,11 +48,16 @@ const airApp = createApp({
 
     const getGradeClass = (grade) => {
       switch (grade) {
-        case "좋음": return "grade-good";
-        case "보통": return "grade-normal";
-        case "나쁨": return "grade-bad";
-        case "매우나쁨": return "grade-verybad";
-        default: return "";
+        case "좋음":
+          return "grade-good";
+        case "보통":
+          return "grade-normal";
+        case "나쁨":
+          return "grade-bad";
+        case "매우나쁨":
+          return "grade-verybad";
+        default:
+          return "";
       }
     };
 
