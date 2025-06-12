@@ -1,6 +1,7 @@
-import { createApp, onMounted } from "vue";
+import { createApp, onMounted, ref } from "vue";
 
-const app = createApp({
+/* 1. 카카오 지도 Vue 인스턴스 */
+const mapApp = createApp({
   template: '<div id="kakao-map-container" style="width:100%;height:100%;"></div>',
   setup() {
     onMounted(() => {
@@ -10,19 +11,13 @@ const app = createApp({
           center: new kakao.maps.LatLng(37.5666805, 126.9784147),
           level: 6,
         };
-
         const map = new kakao.maps.Map(mapContainer, mapOption);
-
-        var zoomControl = new kakao.maps.ZoomControl();
-        map.addControl(zoomControl, kakao.maps.ControlPosition.BOTTOMRIGHT);
-
-        var mapTypeControl = new kakao.maps.MapTypeControl();
-        map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOP);
-
+        map.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.BOTTOMRIGHT);
+        map.addControl(new kakao.maps.MapTypeControl(), kakao.maps.ControlPosition.TOP);
         map.addOverlayMapTypeId(kakao.maps.MapTypeId.TRAFFIC);
       });
 
-      // 지도 전체보기 토글
+      // 지도 전체보기 버튼
       const btn = document.getElementById("map-toggle-btn");
       const mapContainer = document.getElementById("mapContainer");
       if (btn && mapContainer) {
@@ -34,5 +29,59 @@ const app = createApp({
     });
   },
 });
+mapApp.mount("#vmap");
 
-app.mount("#vmap");
+/* 2. 대기오염 Vue 인스턴스 */
+const airApp = createApp({
+  setup() {
+    const airData = ref([]);
+
+    const fetchAirQuality = async () => {
+      const key = "466b566d6f636861343879484c5773"; // ← 실제 발급받은 인증키
+      const url = `https://openapi.seoul.go.kr:8088/${key}/json/RealtimeCityAir/1/25/`;
+
+      try {
+        const res = await fetch(url);
+        const json = await res.json();
+        airData.value = json.RealtimeCityAir.row;
+      } catch (e) {
+        console.error("대기오염 데이터 실패:", e);
+      }
+    };
+
+    const getGradeClass = (grade) => {
+      switch (grade) {
+        case "좋음": return "grade-good";
+        case "보통": return "grade-normal";
+        case "나쁨": return "grade-bad";
+        case "매우나쁨": return "grade-verybad";
+        default: return "";
+      }
+    };
+
+    onMounted(() => {
+      fetchAirQuality();
+    });
+
+    return {
+      airData,
+      getGradeClass,
+    };
+  },
+
+  template: `
+    <div>
+      <h4>서울 대기오염 정보</h4>
+      <ul>
+        <li
+          v-for="item in airData"
+          :key="item.MSRSTE_NM"
+          :class="getGradeClass(item.IDEX_NM)"
+        >
+          {{ item.MSRSTE_NM }}: {{ item.PM10 }}㎍/㎥ ({{ item.IDEX_NM }})
+        </li>
+      </ul>
+    </div>
+  `,
+});
+airApp.mount("#air-info-box");

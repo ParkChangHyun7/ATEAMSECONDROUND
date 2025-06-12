@@ -10,13 +10,13 @@
 <!-- 메인 콘텐츠 영역 -->
 <main class="main">
   <div class="middle-section">
-    <!-- 배경 색상 레이어 (노란/남색 배경 바) -->
+    <!-- 배경 색상 레이어 -->
     <div class="background-section">
       <div class="yellow-bg"></div>
       <div class="navy-bg"></div>
     </div>
 
-    <!-- 실제 콘텐츠 바 (날씨 정보 포함) -->
+    <!-- 상단 날씨 바 -->
     <div class="top-section">
       <div class="yellow-top">
         <div class="weather-info" id="weather-app">
@@ -37,16 +37,22 @@
     </div>
   </div>
 
-  <!-- 하단 박스 콘텐츠 영역 -->
+  <!-- 3개 박스 영역 -->
   <div class="content-section">
+    <!-- 공지사항 -->
     <div class="content-box">
       <div class="index-box"><span>●</span><span>●</span><span>●</span></div>
     </div>
+
+    <!-- 실시간 돌발정보 -->
     <div class="content-box">
       <div class="index-box"><span>●</span><span>●</span><span>●</span></div>
     </div>
+
+    <!-- 대기오염 정보 (여기에 Vue가 mount됨) -->
     <div class="content-box">
       <div class="index-box"><span>●</span><span>●</span><span>●</span></div>
+      <div id="air-info-box"></div>
     </div>
   </div>
 
