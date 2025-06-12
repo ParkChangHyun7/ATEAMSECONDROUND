@@ -1,112 +1,125 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const mapContainer = document.getElementById("map");
-  if (!mapContainer) {
-    showError("지도를 표시할 div(id='map')가 존재하지 않습니다.");
-    throw new Error("지도 컨테이너가 없습니다.");
-  }
-
-  const mapOption = {
+  const map = new kakao.maps.Map(document.getElementById("map"), {
     center: new kakao.maps.LatLng(37.5665, 126.978),
-    level: 7,
-  };
-  const map = new kakao.maps.Map(mapContainer, mapOption);
+    level: 7
+  });
 
-  function showError(message) {
-    let el = document.getElementById("error");
-    if (!el) {
-      el = document.createElement("div");
-      el.id = "error";
-      el.style.color = "red";
-      el.style.padding = "10px";
-      el.style.fontWeight = "bold";
-      document.body.appendChild(el);
-    }
-    el.textContent = message;
+  const eventListEl = document.getElementById("eventList");
+  const filterButtons = document.querySelectorAll(".filter-btn");
+
+  let allEvents = [];
+  let allMarkers = [];
+  let openInfoWindow = null;
+
+  // ✅ 한글 기반 카테고리 분류 함수
+  function mapCategoryName(type) {
+    if (!type) return "기타";
+
+    if (type.includes("공사")) return "공사";
+    if (type.includes("사고") || type.includes("추돌") || type.includes("정체")) return "교통사고";
+    if (type.includes("기상") || type.includes("안개") || type.includes("눈") || type.includes("비")) return "기상";
+    if (type.includes("기타돌발")) return "기타돌발";
+    if (type.includes("재난") || type.includes("침수") || type.includes("지반") || type.includes("붕괴")) return "재난";
+    return "기타";
   }
 
-  function defaultText(value, fallback = "정보 없음") {
-    try {
-      if (value === undefined || value === null) return fallback;
-      const str = String(value).trim();
-      return str === "" ? fallback : str;
-    } catch (e) {
-      return fallback;
-    }
-  }
+  function renderEvents(filterType = "all") {
+    eventListEl.innerHTML = "";
+    allMarkers.forEach(marker => marker.setMap(null));
+    allMarkers = [];
 
-  fetch("/api/traffic/events")
-    .then((res) => res.json())
-    .then((data) => {
-      const events = data?.body?.items || [];
+    const filtered = filterType === "all"
+      ? allEvents
+      : allEvents.filter(ev => mapCategoryName(ev.eventType) === filterType);
 
-      events.forEach((event) => {
-        const lat = parseFloat(String(event.coordY || "0").replace(",", "."));
-        const lon = parseFloat(String(event.coordX || "0").replace(",", "."));
-        if (isNaN(lat) || isNaN(lon)) return;
-
-        const eventType = defaultText(event.eventType);
-        const detailType = defaultText(event.eventDetailType);
-        const roadName = defaultText(event.roadName);
-        const roadNo = defaultText(event.roadNo);
-        const message = defaultText(event.message);
-
-        const marker = new kakao.maps.Marker({
-          map: map,
-          position: new kakao.maps.LatLng(lat, lon),
-          title: eventType,
-        });
-
-        const infoContent = `
-          <div class="info-window">
-            <strong>사건 유형: ${eventType}</strong><br>
-            세부 유형: ${detailType}<br>
-            도로명: ${roadName}<br>
-            차선 유형: ${roadNo}<br>
-            메시지: ${message}
-          </div>
-        `;
-
-        const info = new kakao.maps.InfoWindow({
-          content: infoContent,
-          removable: true,
-        });
-
-        kakao.maps.event.addListener(marker, "click", () => {
-          info.open(map, marker);
-        });
-      });
-    })
-    .catch((err) => {
-      console.error("API 오류:", err);
-      showError("데이터를 불러오지 못했습니다. 다시 시도해주세요.");
-    });
-});
-
-// ✅ 장소 검색 기능 추가
-const placesService = new kakao.maps.services.Places();
-const searchInput = document.getElementById("searchKeyword");
-const searchButton = document.getElementById("searchButton");
-let marker = new kakao.maps.Marker({ map: map });
-
-if (searchButton && searchInput) {
-  searchButton.addEventListener("click", () => {
-    const keyword = searchInput.value.trim();
-    if (!keyword) {
-      alert("검색어를 입력하세요.");
+    if (filtered.length === 0) {
+      const li = document.createElement("li");
+      li.innerHTML = `<em style="color: gray;">해당 카테고리에 데이터가 없습니다.</em>`;
+      eventListEl.appendChild(li);
       return;
     }
 
-    placesService.keywordSearch(keyword, (data, status) => {
-      if (status === kakao.maps.services.Status.OK) {
-        const place = data[0];
-        const latlng = new kakao.maps.LatLng(place.y, place.x);
-        map.setCenter(latlng);
-        marker.setPosition(latlng);
-      } else {
-        alert("검색 결과가 없습니다.");
-      }
+    filtered.forEach(event => {
+      const lat = parseFloat(String(event.coordY).replace(",", "."));
+      const lon = parseFloat(String(event.coordX).replace(",", "."));
+      if (isNaN(lat) || isNaN(lon)) return;
+
+      const pos = new kakao.maps.LatLng(lat, lon);
+      const marker = new kakao.maps.Marker({ position: pos, map });
+      allMarkers.push(marker);
+
+      const infoContent = `
+        <div class="info-window">
+          <strong>${mapCategoryName(event.eventType)}</strong><br>
+          도로명: ${event.roadName || "정보 없음"}<br>
+          메시지: ${event.message || "정보 없음"}
+        </div>
+      `;
+
+      const info = new kakao.maps.InfoWindow({ content: infoContent });
+
+      kakao.maps.event.addListener(marker, 'click', () => {
+        if (openInfoWindow) openInfoWindow.close();
+        info.open(map, marker);
+        openInfoWindow = info;
+      });
+
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <strong>${mapCategoryName(event.eventType)}</strong><br>
+        <span style="font-size: 12px;">${event.message || "정보 없음"}</span>
+      `;
+      li.addEventListener("click", () => {
+        map.panTo(pos);
+        kakao.maps.event.trigger(marker, 'click');
+      });
+
+      eventListEl.appendChild(li);
+    });
+  }
+
+  let isMounted = true; // 페이지가 살아있는지 추적
+
+  // 페이지가 unload되면 플래그 변경
+  window.addEventListener("beforeunload", () => {
+    isMounted = false;
+  });
+
+  // API 호출
+  fetch("/api/traffic/events")
+    .then(res => res.json())
+    .then(data => {
+      if (!isMounted) return; // 페이지 떠났으면 아무것도 안함
+
+      allEvents = data?.body?.items || [];
+      renderEvents("all");
+
+      const allBtn = document.querySelector('.filter-btn[data-type="all"]');
+      if (allBtn) allBtn.classList.add("active");
+    })
+    .catch(err => {
+      console.error("API 오류:", err);
+
+      if (!isMounted) return; // 페이지 떠났으면 무시
+      alert("돌발 상황 데이터를 불러오지 못했습니다.");
+    });
+
+
+  // ✅ 버튼 클릭 시 필터링
+  filterButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      filterButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const type = btn.dataset.type;
+      renderEvents(type);
     });
   });
-}
 
-
+  // ✅ 지도 클릭 시 인포윈도우 닫기
+  kakao.maps.event.addListener(map, 'click', () => {
+    if (openInfoWindow) {
+      openInfoWindow.close();
+      openInfoWindow = null;
+    }
+  });
+});
