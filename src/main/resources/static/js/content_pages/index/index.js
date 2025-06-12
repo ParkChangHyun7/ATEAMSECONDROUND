@@ -1,8 +1,7 @@
 import { createApp, onMounted } from "vue";
 
 const app = createApp({
-  template:
-    '<div id="kakao-map-container" style="width:100%;height:100%;"></div>',
+  template: '<div id="kakao-map-container" style="width:100%;height:100%;"></div>',
   setup() {
     onMounted(() => {
       kakao.maps.load(() => {
@@ -22,22 +21,18 @@ const app = createApp({
 
         map.addOverlayMapTypeId(kakao.maps.MapTypeId.TRAFFIC);
       });
+
+      // 지도 전체보기 토글
+      const btn = document.getElementById("map-toggle-btn");
+      const mapContainer = document.getElementById("mapContainer");
+      if (btn && mapContainer) {
+        btn.addEventListener("click", () => {
+          const isExpanded = mapContainer.classList.toggle("expanded");
+          btn.textContent = isExpanded ? "지도 축소하기" : "지도 전체보기";
+        });
+      }
     });
   },
 });
 
 app.mount("#vmap");
-
-document.addEventListener("DOMContentLoaded", function () {
-  const menuBtn = document.querySelector(".menu-btn");
-  const nav = document.querySelector(".nav ul");
-
-  if (menuBtn && nav) {
-    menuBtn.addEventListener("click", function () {
-      nav.style.display =
-        nav.style.display === "none" || nav.style.display === ""
-          ? "flex"
-          : "none";
-    });
-  }
-});
