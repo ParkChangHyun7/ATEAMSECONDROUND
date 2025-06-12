@@ -10,8 +10,9 @@ pageEncoding="UTF-8" %>
             <img src="/images/main_logo_small.png" alt="서울교통정보센터" />
           </span>
           <div class="site-name">
-            <span class="site-name-seoul">서울특별시</span>
-            <span class="site-name-tic">교통정보센터</span>
+           <span class="site-name-seoul">서울특별시</span>
+           <span class="site-name-tic">교통정보센터</span>
+           <span class="site-name-en">(Seoul Traffic Information)</span>
           </div>
         </a>
       </div>
