@@ -12,7 +12,6 @@ const mapApp = createApp({
           level: 6,
         };
         const map = new kakao.maps.Map(mapContainer, mapOption);
-
         map.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.BOTTOMRIGHT);
         map.addControl(new kakao.maps.MapTypeControl(), kakao.maps.ControlPosition.TOP);
         map.addOverlayMapTypeId(kakao.maps.MapTypeId.TRAFFIC);
@@ -38,7 +37,7 @@ const airApp = createApp({
 
     const fetchAirQuality = async () => {
       try {
-        const res = await fetch("/api/air"); // Spring 프록시 컨트롤러 호출
+        const res = await fetch("/api/air");
         const json = await res.json();
         airData.value = json.RealtimeCityAir.row;
       } catch (e) {
@@ -48,16 +47,11 @@ const airApp = createApp({
 
     const getGradeClass = (grade) => {
       switch (grade) {
-        case "좋음":
-          return "grade-good";
-        case "보통":
-          return "grade-normal";
-        case "나쁨":
-          return "grade-bad";
-        case "매우나쁨":
-          return "grade-verybad";
-        default:
-          return "";
+        case "좋음": return "grade-good";
+        case "보통": return "grade-normal";
+        case "나쁨": return "grade-bad";
+        case "매우나쁨": return "grade-verybad";
+        default: return "";
       }
     };
 
@@ -65,25 +59,31 @@ const airApp = createApp({
       fetchAirQuality();
     });
 
-    return {
-      airData,
-      getGradeClass,
-    };
+    return { airData, getGradeClass };
   },
 
   template: `
-    <div>
-      <h4>서울 대기오염 정보</h4>
-      <ul>
-        <li
-          v-for="item in airData"
-          :key="item.MSRSTE_NM"
-          :class="getGradeClass(item.IDEX_NM)"
-        >
-          {{ item.MSRSTE_NM }}: {{ item.PM10 }}㎍/㎥ ({{ item.IDEX_NM }})
-        </li>
-      </ul>
-    </div>
+    <div class="air-box">
+    <video
+      class="air-bg-video"
+      autoplay
+      loop
+      muted
+      playsinline
+    >
+      <source src="/static/videos/AirQuality/sky.mp4" type="video/mp4" />
+    </video>
+    <h4>서울 대기오염 정보</h4>
+    <ul>
+      <li
+        v-for="item in airData"
+        :key="item.MSRSTE_NM"
+        :class="getGradeClass(item.IDEX_NM)"
+      >
+        {{ item.MSRSTE_NM }}: {{ item.PM10 }}㎍/㎥ ({{ item.IDEX_NM }})
+      </li>
+    </ul>
+  </div>
   `,
 });
 airApp.mount("#air-info-box");
