@@ -15,12 +15,12 @@
 }
 
 .container {
-  background-color: #ffffff;
+  background-color: #fff;
   padding: 0 40px;
   padding-top: 30px;
-  padding-bottom: 0px;
+  padding-bottom: 0;
   border-radius: 8px;
-  box-shadow: 0 5px 50px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 5px 50px rgba(0,0,0,0.5);
   max-width: 1140px;
   min-width: 360px;
   width: 100%;
@@ -89,7 +89,6 @@
   vertical-align: middle;
   margin-left: 5px;
   margin-right: -5px;
-  gap: 0px;
   color: #555;
   font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
 }
@@ -111,35 +110,46 @@
   margin-bottom: 10px;
 }
 
-.post-actions .btn {
-  background-color: #fff;
-  border: 1px solid #ced4da;
-  padding: 8px 16px;
+.post-actions .btn,
+.util-box .post,
+.share-layer-modal .post.share-copy {
+  border: 0;
   border-radius: 4px;
-  font-size: 14px;
-  color: #333;
-  text-decoration: none;
-  transition: background-color 0.2s, color 0.2s;
-}
-
-.post-actions .btn-primary {
   background-color: #1d3b5b;
+  padding: 8px 16px;
+  font-size: 14px;
   color: #fff;
-  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.18s, color 0.18s;
+  min-width: 60px;
+  height: 36px;
 }
 
-.post-actions .btn-primary:hover {
+.post-actions .btn-primary,
+.util-box .post.share,
+.util-box .post.scrap,
+.util-box .post.report,
+.share-layer-modal .post.share-copy {
+  background-color: #1d3b5b;
+}
+
+.post-actions .btn-primary:hover,
+.util-box .post.share:hover,
+.util-box .post.scrap:hover,
+.share-layer-modal .post.share-copy:hover {
   background-color: #f1b300;
   color: #1d3b5b;
 }
 
-.post-actions .btn-danger {
-  background-color: #c62828;
-  color: #fff;
-  border: none;
+.util-box .post.report {
+  background-color: #e44545;
 }
 
-.post-actions .btn-danger:hover {
+.util-box .post.report:hover {
   background-color: #a31515;
 }
 
@@ -210,17 +220,15 @@
 }
 
 .material-symbols-outlined.util {
-  margin: 0px;
-  padding: 0px;
-  padding-right: 2px;
+  margin: 0;
+  padding: 0 2px 0 0;
   font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
 }
 
 .material-symbols-outlined.heart {
   color: #fff;
-  padding: 0px;
-  margin: 0px;
-  gap: 0px;
+  padding: 0;
+  margin: 0;
   font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 40;
 }
 
@@ -254,4 +262,103 @@
     padding: 6px 10px;
     font-size: 13px;
   }
+}
+
+.share-layer-backdrop {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: 2000;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-layer-modal {
+  background: #fff;
+  padding: 28px 22px 22px 22px;
+  border-radius: 12px;
+  min-width: 320px;
+  max-width: 90vw;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.22);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: popup-fadein 0.18s;
+}
+
+@keyframes popup-fadein {
+  from { transform: scale(0.95); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.share-layer-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  text-align: left;
+}
+
+.share-layer-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.share-layer-modal input[type="text"] {
+  flex: 1;
+  padding: 7px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 15px;
+  background: #f8f9fa;
+}
+
+.share-layer-modal .btn {
+  min-width: 60px;
+  height: 36px;
+}
+
+.copy-success {
+  color: #1d7a1d;
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px; right: 14px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.close-btn:hover {
+  color: #c62828;
+}
+
+/* 공유/신고/스크랩 버튼과 동일하게 */
+.share-layer-modal .post.share-copy {
+  border: 0px;
+  border-radius: 4px;
+  background-color: #1d3b5b;
+  padding: 5px 18px;
+  font-size: 14px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  height: 36px;
+  transition: background 0.18s, color 0.18s;
+}
+
+.share-layer-modal .post.share-copy:hover {
+  background-color: #f1b300;
+  color: #1d3b5b;
 }

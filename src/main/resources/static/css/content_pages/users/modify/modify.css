@@ -1,0 +1,443 @@
+[v-cloak] {
+  display: none;
+}
+
+.topdiv-modify {
+  background-color: #f8f9fa;
+  display: flex;
+  justify-content: center;
+  padding-top: 50px;
+  margin: 0;
+  color: #333;
+}
+
+.container {
+  background-color: #ffffff;
+  padding: 0 40px;
+  padding-top: 30px;
+  padding-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 5px 50px rgba(0, 0, 0, 0.5);
+  max-width: 550px;
+  min-width: 360px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 50px;
+  margin-bottom: 100px;
+}
+
+.container button {
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.container button:hover {
+  background-color: #f1b300;
+}
+
+.h1 {
+  font-size: 33px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-section {
+  margin-bottom: 5px;
+}
+.input-info {
+  text-align: center;
+  font-size: 13px;
+}
+
+.form-section label,
+.form-section .section-title {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #333;
+  padding-left: 2px;
+}
+
+.form-section .required {
+  color: red;
+  margin-left: 4px;
+}
+
+.input-group {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.form-section input,
+.form-section select {
+  width: 100%;
+  padding: 14px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  font-size: 14px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+.agreement-item input[type="checkbox"] {
+  margin-right: 10px;
+  width: 16px;
+  height: 16px;
+  accent-color: #1d3b5b;
+}
+
+.form-section input[type="checkbox"] {
+  display: flex;
+}
+
+.form-section.phone_number,
+.form-section.address {
+  gap: 7%;
+}
+
+.form-section.name-nickname,
+.form-section.birthdate-gender {
+  display: flex;
+  gap: 7%;
+}
+
+.agreement-box {
+  border: 1px solid #e0e0e0;
+  padding: 20px;
+  border-radius: 5px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+
+.agreement-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  font-size: 14px;
+  color: #555;
+  position: relative;
+  padding-right: 20px;
+}
+
+.agreement-item:last-child {
+  margin-bottom: 0;
+}
+
+.agreement-item label {
+  font-weight: normal;
+  font-size: 13px;
+}
+
+.arrow-icon {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-top: 1.5px solid #adb5bd;
+  border-right: 1.5px solid #adb5bd;
+  transform: translateY(-50%) rotate(45deg);
+  cursor: pointer;
+}
+
+.agreement-all .arrow-icon {
+  display: none;
+}
+
+.agreement-all {
+  padding-right: 0;
+}
+
+.agreement-all label {
+  font-weight: bold;
+  color: #333;
+}
+
+.agreement-all span {
+  display: block;
+  font-size: 12px;
+  color: #888;
+  margin-top: 4px;
+}
+
+.agreement-item-optional label {
+  color: #888;
+}
+
+.terms-info {
+  display: flex;
+  justify-content: center;
+  font-size: 0.8em;
+  color: red;
+  margin-bottom: 20px;
+}
+
+.phone-input {
+  background-color: #f0f0f0;
+}
+
+.phone-info {
+  text-align: center;
+}
+
+.phone-verify-button,
+.phone-confirm-button,
+.address-search-button {
+  font-size: 14px;
+  background-color: #1d3b5b;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  height: 45px;
+  margin-bottom: 15px;
+}
+
+.phone-confirm-button,
+.phone-verify-button {
+  background-color: #f0f0f0;
+}
+
+.phone-confirm-button:disabled:hover,
+.phone-verify-button:disabled:hover {
+  background-color: #f0f0f0;
+}
+
+.phone-confirm-button,
+.phone-verify-button {
+  width: 150px;
+}
+
+.phone-authcode-inputs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding-top: 20px;
+}
+
+.phone-authcode-inputs input {
+  width: 40px;
+  height: 50px;
+  text-align: center;
+  font-size: 24px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  transition: all 0.2s ease;
+  padding: 0;
+  display: inline-block;
+}
+
+.phone-authcode-inputs input[type="number"]::-webkit-outer-spin-button,
+.phone-authcode-inputs input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.phone-authcode-inputs input:focus {
+  outline: none;
+  border-color: #1d3b5b;
+  box-shadow: 0 0 0 2px rgba(29, 59, 91, 0.1);
+}
+
+.password-label-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.password-label-group .section-title {
+  margin-bottom: 0;
+}
+
+.password-help {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-color: #adb5bd;
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 12px;
+  line-height: 16px;
+  cursor: help;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  margin-top: 10px;
+  background-color: #1d3b5b;
+  color: #fff;
+}
+
+.select-gender {
+  padding-right: 30px;
+  color: #222;
+}
+
+.birth-section {
+  width: 60%;
+}
+
+.gender-section {
+  width: 40%;
+}
+
+.name-section,
+.nickname-section {
+  width: 50%;
+}
+
+#address_postcode {
+  flex-grow: 2;
+}
+
+.address-search-button {
+  width: 95px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  padding: 10px 12px;
+}
+
+.phone-verify-button:hover,
+.phone-confirm-button:hover {
+  background-color: #f0f0f0;
+}
+
+/*
+.first-page-wrap {
+  display: block;
+}
+
+.second-page-wrap {
+  display: none;
+}
+*/
+
+.first-page-wrap,
+.second-page-wrap {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.slide-page-enter-active,
+.slide-page-leave-active {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.slide-page-leave-to {
+  opacity: 0;
+  transform: translateX(-60%);
+}
+
+.slide-page-enter-from {
+  opacity: 0;
+  transform: translateX(60%);
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* 핸드폰 번호 변경 인레이어 팝업 스타일 */
+.phone-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.phone-popup {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+  padding: 30px 25px 20px 25px;
+  min-width: 320px;
+  max-width: 95vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.phone-popup h3 {
+  margin-bottom: 18px;
+  font-size: 20px;
+  color: #1d3b5b;
+}
+.phone-popup input[type="tel"] {
+  margin-bottom: 10px;
+  width: 200px;
+  text-align: center;
+}
+.phone-popup .phone-authcode-inputs {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.phone-popup button {
+  margin-top: 10px;
+  width: 100%;
+  background: #1d3b5b;
+  color: #fff;
+  border: none;
+  padding: 10px 0;
+  border-radius: 4px;
+  font-size: 15px;
+}
+.phone-popup button:last-child {
+  background: #adb5bd;
+  margin-top: 5px;
+}
+
+@media (max-width: 764px) {
+  .container {
+    padding: 20px 15px;
+    margin: 0 10px;
+    max-width: 100%;
+  }
+  .h1 {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  .input-group.postcode {
+    gap: 10%;
+  }
+  .phone-popup {
+    min-width: 90vw;
+    padding: 20px 5vw 15px 5vw;
+  }
+}
+
+.readonly-input {
+  background-color: #f0f0f0;
+}
+
+.phone-verify-button {
+  font-size: 14px;
+  background-color: #1d3b5b;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  height: 45px;
+  margin-bottom: 15px;
+  width: 150px;
+}
+.phone-verify-button:hover {
+  background-color: #f1b300;
+  color: #222;
+}

@@ -105,31 +105,77 @@
                      </div>
                      <div class="input-group" style="justify-content: center">
                         <div class="phone-authcode-inputs" v-show="showAuthCodeInputs">
-                           <input class="phone-authcode" type="text" maxlength="1" pattern="[0-9]" inputmode="numeric"
-                              required :disabled="isPhoneVerified"
-                              :style="{ backgroundColor: isPhoneVerified ? '#f0f0f0' : '' }" v-model="authCode[0]"
-                              @input="handleAuthCodeInput(0, $event)" @keydown="handleAuthCodeKeydown(0, $event)"
-                              @paste.prevent="handleAuthCodePaste($event)" :ref="`authCodeInput0`" />
-                           <input class="phone-authcode" type="text" maxlength="1" pattern="[0-9]" inputmode="numeric"
-                              required :disabled="isPhoneVerified"
-                              :style="{ backgroundColor: isPhoneVerified ? '#f0f0f0' : '' }" v-model="authCode[1]"
-                              @input="handleAuthCodeInput(1, $event)" @keydown="handleAuthCodeKeydown(1, $event)"
-                              :ref="`authCodeInput1`" />
-                           <input class="phone-authcode" type="text" maxlength="1" pattern="[0-9]" inputmode="numeric"
-                              required :disabled="isPhoneVerified"
-                              :style="{ backgroundColor: isPhoneVerified ? '#f0f0f0' : '' }" v-model="authCode[2]"
-                              @input="handleAuthCodeInput(2, $event)" @keydown="handleAuthCodeKeydown(2, $event)"
-                              :ref="`authCodeInput2`" />
-                           <input class="phone-authcode" type="text" maxlength="1" pattern="[0-9]" inputmode="numeric"
-                              required :disabled="isPhoneVerified"
-                              :style="{ backgroundColor: isPhoneVerified ? '#f0f0f0' : '' }" v-model="authCode[3]"
-                              @input="handleAuthCodeInput(3, $event)" @keydown="handleAuthCodeKeydown(3, $event)"
-                              :ref="`authCodeInput3`" />
-                           <input class="phone-authcode" type="text" maxlength="1" pattern="[0-9]" inputmode="numeric"
-                              required :disabled="isPhoneVerified"
-                              :style="{ backgroundColor: isPhoneVerified ? '#f0f0f0' : '' }" v-model="authCode[4]"
-                              @input="handleAuthCodeInput(4, $event)" @keydown="handleAuthCodeKeydown(4, $event)"
-                              :ref="`authCodeInput4`" />
+                           <input
+                              class="phone-authcode"
+                              type="text"
+                              maxlength="1"
+                              pattern="[0-9]"
+                              inputmode="numeric"
+                              required
+                              :disabled="isPhoneVerified"
+                              :style="{ backgroundColor: isPhoneVerified ? '#f0f0f0' : '' }"
+                              v-model="authCode[0]"
+                              @input="handleAuthCodeInput(0, $event)"
+                              @keydown="handleAuthCodeKeydown(0, $event)"
+                              @paste.prevent="handleAuthCodePaste($event)"
+                              :ref="el => authCodeInputs[0] = el"
+                           />
+                           <input
+                              class="phone-authcode"
+                              type="text"
+                              maxlength="1"
+                              pattern="[0-9]"
+                              inputmode="numeric"
+                              required
+                              :disabled="isPhoneVerified"
+                              :style="{ backgroundColor: isPhoneVerified ? '#f0f0f0' : '' }"
+                              v-model="authCode[1]"
+                              @input="handleAuthCodeInput(1, $event)"
+                              @keydown="handleAuthCodeKeydown(1, $event)"
+                              :ref="el => authCodeInputs[1] = el"
+                           />
+                           <input
+                              class="phone-authcode"
+                              type="text"
+                              maxlength="1"
+                              pattern="[0-9]"
+                              inputmode="numeric"
+                              required
+                              :disabled="isPhoneVerified"
+                              :style="{ backgroundColor: isPhoneVerified ? '#f0f0f0' : '' }"
+                              v-model="authCode[2]"
+                              @input="handleAuthCodeInput(2, $event)"
+                              @keydown="handleAuthCodeKeydown(2, $event)"
+                              :ref="el => authCodeInputs[2] = el"
+                           />
+                           <input
+                              class="phone-authcode"
+                              type="text"
+                              maxlength="1"
+                              pattern="[0-9]"
+                              inputmode="numeric"
+                              required
+                              :disabled="isPhoneVerified"
+                              :style="{ backgroundColor: isPhoneVerified ? '#f0f0f0' : '' }"
+                              v-model="authCode[3]"
+                              @input="handleAuthCodeInput(3, $event)"
+                              @keydown="handleAuthCodeKeydown(3, $event)"
+                              :ref="el => authCodeInputs[3] = el"
+                           />
+                           <input
+                              class="phone-authcode"
+                              type="text"
+                              maxlength="1"
+                              pattern="[0-9]"
+                              inputmode="numeric"
+                              required
+                              :disabled="isPhoneVerified"
+                              :style="{ backgroundColor: isPhoneVerified ? '#f0f0f0' : '' }"
+                              v-model="authCode[4]"
+                              @input="handleAuthCodeInput(4, $event)"
+                              @keydown="handleAuthCodeKeydown(4, $event)"
+                              :ref="el => authCodeInputs[4] = el"
+                           />
                         </div>
                      </div>
                      <div class="phone-info">

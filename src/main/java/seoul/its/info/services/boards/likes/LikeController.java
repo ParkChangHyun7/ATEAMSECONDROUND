@@ -21,11 +21,12 @@ public class LikeController {
     private final LikeService likeService;
 
     @GetMapping("/status")
-    public ResponseEntity<Map<String, Boolean>> getLikeStatus(
+    public ResponseEntity<Map<String, Object>> getLikeStatus(
             @PathVariable Long postId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         boolean liked = likeService.isPostLikedByUser(postId, userDetails);
-        Map<String, Boolean> response = new HashMap<>();
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
         response.put("liked", liked);
         return ResponseEntity.ok(response);
     }

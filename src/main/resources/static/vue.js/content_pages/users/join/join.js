@@ -608,6 +608,13 @@ const joinApp = createApp({
       }
     };
 
+    const handleLoginIdBlur = () => { validateField("loginId"); };
+    const handlePasswordBlur = () => { validateField("password"); };
+    const handleNameBlur = () => { validateField("name"); };
+    const handleNicknameBlur = () => { validateField("nickname"); };
+    const handleEmailBlur = () => { validateField("email"); };
+    const handleBirthBlur = () => { validateField("birth"); };
+
     onMounted(() => {
       console.log("Vue 인스턴스 mounted! 시점:", new Date().toLocaleTimeString());
     });
@@ -663,6 +670,12 @@ const joinApp = createApp({
       validateField,
       openDaumPostcode,
       submitJoinForm,
+      handleLoginIdBlur,
+      handlePasswordBlur,
+      handleNameBlur,
+      handleNicknameBlur,
+      handleEmailBlur,
+      handleBirthBlur,
     };
   },
 });

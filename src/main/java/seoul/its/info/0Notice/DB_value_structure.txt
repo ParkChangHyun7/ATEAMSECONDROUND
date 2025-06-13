@@ -6,6 +6,7 @@ CREATE TABLE users (
     password_updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     name VARCHAR(50) NOT NULL,
     nickname VARCHAR(50) NOT NULL UNIQUE,
+    nickname_changed_at DATETIME NULL,
     gender CHAR(1), -- ENUM(N/M/F) 가능
     email VARCHAR(100) UNIQUE,
     email_verified TINYINT DEFAULT 0,

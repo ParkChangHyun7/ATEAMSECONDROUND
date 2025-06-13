@@ -109,7 +109,7 @@ uri="http://java.sun.com/jsp/jstl/functions" %>
             <span class="material-symbols-outlined util"> fmd_bad </span
             ><span class="util-text">신고</span>
           </button>
-          <button class="post share">
+          <button class="post share" @click="openShareLayer">
             <span class="material-symbols-outlined util"> share </span
             ><span class="util-text">공유</span>
           </button>
@@ -239,6 +239,19 @@ uri="http://java.sun.com/jsp/jstl/functions" %>
 
     <div v-else>
       <p>게시글 정보를 불러오지 못했습니다.</p>
+    </div>
+
+    <!-- util-container 아래에 인레이어 모달 추가 -->
+    <div v-if="showShareLayer" class="share-layer-backdrop" @click.self="closeShareLayer">
+      <div class="share-layer-modal">
+        <div class="share-layer-title">게시글 공유</div>
+        <div class="share-layer-row">
+          <input type="text" :value="postUrl" readonly ref="shareInput">
+          <button @click="copyPostUrl" class="btn btn-primary">복사</button>
+        </div>
+        <div v-if="copySuccessMsg" class="copy-success">{{ copySuccessMsg }}</div>
+        <button @click="closeShareLayer" class="close-btn" title="닫기">×</button>
+      </div>
     </div>
   </div>
 </div>

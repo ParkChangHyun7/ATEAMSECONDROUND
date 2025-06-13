@@ -130,10 +130,10 @@ const postReadApp = {
       try {
         const url = `/boards/${post.value.boardId}/posts/${post.value.id}/likes/status`;
         const response = await window.apiService.getRequest(url);
-        if (response.success) {
-          isLiked.value = response.liked;
+        if (response.success && response.data && typeof response.data.liked === "boolean") {
+          isLiked.value = response.data.liked;
         } else {
-          console.error("좋아요 상태 로드 실패:", response.message);
+          console.error("좋아요 상태 로드 실패:", response.message, response);
           isLiked.value = false;
         }
       } catch (error) {
@@ -154,12 +154,17 @@ const postReadApp = {
         return;
       }
 
+      // 이미 공감한 상태에서 취소 시도면 확인창
+      if (isLiked.value) {
+        const ok = confirm("공감을 취소 하시겠습니까?");
+        if (!ok) return;
+      }
+
       try {
         const url = `/boards/${post.value.boardId}/posts/${post.value.id}/likes`;
-        const response = await window.apiService.postRequest(url, {}); // 빈 바디 전송
+        const response = await window.apiService.postRequest(url, {});
         if (response.success) {
-          isLiked.value = !isLiked.value; // 상태 토글
-          // 좋아요 수 업데이트 (post.likeCount가 null일 경우 0으로 초기화)
+          isLiked.value = !isLiked.value;
           post.value.likeCount =
             (post.value.likeCount || 0) + (isLiked.value ? 1 : -1);
         } else {
@@ -317,6 +322,49 @@ const postReadApp = {
       }
     };
 
+    const showShareLayer = ref(false);
+    const copySuccessMsg = ref("");
+    const shareInput = ref(null);
+
+    const postUrl = computed(() => {
+      if (!post.value) return "";
+      return window.location.origin + `/boards/${post.value.boardId}/posts/${post.value.id}`;
+    });
+
+    const openShareLayer = () => {
+      showShareLayer.value = true;
+      copySuccessMsg.value = "";
+      setTimeout(() => {
+        if (shareInput.value) {
+          shareInput.value.focus();
+          shareInput.value.select();
+        }
+      }, 100);
+    };
+
+    const closeShareLayer = () => {
+      showShareLayer.value = false;
+      copySuccessMsg.value = "";
+    };
+
+    const copyPostUrl = async () => {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(postUrl.value);
+          copySuccessMsg.value = "주소가 복사되었습니다!";
+        } else {
+          // fallback: input 선택 후 execCommand
+          if (shareInput.value) {
+            shareInput.value.select();
+            document.execCommand("copy");
+            copySuccessMsg.value = "주소가 복사되었습니다!";
+          }
+        }
+      } catch (e) {
+        copySuccessMsg.value = "복사 실패! 직접 복사해 주세요.";
+      }
+    };
+
     onMounted(() => {
       fetchComments();
       fetchLikeStatus(); // 좋아요 상태 불러오기 추가
@@ -344,6 +392,13 @@ const postReadApp = {
       cancelEdit,
       saveCommentEdit,
       deleteComment,
+      showShareLayer,
+      openShareLayer,
+      closeShareLayer,
+      copyPostUrl,
+      postUrl,
+      copySuccessMsg,
+      shareInput,
     };
   },
 };
