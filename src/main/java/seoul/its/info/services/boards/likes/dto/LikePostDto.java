@@ -9,6 +9,7 @@ public class LikePostDto {
    private Long id;
    private Long postId;
    private Long userId;
+   private String loginId;
    private String nickname;
    private LocalDateTime createdAt;
-} 
+}
