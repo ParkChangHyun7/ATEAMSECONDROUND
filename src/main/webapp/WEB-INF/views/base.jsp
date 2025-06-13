@@ -150,6 +150,9 @@
             <c:if test="${not empty scriptsPage}">
                 <c:import url="${scriptsPage}" />
             </c:if>
+            <!-- base.jsp에 삽입 -->
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+            <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
         </body>
 
         </html>
