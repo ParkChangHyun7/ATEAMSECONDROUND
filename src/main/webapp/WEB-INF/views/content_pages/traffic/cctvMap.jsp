@@ -7,12 +7,18 @@
 <div class="sidebar">
   <h3>📷 CCTV 목록</h3>
 
+	<input type="text" id="cctvSearchInput" placeholder="CCTV 이름 검색" style="width:100%; margin-bottom:10px; padding:5px;" />
+
+
   <!-- ✅ 필터 버튼 -->
   <div id="filterButtons" style="margin-bottom: 10px;">
     <button class="filter-btn" data-type="all">전체</button>
     <button class="filter-btn" data-type="ex">고속도로</button>
     <button class="filter-btn" data-type="its">국도</button>
   </div>
+
+	
+
 
   <ul id="cctvList"></ul>
 </div>

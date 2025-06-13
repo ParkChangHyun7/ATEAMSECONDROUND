@@ -59,6 +59,26 @@
     font-weight: bold;
   }
   
+    #scrollToTopBtn {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    display: none;
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    border: none;
+    cursor: pointer;
+    z-index: 999;
+  }
   
+  .active-list-item {
+  background-color: #ffeb3b33;
+  border-left: 4px solid #ffc107;
+}
   
+    #eventList {
+    position: relative;
+    overflow-y: auto;
+  }
+
 </style>

@@ -1,3 +1,7 @@
+// eventMap.js
+
+// ✅ DOMContentLoaded 보장
+
 document.addEventListener("DOMContentLoaded", () => {
   const map = new kakao.maps.Map(document.getElementById("map"), {
     center: new kakao.maps.LatLng(37.5665, 126.978),
@@ -5,21 +9,25 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const eventListEl = document.getElementById("eventList");
+  const eventListWrapper = document.getElementById("eventListWrapper");
   const filterButtons = document.querySelectorAll(".filter-btn");
+  const searchInput = document.getElementById("searchInput");
+  const scrollTopBtn = document.getElementById("scrollToTopBtn");
 
   let allEvents = [];
   let allMarkers = [];
   let openInfoWindow = null;
+  let activeFilterType = "all";
+  let markerToListItemMap = new Map();
 
-  // ✅ 한글 기반 카테고리 분류 함수
   function mapCategoryName(type) {
     if (!type) return "기타";
-
-    if (type.includes("공사")) return "공사";
-    if (type.includes("사고") || type.includes("추돌") || type.includes("정체")) return "교통사고";
-    if (type.includes("기상") || type.includes("안개") || type.includes("눈") || type.includes("비")) return "기상";
-    if (type.includes("기타돌발")) return "기타돌발";
-    if (type.includes("재난") || type.includes("침수") || type.includes("지반") || type.includes("붕괴")) return "재난";
+    const cleanType = type.replace(/<[^>]+>/g, "").toLowerCase();
+    if (cleanType.includes("공사")) return "공사";
+    if (cleanType.includes("사고") || cleanType.includes("추돌") || cleanType.includes("정체")) return "교통사고";
+    if (cleanType.includes("기상") || cleanType.includes("눈") || cleanType.includes("비") || cleanType.includes("안개")) return "기상";
+    if (cleanType.includes("재난") || cleanType.includes("침수") || cleanType.includes("지반") || cleanType.includes("붕괴")) return "재난";
+    if (cleanType.includes("기타돌발")) return "기타돌발";
     return "기타";
   }
 
@@ -27,6 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
     eventListEl.innerHTML = "";
     allMarkers.forEach(marker => marker.setMap(null));
     allMarkers = [];
+    markerToListItemMap.clear();
+    activeFilterType = filterType;
 
     const filtered = filterType === "all"
       ? allEvents
@@ -39,87 +49,110 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    filtered.forEach(event => {
-      const lat = parseFloat(String(event.coordY).replace(",", "."));
-      const lon = parseFloat(String(event.coordX).replace(",", "."));
-      if (isNaN(lat) || isNaN(lon)) return;
+    filtered.forEach(event => createListAndMarker(event));
+  }
 
-      const pos = new kakao.maps.LatLng(lat, lon);
-      const marker = new kakao.maps.Marker({ position: pos, map });
-      allMarkers.push(marker);
+  function createListAndMarker(event) {
+    const lat = parseFloat(String(event.coordY).replace(",", "."));
+    const lon = parseFloat(String(event.coordX).replace(",", "."));
+    if (isNaN(lat) || isNaN(lon)) return;
 
-      const infoContent = `
-        <div class="info-window">
-          <strong>${mapCategoryName(event.eventType)}</strong><br>
-          도로명: ${event.roadName || "정보 없음"}<br>
-          메시지: ${event.message || "정보 없음"}
-        </div>
-      `;
+    const pos = new kakao.maps.LatLng(lat, lon);
+    const marker = new kakao.maps.Marker({ position: pos, map });
+    allMarkers.push(marker);
 
-      const info = new kakao.maps.InfoWindow({ content: infoContent });
-
-      kakao.maps.event.addListener(marker, 'click', () => {
-        if (openInfoWindow) openInfoWindow.close();
-        info.open(map, marker);
-        openInfoWindow = info;
-      });
-
-      const li = document.createElement("li");
-      li.innerHTML = `
+    const infoContent = `
+      <div class="info-window">
         <strong>${mapCategoryName(event.eventType)}</strong><br>
-        <span style="font-size: 12px;">${event.message || "정보 없음"}</span>
-      `;
-      li.addEventListener("click", () => {
-        map.panTo(pos);
-        kakao.maps.event.trigger(marker, 'click');
-      });
+        도로명: ${event.roadName || "정보 없음"}<br>
+        메시지: ${event.message || "정보 없음"}
+      </div>
+    `;
+    const info = new kakao.maps.InfoWindow({ content: infoContent });
 
-      eventListEl.appendChild(li);
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <strong>${mapCategoryName(event.eventType)}</strong><br>
+      <span style="font-size: 12px;">도로명: ${event.roadName || "정보 없음"}</span><br>
+      <span style="font-size: 12px;">${event.message || "메시지 없음"}</span>
+    `;
+
+    li.addEventListener("click", () => {
+      document.querySelectorAll("#eventList li").forEach(el => el.classList.remove("active-list-item"));
+      li.classList.add("active-list-item");
+      map.setCenter(pos); // ✅ 화면 중앙으로 이동
+      kakao.maps.event.trigger(marker, "click");
+    });
+
+    markerToListItemMap.set(marker, li);
+    eventListEl.appendChild(li);
+
+    kakao.maps.event.addListener(marker, "click", () => {
+      if (openInfoWindow) openInfoWindow.close();
+      info.open(map, marker);
+      openInfoWindow = info;
+
+      document.querySelectorAll("#eventList li").forEach(el => el.classList.remove("active-list-item"));
+      const targetLi = markerToListItemMap.get(marker);
+      if (targetLi) {
+        targetLi.classList.add("active-list-item");
+        targetLi.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
     });
   }
 
-  let isMounted = true; // 페이지가 살아있는지 추적
+  searchInput.addEventListener("input", () => {
+    const keyword = searchInput.value.trim().toLowerCase();
+    const filtered = allEvents.filter(ev => {
+      const msg = (ev.message || "").toLowerCase();
+      const road = (ev.roadName || "").toLowerCase();
+      return msg.includes(keyword) || road.includes(keyword);
+    });
 
-  // 페이지가 unload되면 플래그 변경
-  window.addEventListener("beforeunload", () => {
-    isMounted = false;
+    eventListEl.innerHTML = "";
+    allMarkers.forEach(marker => marker.setMap(null));
+    allMarkers = [];
+
+    if (filtered.length === 0) {
+      const li = document.createElement("li");
+      li.innerHTML = `<em style="color: gray;">검색 결과가 없습니다.</em>`;
+      eventListEl.appendChild(li);
+      return;
+    }
+
+    filtered.forEach(event => createListAndMarker(event));
   });
 
-  // API 호출
   fetch("/api/traffic/events")
     .then(res => res.json())
     .then(data => {
-      if (!isMounted) return; // 페이지 떠났으면 아무것도 안함
-
       allEvents = data?.body?.items || [];
       renderEvents("all");
-
-      const allBtn = document.querySelector('.filter-btn[data-type="all"]');
-      if (allBtn) allBtn.classList.add("active");
-    })
-    .catch(err => {
-      console.error("API 오류:", err);
-
-      if (!isMounted) return; // 페이지 떠났으면 무시
-      alert("돌발 상황 데이터를 불러오지 못했습니다.");
+      document.querySelector('.filter-btn[data-type="all"]')?.classList.add("active");
     });
 
-
-  // ✅ 버튼 클릭 시 필터링
   filterButtons.forEach(btn => {
     btn.addEventListener("click", () => {
       filterButtons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
-      const type = btn.dataset.type;
-      renderEvents(type);
+      renderEvents(btn.dataset.type);
     });
   });
 
-  // ✅ 지도 클릭 시 인포윈도우 닫기
   kakao.maps.event.addListener(map, 'click', () => {
     if (openInfoWindow) {
       openInfoWindow.close();
       openInfoWindow = null;
+      document.querySelectorAll("#eventList li").forEach(el => el.classList.remove("active-list-item"));
     }
+  });
+
+  // ✅ Top 버튼 제어
+  eventListWrapper.addEventListener("scroll", () => {
+    scrollTopBtn.style.display = eventListWrapper.scrollTop > 150 ? "block" : "none";
+  });
+
+  scrollTopBtn.addEventListener("click", () => {
+    eventListWrapper.scrollTo({ top: 0, behavior: "smooth" });
   });
 });
