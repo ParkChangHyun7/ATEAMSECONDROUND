@@ -441,3 +441,16 @@ input[type="number"] {
   background-color: #f1b300;
   color: #222;
 }
+
+.withdraw-button {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  margin-top: 10px;
+  background-color: #e74c3c;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}

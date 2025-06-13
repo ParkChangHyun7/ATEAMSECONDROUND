@@ -120,6 +120,7 @@
             </div>
           </div>
           <button type="submit" class="submit-button" :disabled="isSubmitting">수정하기</button>
+          <button type="button" class="withdraw-button">탈퇴하기</button>
           <div v-if="serverErrors.general" style="color:red; margin-top:10px;">{{ serverErrors.general }}</div>
         </div>
       </div>
