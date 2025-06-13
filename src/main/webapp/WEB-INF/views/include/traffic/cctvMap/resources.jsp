@@ -7,9 +7,10 @@
   .sidebar {
     width: 300px;
     background: #f5f5f5;
-    overflow-y: auto;
+    overflow: hidden;
     padding: 10px;
     border-right: 1px solid #ccc;
+    position: relative; /* ✅ TOP 버튼 정렬 기준 */
   }
 
   .sidebar h3 {
@@ -17,6 +18,12 @@
     font-size: 18px;
     border-bottom: 1px solid #aaa;
     padding-bottom: 5px;
+  }
+
+  #cctvListWrapper {
+    height: 75vh;
+    overflow-y: auto;
+    margin-top: 10px;
   }
 
   #cctvList {
@@ -38,8 +45,8 @@
   .map {
     flex-grow: 1;
   }
-  
-    #filterButtons {
+
+  #filterButtons {
     display: flex;
     gap: 5px;
   }
@@ -58,27 +65,23 @@
     color: white;
     font-weight: bold;
   }
-  
+
+  .active-list-item {
+    background-color: #ffeb3b33;
+    border-left: 4px solid #ffc107;
+  }
+
     #scrollToTopBtn {
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
+    position: sticky;
+    bottom: 0;
+    width: 100%;
     display: none;
-    padding: 5px 10px;
-    background-color: #f0f0f0;
+    padding: 8px 0;
+    background-color: #eee;
     border: none;
+    text-align: center;
+    font-weight: bold;
     cursor: pointer;
     z-index: 999;
   }
-  
-  .active-list-item {
-  background-color: #ffeb3b33;
-  border-left: 4px solid #ffc107;
-}
-  
-    #eventList {
-    position: relative;
-    overflow-y: auto;
-  }
-
 </style>

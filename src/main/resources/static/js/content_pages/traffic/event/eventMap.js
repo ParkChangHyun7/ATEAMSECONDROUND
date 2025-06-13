@@ -89,9 +89,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     kakao.maps.event.addListener(marker, "click", () => {
       if (openInfoWindow) openInfoWindow.close();
+	  
+	  // ✅ 마커 클릭 시 지도 중심 이동
+	  map.setCenter(pos); // 또는 부드러운 이동 원할 경우 map.panTo(pos)
+	  
       info.open(map, marker);
       openInfoWindow = info;
-
+	  
       document.querySelectorAll("#eventList li").forEach(el => el.classList.remove("active-list-item"));
       const targetLi = markerToListItemMap.get(marker);
       if (targetLi) {
