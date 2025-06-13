@@ -1,4 +1,3 @@
-// ✅ DOMContentLoaded 보장
 function initializeCCTVMap() {
   let openInfoWindow = null;
   const map = new kakao.maps.Map(document.getElementById("map"), {
@@ -31,6 +30,14 @@ function initializeCCTVMap() {
     });
 
   function renderCCTVList(filterType, keyword = "") {
+	
+	if (openInfoWindow) {
+	  openInfoWindow.close();
+	  openInfoWindow = null;
+	}
+
+	
+	
     cctvListEl.innerHTML = "";
     allMarkers.forEach(m => m.setMap(null));
     allMarkers = [];
@@ -75,7 +82,12 @@ function initializeCCTVMap() {
       li.addEventListener("click", () => {
         document.querySelectorAll("#cctvList li").forEach(el => el.classList.remove("active-list-item"));
         li.classList.add("active-list-item");
-        map.setCenter(position);
+
+        // ✅ 스르륵 중앙 이동
+        setTimeout(() => {
+          map.panTo(position);
+        }, 10);
+
         setTimeout(() => kakao.maps.event.trigger(marker, 'click'), 200);
       });
 
@@ -84,11 +96,15 @@ function initializeCCTVMap() {
           openInfoWindow.close();
           document.querySelectorAll("#cctvList li").forEach(el => el.classList.remove("active-list-item"));
         }
+
+        // ✅ 마커 클릭 시 부드럽게 중앙 이동
+        setTimeout(() => {
+          map.panTo(position);
+        }, 10);
+
         infowindow.open(map, marker);
         openInfoWindow = infowindow;
-		map.setCenter(position); // ✅ 마커 클릭 시 지도 중심으로 이동
-		
-		
+
         const video = document.getElementById(`video_${cctv.coordX}`);
         if (Hls.isSupported()) {
           const hls = new Hls();

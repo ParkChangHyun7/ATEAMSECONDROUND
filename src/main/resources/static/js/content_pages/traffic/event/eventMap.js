@@ -1,7 +1,3 @@
-// eventMap.js
-
-// ✅ DOMContentLoaded 보장
-
 document.addEventListener("DOMContentLoaded", () => {
   const map = new kakao.maps.Map(document.getElementById("map"), {
     center: new kakao.maps.LatLng(37.5665, 126.978),
@@ -32,6 +28,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderEvents(filterType = "all") {
+	
+	if (openInfoWindow) {
+	  openInfoWindow.close();
+	  openInfoWindow = null;
+	}
+
+	
     eventListEl.innerHTML = "";
     allMarkers.forEach(marker => marker.setMap(null));
     allMarkers = [];
@@ -80,7 +83,12 @@ document.addEventListener("DOMContentLoaded", () => {
     li.addEventListener("click", () => {
       document.querySelectorAll("#eventList li").forEach(el => el.classList.remove("active-list-item"));
       li.classList.add("active-list-item");
-      map.setCenter(pos); // ✅ 화면 중앙으로 이동
+
+      // ✅ 부드러운 중앙 이동 (딜레이 추가)
+      setTimeout(() => {
+        map.panTo(pos);
+      }, 10);
+
       kakao.maps.event.trigger(marker, "click");
     });
 
@@ -89,13 +97,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     kakao.maps.event.addListener(marker, "click", () => {
       if (openInfoWindow) openInfoWindow.close();
-	  
-	  // ✅ 마커 클릭 시 지도 중심 이동
-	  map.setCenter(pos); // 또는 부드러운 이동 원할 경우 map.panTo(pos)
-	  
+
+      // ✅ 마커 클릭 시 지도 중심으로 부드럽게 이동
+      setTimeout(() => {
+        map.panTo(pos);
+      }, 10);
+
       info.open(map, marker);
       openInfoWindow = info;
-	  
+
       document.querySelectorAll("#eventList li").forEach(el => el.classList.remove("active-list-item"));
       const targetLi = markerToListItemMap.get(marker);
       if (targetLi) {
