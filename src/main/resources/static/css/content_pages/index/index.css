@@ -1,38 +1,34 @@
-
 html, body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
   background-color: #1d3b5b;
 }
 
+* { box-sizing: border-box; }
+
+.main {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
 .map-wrapper {
-  width: 100%;
   display: flex;
-  justify-content: flex-start;
   padding-left: 40px;
 }
 
 .map_container {
   width: 900px;
   height: 625px;
-  background-color: #F3F2E8;
   margin: 40px 0;
   border-radius: 12px;
+  background-color: #F3F2E8;
   overflow: hidden;
   position: relative;
 }
 
 .mapview {
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%; 
 }
 
 #map-toggle-btn {
@@ -48,22 +44,10 @@ body {
   font-size: 14px;
 }
 
-.vw-notice, .vw-logo, .vw-control {
-  display: none;
-}
-
-.main {
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0;
-}
-
 .middle-section {
-  position: relative;
-  width: 100%;
   height: 140px;
   margin-bottom: 20px;
+  position: relative;
 }
 
 .background-section {
@@ -71,28 +55,19 @@ body {
   top: 0;
   left: 50%;
   right: 50%;
-  display: flex;
   width: 100vw;
   margin-left: -50vw;
   height: 140px;
+  display: flex;
   z-index: 0;
 }
 
-.yellow-bg {
-  width: 50%;
-  background-color: #FFD700;
-}
-
-.navy-bg {
-  width: 50%;
-  background-color: #4682B4;
-}
+.yellow-bg { width: 50%; background: #FFD700; }
+.navy-bg { width: 50%; background: #4682B4; }
 
 .top-section {
   position: relative;
   display: flex;
-  width: 100%;
-  max-width: 1280px;
   height: 140px;
   z-index: 1;
   margin: 0 auto;
@@ -100,7 +75,6 @@ body {
 
 .yellow-top {
   width: 370px;
-  min-width: 370px;
   background-color: #FF7F50;
   display: flex;
   flex-direction: column;
@@ -108,10 +82,7 @@ body {
   justify-content: center;
 }
 
-.navy-top {
-  flex: 1;
-  background-color: #1d2e5b;
-}
+.navy-top { flex: 1; background-color: #1d2e5b; }
 
 .content-section {
   padding: 50px 0 130px;
@@ -124,13 +95,12 @@ body {
 }
 
 .content-box {
-  position: relative;
   width: 400px;
   height: 250px;
   margin-top: 22px;
-  background-color: white;
+  background: white;
   border: 1px solid #ddd;
-  flex: 0 0 400px;
+  position: relative;
   overflow-y: auto;
 }
 
@@ -138,23 +108,89 @@ body {
   position: absolute;
   top: -35px;
   right: 0;
-  padding: 5px;
   font-size: 12px;
-  color: black;
   display: flex;
-  justify-content: center;
-  align-items: center;
   gap: 5px;
 }
 
+.air-box {
+  position: relative;
+  border-radius: 10px;
+  padding: 20px;
+  color: white;
+  background: transparent;
+  height: 100%;
+  max-height: 250px;
+  overflow: auto;
+  z-index: 0;
+}
+
+.air-bg-video {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0.4;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ✅ 슬라이드 버튼 (▶ ❚❚ ◀) 정렬 */
+.swiper-controls {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: none;
+  gap: 12px;
+  align-items: center;
+  z-index: 20;
+}
+
+#notice-swiper:hover .swiper-controls {
+  display: flex !important;
+}
+
+#notice-swiper-toggle {
+  background: black;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#notice-swiper-toggle .material-icons {
+  font-size: 20px;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  position: static !important;
+  transform: none !important;
+  width: 28px;
+  height: 28px;
+  font-size: 18px !important;
+  color: black !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+}
+
+/* 🔄 타 ITS 링크 배경 복원 */
 .ITS-link {
   width: 100vw;
   height: 100px;
   background-color: white;
+  display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 calc(50% - 50vw);
-  display: flex;
 }
 
 .ITS-link-box {
@@ -162,49 +198,3 @@ body {
   height: fit-content;
   width: fit-content;
 }
-
-.air-box {
-  position: relative;
-  overflow: auto;
-  border-radius: 10px;
-  padding: 20px;
-  color: white;
-  z-index: 0;
-  background-color: transparent;
-  height: 100%;
-  max-height: 250px;
-}
-
-.air-bg-video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -1;
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-.air-box h4,
-.air-box ul {
-  position: relative;
-  z-index: 1;
-}
-
-.air-box ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.air-box li {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 6px 0;
-}
-
-.grade-good { color: #2e8b57; font-weight: bold; }
-.grade-normal { color: #1e90ff; font-weight: bold; }
-.grade-bad { color: #ff8c00; font-weight: bold; }
-.grade-verybad { color: #dc143c; font-weight: bold; }
