@@ -161,7 +161,7 @@
           direction: 'horizontal',
           loop: true,
           autoplay: {
-            delay: 7000,
+            delay: 3000,
           },
         })
       })
