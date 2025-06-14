@@ -80,7 +80,6 @@
             <c:if test="${not empty resourcesPage}">
                 <c:import url="${resourcesPage}" />
             </c:if>
-            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         </head>
 
         <body>
