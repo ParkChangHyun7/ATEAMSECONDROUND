@@ -1,8 +1,8 @@
-<!-- ✅ index.css 전체 -->
+/* 기본 CSS 재설정 및 박스 모델 설정 */
 html, body {
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
+  overflow-x: hidden; /* 가로 스크롤바 방지 */
 }
 
 * {
@@ -13,6 +13,7 @@ body {
   background-color: #1d3b5b;
 }
 
+/* 지도 전체 감싸는 영역 */
 .map-wrapper {
   width: 100%;
   display: flex;
@@ -24,7 +25,8 @@ body {
   width: 900px;
   height: 625px;
   background-color: #F3F2E8;
-  margin: 40px 0;
+  margin-top: 40px;
+  margin-bottom: 40px;
   border-radius: 12px;
   overflow: hidden;
   position: relative;
@@ -48,10 +50,14 @@ body {
   font-size: 14px;
 }
 
-.vw-notice, .vw-logo, .vw-control {
+/* 카카오 로고 제거 */
+.vw-notice,
+.vw-logo,
+.vw-control {
   display: none;
 }
 
+/* 메인 전체 */
 .main {
   width: 100%;
   max-width: 1280px;
@@ -59,6 +65,7 @@ body {
   padding: 0;
 }
 
+/* 상단 배너 영역 */
 .middle-section {
   position: relative;
   width: 100%;
@@ -113,12 +120,15 @@ body {
   background-color: #1d2e5b;
 }
 
+/* 콘텐츠 박스 3개 영역 */
 .content-section {
-  padding: 50px 0 130px;
+  padding-top: 50px;
+  padding-bottom: 130px;
   display: flex;
   gap: 50px;
   justify-content: center;
   align-items: flex-start;
+  width: 100%;
   max-width: 1280px;
   margin: 0 auto;
 }
@@ -137,7 +147,8 @@ body {
 .index-box {
   position: absolute;
   top: -35px;
-  right: 0;
+  right: 0px;
+  width: fit-content;
   padding: 5px;
   font-size: 12px;
   color: black;
@@ -147,6 +158,7 @@ body {
   gap: 5px;
 }
 
+/* ITS 링크 박스 */
 .ITS-link {
   width: 100vw;
   height: 100px;
@@ -158,39 +170,18 @@ body {
 }
 
 .ITS-link-box {
-  background-color: white;
-  height: fit-content;
   width: fit-content;
+  height: fit-content;
+  background-color: white;
 }
 
+/* 대기오염 박스 안 내용 */
 .air-box {
-  position: relative;
-  overflow: auto;
-  border-radius: 10px;
-  padding: 20px;
-  color: white;
-  z-index: 0;
-  background-color: transparent;
-  height: 100%;
-  max-height: 250px;
-}
-
-.air-bg-video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -1;
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-.air-box h4,
-.air-box ul {
-  position: relative;
-  z-index: 1;
+  padding: 15px;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-y: auto;
+  background-color: white;
 }
 
 .air-box ul {
@@ -200,11 +191,27 @@ body {
 }
 
 .air-box li {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 1px solid #ddd;
   padding: 6px 0;
 }
 
-.grade-good { color: #2e8b57; font-weight: bold; }
-.grade-normal { color: #1e90ff; font-weight: bold; }
-.grade-bad { color: #ff8c00; font-weight: bold; }
-.grade-verybad { color: #dc143c; font-weight: bold; }
+/* 등급에 따른 색상 강조 */
+.grade-good {
+  color: #2e8b57; /* 초록 */
+  font-weight: bold;
+}
+
+.grade-normal {
+  color: #1e90ff; /* 파랑 */
+  font-weight: bold;
+}
+
+.grade-bad {
+  color: #ff8c00; /* 주황 */
+  font-weight: bold;
+}
+
+.grade-verybad {
+  color: #dc143c; /* 진한 빨강 */
+  font-weight: bold;
+}

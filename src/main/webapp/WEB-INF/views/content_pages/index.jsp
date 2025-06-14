@@ -1,4 +1,3 @@
-<!--  index.jsp 전체 (JSP + 비디오 영역 포함) -->
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <!-- 지도 영역 -->
@@ -12,11 +11,13 @@
 <!-- 메인 콘텐츠 영역 -->
 <main class="main">
   <div class="middle-section">
+    <!-- 배경 색상 바 -->
     <div class="background-section">
       <div class="yellow-bg"></div>
       <div class="navy-bg"></div>
     </div>
 
+    <!-- 상단 날씨 바 -->
     <div class="top-section">
       <div class="yellow-top">
         <div class="weather-info" id="weather-app">
@@ -37,29 +38,26 @@
     </div>
   </div>
 
-  <!-- 콘텐츠 박스 3개 -->
+  <!-- 3개 박스 콘텐츠 -->
   <div class="content-section">
+    <!-- 공지사항 -->
     <div class="content-box">
       <div class="index-box"><span>●</span><span>●</span><span>●</span></div>
     </div>
 
+    <!-- 실시간 돌발정보 -->
     <div class="content-box">
       <div class="index-box"><span>●</span><span>●</span><span>●</span></div>
     </div>
 
+    <!-- 대기오염 정보 -->
     <div class="content-box">
       <div class="index-box"><span>●</span><span>●</span><span>●</span></div>
-      <div class="air-box">
-        <video class="air-bg-video" autoplay muted loop playsinline>
-          <source src="/videos/AirQuality/sky.mp4" type="video/mp4" />
-          브라우저가 video 태그를 지원하지 않습니다.
-        </video>
-        <!-- Vue가 mount 될 영역 -->
-        <div id="air-info-box"></div>
-      </div>
+      <div id="air-info-box"></div>
     </div>
   </div>
 
+  <!-- ITS 링크 -->
   <div class="ITS-link">
     <div class="ITS-link-box">
       <p>타 ITS 사이트 링크 걸 공간</p>
