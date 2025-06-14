@@ -176,3 +176,34 @@
 
   createApp(App).mount('#notice-swiper-app')
 </script>
+<script type="module">
+  import { createApp, ref, onMounted } from 'vue'
+
+  const AirInfoApp = {
+    setup() {
+      const airInfo = ref('대기 정보를 불러오는 중...')
+
+      onMounted(async () => {
+        try {
+          const res = await fetch('/api/indexWeather')
+          if (!res.ok) throw new Error('응답 실패')
+
+          const data = await res.json()
+          airInfo.value = `
+            서울 대기오염 정보<br>
+            • 중구: ${data.junggu}㎍/㎥ (${data.jungguStatus})<br>
+            • 종로구: ${data.jongrogu}㎍/㎥ (${data.jongroguStatus})<br>
+            ...
+          `
+        } catch (e) {
+          airInfo.value = '대기 정보를 가져오는 데 실패했습니다.'
+        }
+      })
+
+      return { airInfo }
+    },
+    template: `<div class="air-info-text" v-html="airInfo"></div>`
+  }
+
+  createApp(AirInfoApp).mount('#air-info-box')
+</script>
