@@ -44,7 +44,7 @@
       <h3 style="color:rgb(182, 28, 199); text-align:center; margin-bottom:5px;">공지사항</h3>
       <div class="content-box">
         <div id="notice-swiper-app">
-          <div class="swiper" id="notice-swiper" style="width: 100%; max-width: 500px;">
+          <div class="swiper" id="notice-swiper" style="width: 100%; max-width: 500px; position: relative;">
             <div class="swiper-wrapper">
               <div class="swiper-slide" v-for="notice in notices" :key="notice.id"
                    :style="getSlideStyle(notice)">
@@ -62,6 +62,13 @@
                      style="color: black; font-size: 14px; line-height: 1.6; text-align: left; padding-top: 8px;"></div>
               </div>
             </div>
+
+            <!-- Swiper 기본 네비게이션 버튼 -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+
+            <!-- 재생/정지 토글 버튼 -->
+            <button id="notice-swiper-toggle" class="swiper-toggle-btn">Pause</button>
           </div>
         </div>
       </div>
@@ -157,12 +164,33 @@
       }
 
       onMounted(() => {
-        new Swiper('#notice-swiper', {
+        // 1) Swiper 인스턴스 생성
+        const swiper = new Swiper('#notice-swiper', {
           direction: 'horizontal',
           loop: true,
           autoplay: {
             delay: 7000,
+            disableOnInteraction: false,  // 화살표 눌러도 자동재생 유지
+            pauseOnMouseEnter: true        // 마우스 올리면 일시정지
           },
+          navigation: {                    // 화살표 활성화
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev'
+          }
+        })
+
+        // 2) 재생/정지 토글
+        const toggleBtn = document.getElementById('notice-swiper-toggle')
+        let isPlaying = true
+        toggleBtn.addEventListener('click', () => {
+          if (isPlaying) {
+            swiper.autoplay.stop()
+            toggleBtn.textContent = 'Play'
+          } else {
+            swiper.autoplay.start()
+            toggleBtn.textContent = 'Pause'
+          }
+          isPlaying = !isPlaying
         })
       })
 
