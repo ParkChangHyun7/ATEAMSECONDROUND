@@ -1,4 +1,4 @@
-package seoul.its.info.services.llm.weather;
+package seoul.its.info.services.llm;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +19,7 @@ public class QuestionClassifier {
       return "content_pages/llm/chat";
    }
 
-   @PostMapping("/api/chat")
+   @PostMapping("/api/classifier")
    @ResponseBody
    public String classifyQuestion(@RequestBody String userQuestion) {
       System.out.println("사용자 질문: " + userQuestion);

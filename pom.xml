@@ -33,6 +33,12 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
+		<!-- 제미나이 API -->
+		<dependency>
+			<groupId>com.google.genai</groupId>
+			<artifactId>google-genai</artifactId>
+			<version>1.0.0</version>
+		 </dependency>
 		<!-- Spring Boot Actuator: 애플리케이션 모니터링 및 관리 기능 제공 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

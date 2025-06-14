@@ -79,7 +79,7 @@ createApp({
                     messages.value.pop();
                 }
                 // 사용자에게 더 친화적인 에러 메시지 제공
-                let errorMessage = '죄송합니다, 날씨 정보를 가져오는 데 실패했습니다. 잠시 후 다시 시도해 주세요.';
+                let errorMessage = '잠시 후 다시 시도해 주세요.';
                 if (error.message) {
                     errorMessage += ` (오류: ${error.message})`;
                 }
