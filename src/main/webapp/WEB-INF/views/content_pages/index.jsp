@@ -8,14 +8,12 @@
   </div>
 </div>
 
-<!-- 메인 콘텐츠 영역 -->
 <main class="main">
   <div class="middle-section">
     <div class="background-section">
       <div class="yellow-bg"></div>
       <div class="navy-bg"></div>
     </div>
-
     <div class="top-section">
       <div class="yellow-top">
         <div class="weather-info" id="weather-app">
@@ -36,10 +34,8 @@
     </div>
   </div>
 
-  <!-- 콘텐츠 박스 3개 -->
+  <!-- 공지사항 -->
   <div class="content-section">
-
-    <!-- 공지사항 캐로우절 -->
     <div style="margin-bottom: 10px;">
       <h3 style="color:rgb(182, 28, 199); text-align:center; margin-bottom:5px;">공지사항</h3>
       <div class="content-box">
@@ -56,7 +52,6 @@
                      style="color: black; font-size: 14px; line-height: 1.6; text-align: left; padding-top: 8px;"></div>
               </div>
             </div>
-
             <div class="swiper-controls">
               <div class="swiper-button-prev"></div>
               <button id="notice-swiper-toggle" class="swiper-toggle-btn">
@@ -74,6 +69,7 @@
       <h3 style="color:rgb(185, 101, 17); text-align:center; margin-bottom:5px;">실시간 돌발상황</h3>
       <div class="content-box">
         <div class="index-box"><span>●</span><span>●</span><span>●</span></div>
+        <div style="padding: 10px;">실시간 돌발상황 내용 구성 예정</div>
       </div>
     </div>
 
@@ -90,7 +86,6 @@
         </div>
       </div>
     </div>
-
   </div>
 
   <div class="ITS-link">
@@ -100,7 +95,6 @@
   </div>
 </main>
 
-<!-- Vue + Swiper Composition Script -->
 <script type="module">
   import { createApp, ref, onMounted } from 'vue'
 
@@ -176,27 +170,30 @@
 
   createApp(App).mount('#notice-swiper-app')
 </script>
+
 <script type="module">
   import { createApp, ref, onMounted } from 'vue'
 
   const AirInfoApp = {
     setup() {
-      const airInfo = ref('대기 정보를 불러오는 중...')
+      const airInfo = ref('로딩 중...')
 
       onMounted(async () => {
         try {
           const res = await fetch('/api/indexWeather')
-          if (!res.ok) throw new Error('응답 실패')
+          if (!res.ok) throw new Error('불러오기 실패')
+          const d = await res.json()
 
-          const data = await res.json()
           airInfo.value = `
-            서울 대기오염 정보<br>
-            • 중구: ${data.junggu}㎍/㎥ (${data.jungguStatus})<br>
-            • 종로구: ${data.jongrogu}㎍/㎥ (${data.jongroguStatus})<br>
-            ...
+            <span class="hover-line">• 중구: ${d.junggu}㎍/㎥ (${d.jungguStatus})</span>
+            <span class="hover-line">• 종로구: ${d.jongrogu}㎍/㎥ (${d.jongroguStatus})</span>
+            <span class="hover-line">• 용산구: ${d.yongsangu}㎍/㎥ (${d.yongsanguStatus})</span>
+            <span class="hover-line">• 은평구: ${d.eunpyeong}㎍/㎥ (${d.eunpyeongStatus})</span>
+            <span class="hover-line">• 서대문구: ${d.seodaemun}㎍/㎥ (${d.seodaemunStatus})</span>
+            <span class="hover-line">• 마포구: ${d.mapo}㎍/㎥ (${d.mapoStatus})</span>
           `
         } catch (e) {
-          airInfo.value = '대기 정보를 가져오는 데 실패했습니다.'
+          airInfo.value = '<span class="hover-line">정보를 불러오는 데 실패했습니다.</span>'
         }
       })
 
