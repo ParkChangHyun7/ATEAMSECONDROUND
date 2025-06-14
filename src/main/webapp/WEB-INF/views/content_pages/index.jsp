@@ -39,25 +39,34 @@
 
   <!-- 콘텐츠 박스 3개 -->
   <div class="content-section">
-    <div class="content-box">
-      <div class="index-box"><span>●</span><span>●</span><span>●</span></div>
-    </div>
 
-    <div class="content-box">
-      <div class="index-box"><span>●</span><span>●</span><span>●</span></div>
-    </div>
-
-    <div class="content-box">
-      <div class="index-box"><span>●</span><span>●</span><span>●</span></div>
-      <div class="air-box">
-        <video class="air-bg-video" autoplay muted loop playsinline>
-          <source src="/videos/AirQuality/sky.mp4" type="video/mp4" />
-          브라우저가 video 태그를 지원하지 않습니다.
-        </video>
-        <!-- Vue가 mount 될 영역 -->
-        <div id="air-info-box"></div>
+    <div style="margin-bottom: 10px;">
+      <h3 style="color:rgb(182, 28, 199); text-align:center; margin-bottom:5px;">공지사항</h3>
+      <div class="content-box">
+        <div class="index-box"><span>●</span><span>●</span><span>●</span></div>
       </div>
     </div>
+
+    <div style="margin-bottom: 10px;">
+      <h3 style="color:rgb(185, 101, 17); text-align:center; margin-bottom:5px;">실시간 돌발상황</h3>
+      <div class="content-box">
+        <div class="index-box"><span>●</span><span>●</span><span>●</span></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 10px;">
+      <h3 style="color:rgb(51, 176, 13); text-align:center; margin-bottom:5px;">서울 대기오염 정보</h3>
+      <div class="content-box">
+        <div class="index-box"><span>●</span><span>●</span><span>●</span></div>
+        <div class="air-box">
+          <video class="air-bg-video" autoplay muted loop playsinline>
+            <source src="/videos/AirQuality/sky.mp4" type="video/mp4" />
+          </video>
+          <div id="air-info-box"></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <div class="ITS-link">
