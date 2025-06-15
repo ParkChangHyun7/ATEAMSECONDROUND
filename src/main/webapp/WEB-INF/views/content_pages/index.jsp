@@ -30,10 +30,54 @@
                         </div>
                     </div>
                 </div>
-                <div class="navy-top"></div>
+                <div class="navy-top">
+                    <div class="sitemap-icons">
+                        <div class="middle-icons parking">
+                            <span class="material-symbols-outlined">
+                                local_parking
+                            </span>
+                            <span class="icon-text">주차장 정보</span>
+                        </div>
+                        <div class="middle-icons traffic">
+                            <span class="material-symbols-outlined">
+                                traffic_jam
+                            </span>
+                            <span class="icon-text">교통 정보</span>
+                        </div>
+                        <div class="middle-icons event">
+                            <span class="material-symbols-outlined">
+                                sync_problem
+                            </span>
+                            <span class="icon-text">돌발 정보</span>
+                        </div>
+                        <div class="middle-icons cctv">
+                            <span class="material-symbols-outlined">
+                                speed_camera
+                            </span>
+                            <span class="icon-text">도로 CCTV</span>
+                        </div>
+                        <div class="middle-icons metro">
+                            <span class="material-symbols-outlined">
+                                train
+                            </span>
+                            <span class="icon-text">서울 지하철</span>
+                        </div>
+                        <div class="middle-icons bus">
+                            <span class="material-symbols-outlined">
+                                directions_bus
+                            </span>
+                            <span class="icon-text">서울 버스</span>
+                        </div>
+                        <div class="middle-icons bicycle">
+                            <span class="material-symbols-outlined">
+                                pedal_bike
+                            </span>
+                            <span class="icon-text">따릉이</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
         <!-- 하단 콘텐츠 박스 -->
         <div class="content-section">
             <div class="content-box">
@@ -42,11 +86,11 @@
                     <span>●</span>
                 </div>
                 <div class="board-content">
-                    <div class="content-title 1"><span class="ctt">공지사항</span><span class="material-symbols-outlined"
+                    <div class="content-title 1"><span class="ctt">공지사항</span><a href="/boards/3/posts"><span class="material-symbols-outlined"
                             style="color: black; font-size: 60px;">
                             read_more
-                        </span></div>
-                    <div class="board-content-content">
+                        </span></a></div>
+                    <div class="board-content-content" style="overflow-y: hidden;">
                         <ul class="notice-list">
                             <li v-for="notice in noticePosts" :key="notice.id">
                                 <a :href="'/boards/' + notice.boardId + '/posts/read/' + notice.id">
@@ -88,8 +132,8 @@
                     <span>●</span>
                 </div>
                 <div class="board-content">
-                    <div class="content-title 3"><span class="ctt">서울 교통 뉴스</span><span class="material-symbols-outlined"
-                            style="color: black; font-size: 60px;">
+                    <div class="content-title 3"><span class="ctt">서울 교통 뉴스</span><span
+                            class="material-symbols-outlined" style="color: black; font-size: 60px;">
                             read_more
                         </span></div>
                     <div class="board-content-content">

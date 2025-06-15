@@ -88,12 +88,12 @@ const app = createApp({
                 const mapContainer = document.getElementById('vmap');
                 const mapOption = { 
                     center: new kakao.maps.LatLng(37.5666805, 126.9784147),
-                    level: 7
+                    level: 5
                 };
                 
                 const map = new kakao.maps.Map(mapContainer, mapOption);
 
-                // TODO: 여기에 지도 관련 추가 기능 (마커, 컨트롤 등) 구현해야 함.
+                map.addOverlayMapTypeId(kakao.maps.MapTypeId.TRAFFIC);
             });
 
             const menuBtn = document.querySelector('.menu-btn');

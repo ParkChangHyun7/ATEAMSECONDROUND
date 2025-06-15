@@ -171,7 +171,9 @@
             <script src="https://unpkg.com/vue@3/dist/vue.esm-browser.js" type="module"></script>
             <!-- 개발 끝나고 변경할 프로덕션 버전 (최적화됨) -->
             <!-- <script src="https://unpkg.com/vue@3/dist/vue.esm-browser.prod.js" type="module"></script> -->
+            <script src="/vue.js/common/header/main-header.vue.js" type="module"></script>
             <script src="/vue.js/common/header/header.vue.js" type="module"></script>
+            <script src="/vue.js/common/header/main-header.js" type="module"></script>
             <!-- 9. 페이지별 스크립트 (컨트롤러에서 인자값으로 받아옴. 이것도 없으면 생략됩니당) -->
             <script src="/js/content_pages/llm/chat.js" type="module"></script>
             <c:if test="${not empty scriptsPage}">

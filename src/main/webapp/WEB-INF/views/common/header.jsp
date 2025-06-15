@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
   <!-- 헤더 -->
-  <header class="header_container">
+  <header class="header_container" id="main-header-app">
     <div class="header-main">
       <div class="header-left">
         <div class="logo-container">
@@ -11,7 +11,6 @@
             <div class="site-name">
               <span class="site-name-seoul">서울특별시</span>
               <span class="site-name-tic">교통정보센터</span>
-              <span class="site-name-en">(Seoul Traffic Information)</span>
             </div>
           </a>
         </div>
@@ -36,23 +35,20 @@
                 <li><a href="/traffic/eventMap">돌발정보</a></li>
                 <li><a href="/traffic/trafficflowmap">소통정보</a></li>
 
-                <!--  대중교통 드롭다운 -->
-                <li class="dropdown">
-                  <a href="/transport">대중교통정보</a>
-                  <ul class="dropdown-menu">
-                    <li><a href="/busstop">버스정류장위치정보</a></li>
-                  </ul>
-                </li>
-
                 <li><a href="/contact">문의하기</a></li>
                 <li><a href="/boards/1/posts">커뮤니티</a></li>
               </ul>
-              <span class="material-symbols-outlined" style="color: white; font-size: 40px;">menu_open</span>
+              <span class="material-symbols-outlined">
+                brightness_4
+              </span>
+              <span class="material-symbols-outlined" style="color: white; font-size: 40px;"
+                @click="toggleMenu">menu_open</span>
             </nav>
           </div>
         </div>
       </div>
     </div>
+    <div id="dropdown-menu-overlay"></div>
     <div class=" auth-wrap">
       <div class="auth-links" id="auth-links-app"></div>
     </div>

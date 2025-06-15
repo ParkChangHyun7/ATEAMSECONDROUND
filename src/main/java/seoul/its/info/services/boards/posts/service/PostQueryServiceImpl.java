@@ -133,7 +133,7 @@ public class PostQueryServiceImpl implements PostQueryService {
     public List<IndexPostListDto> getPostsForIndex() {
         // 공지사항 게시판(boardId=3)의 최신 게시글 5개를 가져옴
         long noticeBoardId = 3L;
-        int limit = 5;
+        int limit = 6;
         return postMapper.findPostsForIndex(noticeBoardId, limit);
     }
 } 

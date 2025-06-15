@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 sendMessage,
                 isLoading,
                 isChatOpen,
-                toggleChat
+                toggleChat,
             };
         },
     }).mount('#chat-widget-wrapper');

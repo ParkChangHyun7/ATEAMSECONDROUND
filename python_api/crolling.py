@@ -17,7 +17,6 @@ app.add_middleware(
 async def get_naver_news():
     """
     네이버 뉴스 검색 결과 페이지에서 서울 도로 교통 관련 뉴스 정보를 크롤링하여 반환합니다.
-    제목, 기사 링크 5개를 포함합니다.
     """
     naver_news_url = "https://search.naver.com/search.naver?sm=tab_hty.top&where=news&ssc=tab.news.all&query=%22%EC%84%9C%EC%9A%B8%22+%EB%8F%84%EB%A1%9C+%EA%B5%90%ED%86%B5&oquery=%EC%84%9C%EC%9A%B8+%EB%8F%84%EB%A1%9C+%EA%B5%90%ED%86%B5"
     headers = {
@@ -57,7 +56,7 @@ async def get_naver_news():
                         })
                         processed_links.add(link)
                     
-                        if len(results) >= 5:
+                        if len(results) >= 8:
                             break
 
         if not results:
