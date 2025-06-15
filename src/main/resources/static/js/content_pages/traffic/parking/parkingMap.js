@@ -47,6 +47,7 @@ createApp({
         let validCount = 0
 
         for (const p of parkingList) {
+          console.log('주차장 데이터:', p); // 데이터 확인용 로그
           const lat = parseFloat(String(p.LAT || '').trim())
           const lng = parseFloat(String(p.LOT || '').trim())
           if (isNaN(lat) || isNaN(lng)) continue
@@ -80,11 +81,11 @@ createApp({
           const basicChargeRow = !isFree && p.ADD_CRG && p.PRK_HM
             ? `<tr><td style="border:1px solid #ccc; padding:4px;">기본요금</td><td style="border:1px solid #ccc; padding:4px;">${p.ADD_CRG}원 / ${p.PRK_HM}분</td></tr>` : ''
 
-          const extraChargeRow = !isFree && p.ADD_CRG && p.ADD_UNIT_TM
-            ? `<tr><td style="border:1px solid #ccc; padding:4px;">추가요금</td><td style="border:1px solid #ccc; padding:4px;">${p.ADD_CRG}원 / ${p.ADD_UNIT_TM}분</td></tr>` : ''
+          const extraChargeRow = !isFree
+            ? `<tr><td style=\"border:1px solid #ccc; padding:4px;\">추가요금</td><td style=\"border:1px solid #ccc; padding:4px;\">${p.ADD_RATES && p.ADD_TIME_RATES ? p.ADD_RATES + '원 / ' + p.ADD_TIME_RATES + '분' : '-'}</td></tr>` : ''
 
           const monthlyChargeRow = p.MONTLY_CMMT_CHRG_AMT && p.MONTLY_CMMT_CHRG_AMT !== '0'
-            ? `<tr><td style="border:1px solid #ccc; padding:4px;">월정기권금액</td><td style="border:1px solid #ccc; padding:4px;">${p.MONTLY_CMMT_CHRG_AMT}원</td></tr>` : ''
+            ? `<tr><td style=\"border:1px solid #ccc; padding:4px;\">월정기권금액</td><td style=\"border:1px solid #ccc; padding:4px;\">${p.MONTLY_CMMT_CHRG_AMT}원</td></tr>` : ''
 
           const content = `
             <div style="padding:10px; font-size:13px; background:white; border-radius:8px;
@@ -101,8 +102,8 @@ createApp({
                 ${extraChargeRow}
                 ${monthlyChargeRow}
                 <tr><td style="border:1px solid #ccc; padding:4px;">운영시간</td><td style="border:1px solid #ccc; padding:4px;">
-                  평일: ${formatTime(p.WD_OPER_BGNG_TM)} ~ ${formatTime(p.WD_OPER_END_TM)}<br>
-                  주말: ${formatTime(p.HLDY_BGNG_TM)} ~ ${formatTime(p.HLDY_END_TM)}
+                  평일: ${formatTime(p.WEEKDAY_BEGIN_TIME)} - ${formatTime(p.WEEKDAY_END_TIME)}<br>
+                  주말: ${formatTime(p.WEEKEND_BEGIN_TIME) !== '-' || formatTime(p.WEEKEND_END_TIME) !== '-' ? formatTime(p.WEEKEND_BEGIN_TIME) + ' - ' + formatTime(p.WEEKEND_END_TIME) : '-'}
                 </td></tr>
               </table>
             </div>`

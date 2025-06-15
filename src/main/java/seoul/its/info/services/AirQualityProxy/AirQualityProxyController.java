@@ -11,7 +11,7 @@ import java.util.Map;
 @RequestMapping("/api/air")
 public class AirQualityProxyController {
 
-    @Value("${open.api.base_key}")
+    @Value("${open.api.air.key}")
     private String apiKey;
 
     @GetMapping
