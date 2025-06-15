@@ -1,18 +1,73 @@
 /* 푸터 스타일 */
 .footer {
-    width: 100%;
-    height: 150px;
-    background-color: #444;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  background-color: #444;
+  color: white;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+
+  padding-top: 30px;
+  padding-bottom: 30px;
+
+  overflow-x: hidden;
+}
+
+.footer-content {
+  width: 100%;
+  max-width: 1280px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  text-align: left;
+}
+
+.copyright {
+  border-right: 1px solid #696969;
+  padding: 30px;
+}
+
+.family-site-wrap {
+  border-right: 0px;
+  padding: 30px;
+}
+
+.copyright ul {
+  list-style: none;
+  list-style-type: none;
+  color: #a8a8a8;
+  font-size: 14px;
+}
+
+.copyright ul li {
+  margin-top: 10px;
+}
+
+.family-site-select {
+  padding: 5px;
+  margin-top: 10px;
+  height: 35px;
+  background-color: #6c6c6c;
+  color: white;
+  border: 0px;
+  border-radius: 3px;
+}
+
+.inner-wrap {
+  width: 100%;
+}
+.footer-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 20px;
+  text-align: left;
 }
 
 /* 푸터 반응형 스타일 */
 @media screen and (max-width: 768px) {
-    .footer {
-        height: 200px;
-        padding: 20px;
-    }
-} 
+  .footer {
+    height: 200px;
+    padding: 20px;
+  }
+}

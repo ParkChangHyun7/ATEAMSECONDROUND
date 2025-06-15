@@ -1,4 +1,7 @@
-/* 헤더 스타일 */
+header{
+  overflow: hidden;
+}
+
 .header_container {
   width: 100%;
   height: 70px;

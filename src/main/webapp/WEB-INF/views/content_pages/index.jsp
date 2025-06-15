@@ -30,7 +30,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="navy-top">
+                <div class="navy-top" >
                     <div class="sitemap-icons">
                         <div class="middle-icons parking">
                             <span class="material-symbols-outlined">
@@ -153,7 +153,12 @@
         </div>
         <div class="ITS-link">
             <div class="ITS-link-box">
-                <p>타 ITS 사이트 링크 걸 공간</p>
+                <div class="logo-box" style="display: flex; gap: 40px;">
+                    <img src="/images/ext_logos/seoulcity.png" style="width: auto; height: 40px;" alt="서울시 로고">
+                    <img src="/images/ext_logos/seoulopendata.png" style="width: auto; height: 40px;" alt="서울시 로고">
+                    <img src="/images/ext_logos/weatheradminis.png" style="width: auto; height: 40px;" alt="서울시 로고">
+                    <img src="/images/ext_logos/chatgpt.png" style="width: auto; height: 40px;" alt="서울시 로고">
+                    <img src="/images/ext_logos/gemini.png" style="width: auto; height: 40px;" alt="서울시 로고">
             </div>
         </div>
     </main>

@@ -1,4 +1,4 @@
-import { createApp, onMounted, ref } from 'vue';
+import { createApp, onMounted, ref, onBeforeUnmount } from 'vue';
 
 const app = createApp({
     setup() {
@@ -82,6 +82,7 @@ const app = createApp({
             displayCurrentEvent();
             resetSlideTimer();
         };
+
 
         onMounted(() => {
             kakao.maps.load(() => {

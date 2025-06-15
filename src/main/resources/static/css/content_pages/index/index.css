@@ -44,7 +44,7 @@ body {
   left: 50%;
   right: 50%;
   display: flex;
-  width: 100vw;
+  width: calc(100vw - 8px);
   margin-left: -50vw;
   height: 140px;
   z-index: 0;
@@ -97,7 +97,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding-left: 40px;
+  padding-left: 50px;
 }
 
 .middle-icons span {
@@ -237,7 +237,7 @@ body {
 }
 
 .ITS-link {
-  width: 100vw;
+  width: calc(100vw - 8px);
   height: 100px;
   background-color: white;
   align-items: center;
