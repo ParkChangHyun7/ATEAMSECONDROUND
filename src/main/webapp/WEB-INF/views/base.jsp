@@ -28,17 +28,14 @@
             <link rel="stylesheet" href="/css/common/body/body.css" />
             <link rel="stylesheet" href="/css/common/header/header.css" />
             <link rel="stylesheet" href="/css/common/footer/footer.css" />
+            <link rel="stylesheet" href="/css/content_pages/llm/chat.css">
 
             <!-- 6. 폰트 리소스 -->
             <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap"
                 rel="stylesheet" />
             <!-- 7. 구글 폰트 아이콘 리소스 & 가변 설정 초기화 일반 폰트랑 별개 사항으로 아이콘 라이브러리 같은 겁니당 -->
-            <link rel="stylesheet"
-                href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,200,0,0" />
             <style>
-                .material-symbols-outlined {
-                    font-variation-settings: "FILL" 0, "wght" 100, "GRAD" -25, "opsz" 40;
-                }
 
                 .meesage-from-server {
                     position: fixed;
@@ -80,7 +77,6 @@
             <c:if test="${not empty resourcesPage}">
                 <c:import url="${resourcesPage}" />
             </c:if>
-            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         </head>
 
         <body>
@@ -138,6 +134,35 @@
                 <!-- 푸터 영역 -->
                 <jsp:include page="common/footer.jsp" />
             </div>
+
+            <!-- 챗봇 위젯 래퍼 -->
+            <div id="chat-widget-wrapper">
+                <!-- 챗봇 토글 버튼 -->
+                <button class="chat-toggle-button" @click="toggleChat">
+                    <span class="material-symbols-outlined">chat</span>
+                </button>
+
+                <!-- 챗봇 컨테이너 (chat.jsp 내용 이식) -->
+                <div id="chat-app" class="chat-container" :class="{ 'show': isChatOpen }">
+                    <div class="chat-header">
+                        날씨 정보 알림이
+                        <button class="chat-close-button" @click="toggleChat">
+                            <span class="material-symbols-outlined">close</span>
+                        </button>
+                    </div>
+                    <div class="chat-messages" ref="messagesContainer">
+                        <!-- 챗 메시지 표시 위치 -->
+                        <div v-for="(message, index) in messages" :key="index" :class="['message', message.type]">
+                            {{ message.text }}
+                        </div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" v-model="userMessage" @keyup.enter="sendMessage" placeholder="날씨를 물어보세요...">
+                        <button @click="sendMessage">전송</button>
+                    </div>
+                </div>
+            </div>
+
             <!-- CSRF 유틸리티 공통 호출 영역 삭제 금지 - 남성욱 -->
             <script src="/js/commonUtils/csrf-util.js"></script>
             <script src="/js/commonUtils/apiService.js"></script>
@@ -148,12 +173,10 @@
             <!-- <script src="https://unpkg.com/vue@3/dist/vue.esm-browser.prod.js" type="module"></script> -->
             <script src="/vue.js/common/header/header.vue.js" type="module"></script>
             <!-- 9. 페이지별 스크립트 (컨트롤러에서 인자값으로 받아옴. 이것도 없으면 생략됩니당) -->
+            <script src="/js/content_pages/llm/chat.js" type="module"></script>
             <c:if test="${not empty scriptsPage}">
                 <c:import url="${scriptsPage}" />
-            </c:if>
-            <!-- base.jsp에 삽입 -->
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-            <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+        </c:if>
         </body>
 
         </html>

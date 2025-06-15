@@ -1,60 +1,59 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-pageEncoding="UTF-8" %>
-<!-- 헤더 -->
-<header class="header_container">
-  <div class="header-main">
-    <div class="header-left">
-      <div class="logo-container">
-        <a href="/" class="logo-link">
-          <span class="logo-img">
-            <img src="/images/main_logo_small.png" alt="서울교통정보센터" />
-          </span>
-          <div class="site-name">
-           <span class="site-name-seoul">서울특별시</span>
-           <span class="site-name-tic">교통정보센터</span>
-           <span class="site-name-en">(Seoul Traffic Information)</span>
-          </div>
-        </a>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+  <!-- 헤더 -->
+  <header class="header_container">
+    <div class="header-main">
+      <div class="header-left">
+        <div class="logo-container">
+          <a href="/" class="logo-link">
+            <span class="logo-img">
+              <img src="/images/main_logo_small.png" alt="서울교통정보센터" />
+            </span>
+            <div class="site-name">
+              <span class="site-name-seoul">서울특별시</span>
+              <span class="site-name-tic">교통정보센터</span>
+              <span class="site-name-en">(Seoul Traffic Information)</span>
+            </div>
+          </a>
+        </div>
       </div>
-    </div>
-    <div class="header-right-wrap">
-      <div class="nav-menu-wrap">
-        <div class="nav_container">
-          <nav class="navs">
-            <ul>
-              <li><a href="/about">소개</a></li>
+      <div class="header-right-wrap">
+        <div class="nav-menu-wrap">
+          <div class="nav_container">
+            <nav class="navs">
+              <ul>
+                <li><a href="/about">소개</a></li>
 
-              <!--  주차장 드롭다운 -->
-              <li class="dropdown">
-                <a href="#">주차장정보</a>
-                <ul class="dropdown-menu">
-                  <li><a href="/parking">공영주차장</a></li>
-                  <li><a href="/private-parking">민영주차장</a></li>
-                </ul>
-              </li>
+                <!--  주차장 드롭다운 -->
+                <li class="dropdown">
+                  <a href="#">주차장정보</a>
+                  <ul class="dropdown-menu">
+                    <li><a href="/parking">공영주차장</a></li>
+                    <li><a href="/private-parking">민영주차장</a></li>
+                  </ul>
+                </li>
 
-              <li><a href="/traffic/cctvMap">CCTV</a></li>
-              <li><a href="/traffic/eventMap">돌발정보</a></li>
-              <li><a href="/traffic/trafficflowmap">소통정보</a></li>
+                <li><a href="/traffic/cctvMap">CCTV</a></li>
+                <li><a href="/traffic/eventMap">돌발정보</a></li>
+                <li><a href="/traffic/trafficflowmap">소통정보</a></li>
 
-              <!--  대중교통 드롭다운 -->
-              <li class="dropdown">
-                <a href="/transport">대중교통정보</a>
-                <ul class="dropdown-menu">
-                  <li><a href="/busstop">버스정류장위치정보</a></li>
-                </ul>
-              </li>
+                <!--  대중교통 드롭다운 -->
+                <li class="dropdown">
+                  <a href="/transport">대중교통정보</a>
+                  <ul class="dropdown-menu">
+                    <li><a href="/busstop">버스정류장위치정보</a></li>
+                  </ul>
+                </li>
 
-              <li><a href="/contact">문의하기</a></li>
-              <li><a href="/boards/1/posts">커뮤니티</a></li>
-            </ul>
-            <span class="material-symbols-outlined menu_open">menu_open</span>
-          </nav>
+                <li><a href="/contact">문의하기</a></li>
+                <li><a href="/boards/1/posts">커뮤니티</a></li>
+              </ul>
+              <span class="material-symbols-outlined" style="color: white; font-size: 40px;">menu_open</span>
+            </nav>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="auth-wrap">
-    <div class="auth-links" id="auth-links-app"></div>
-  </div>
-</header>
+    <div class=" auth-wrap">
+      <div class="auth-links" id="auth-links-app"></div>
+    </div>
+  </header>

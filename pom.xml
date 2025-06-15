@@ -37,7 +37,7 @@
 		<dependency>
 			<groupId>com.google.genai</groupId>
 			<artifactId>google-genai</artifactId>
-			<version>1.0.0</version>
+			<version>1.4.1</version>
 		 </dependency>
 		<!-- Spring Boot Actuator: 애플리케이션 모니터링 및 관리 기능 제공 -->
 		<dependency>
@@ -115,6 +115,12 @@
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
 
+		<!-- Proj4J: 좌표 변환 라이브러리 -->
+		<dependency>
+			<groupId>org.locationtech.proj4j</groupId>
+			<artifactId>proj4j</artifactId>
+			<version>1.4.0</version>
+		</dependency>
 
 		<!-- MySQL Connector/J: MySQL 데이터베이스 연결 드라이버 -->
 		<dependency>

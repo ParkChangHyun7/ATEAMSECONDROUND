@@ -2,8 +2,10 @@ package seoul.its.info.services.boards.posts.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.List;
 import java.util.Map;
 
+import seoul.its.info.services.boards.posts.dto.IndexPostListDto;
 import seoul.its.info.services.boards.posts.dto.PostResponseDto;
 
 public interface PostQueryService {
@@ -21,4 +23,7 @@ public interface PostQueryService {
 
     // 특정 게시판의 게시글 목록 조회 (공지 포함, 페이징 처리) 및 총 개수 반환
     Map<String, Object> getPostList(Long boardId, int page, int pageSize, UserDetails userDetails);
+
+    // 인덱스 페이지용 공지사항 게시글 목록 조회
+    List<IndexPostListDto> getPostsForIndex();
 } 

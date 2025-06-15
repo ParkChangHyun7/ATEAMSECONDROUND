@@ -12,6 +12,7 @@ import seoul.its.info.services.boards.posts.dto.PostResponseDto;
 import seoul.its.info.common.exception.SystemException;
 import seoul.its.info.common.exception.ErrorCode;
 import seoul.its.info.services.boards.service.BoardHelperService;
+import seoul.its.info.services.boards.posts.dto.IndexPostListDto;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -125,5 +126,14 @@ public class PostQueryServiceImpl implements PostQueryService {
         // postResponse.setComments(comments); // PostResponseDto에 댓글 목록 필드 추가 가정
 
         return postResponse;
+    }
+
+    // 인덱스 페이지용 공지사항 게시글 목록 조회
+    @Override
+    public List<IndexPostListDto> getPostsForIndex() {
+        // 공지사항 게시판(boardId=3)의 최신 게시글 5개를 가져옴
+        long noticeBoardId = 3L;
+        int limit = 5;
+        return postMapper.findPostsForIndex(noticeBoardId, limit);
     }
 } 

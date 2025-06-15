@@ -189,3 +189,5 @@ src/main/resources/com/json/seoulpublicdata.json
 /uploads
 src/main/data/api/json/seoulpublicdata.json
 .windsurf
+src/main/data/api/json/seoulTrafficEvent.json
+src/main/data/api/json/seoulpublicdata.json

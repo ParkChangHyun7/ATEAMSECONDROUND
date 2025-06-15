@@ -2,42 +2,46 @@
 @charset "utf-8";
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 /* 기본 body 스타일 */
 body {
-    /* 폰트 설정 */
-    font-family: "Noto Sans KR", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-    
-    /* 레이아웃 설정 */
-    background-color: white;
-    overflow-x: hidden;
-    min-width: 395px;
+  /* 폰트 설정 */
+  font-family: "Noto Sans KR", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: normal;
+  font-style: normal;
+  font-display: auto;
+
+  /* 폰트 렌더링 최적화 (안티에일리어싱) */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* 레이아웃 설정 */
+  background-color: white;
+  overflow-x: hidden;
+  min-width: 395px;
 }
 
 /* 가변 폰트 weight 범위 설정 - 필요한 곳에서 100~900 사이 값으로 설정 가능 */
 :root {
-    --font-weight-range: 100 900;
+  --font-weight-range: 100 900;
 }
 
 /* 레이아웃 래퍼 */
 .base-wrapper {
-    min-width: 450px;
-    overflow-x: auto;
-    padding-top: 70px;
+  min-width: 450px;
+  overflow-x: auto;
+  padding-top: 70px;
 }
 
 /* 반응형 스타일 */
 @media screen and (max-width: 768px) {
-    .base-wrapper {
-        max-width: 650px;
-        width: 100%;
-    }
-} 
+  .base-wrapper {
+    max-width: 650px;
+    width: 100%;
+  }
+}

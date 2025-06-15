@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.*;
 import seoul.its.info.services.boards.posts.dto.PostListDto;
 import seoul.its.info.services.boards.posts.dto.PostResponseDto;
 import seoul.its.info.services.boards.posts.dto.PostsDto;
+import seoul.its.info.services.boards.posts.dto.IndexPostListDto;
 
 import java.util.List;
 
@@ -67,6 +68,10 @@ public interface PostMapper {
     // 특정 게시판의 일반 게시글 총 개수 조회
     @Select("SELECT COUNT(*) FROM posts WHERE board_id = #{boardId} AND is_deleted = 0 AND is_notice = 0")
     int countRegularPostsByBoardId(@Param("boardId") Long boardId);
+
+    // 인덱스 페이지용 최신 게시글 목록 조회
+    @Select("SELECT id, board_id AS boardId, title FROM posts WHERE board_id = #{boardId} AND is_deleted = 0 AND is_blinded = 0 ORDER BY id DESC LIMIT #{limit}")
+    List<IndexPostListDto> findPostsForIndex(@Param("boardId") Long boardId, @Param("limit") int limit);
 
     // 게시글 수정을 위한 정보 조회 (userId, boardId 등 최소 정보)
     // PostManagementServiceImpl의 updatePost, deletePost에서 사용

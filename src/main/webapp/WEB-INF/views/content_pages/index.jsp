@@ -1,206 +1,115 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-
-<!-- 지도 영역 -->
-<div class="map-wrapper">
-  <div class="map_container" id="mapContainer">
-    <div class="mapview" id="vmap"></div>
-    <button id="map-toggle-btn">지도 전체보기</button>
-  </div>
-</div>
-
-<main class="main">
-  <div class="middle-section">
-    <div class="background-section">
-      <div class="yellow-bg"></div>
-      <div class="navy-bg"></div>
+    <!-- 지도 들어갈 자리 -->
+    <div class="map_container">
+        <div class="mapview" id="vmap"></div>
     </div>
-    <div class="top-section">
-      <div class="yellow-top">
-        <div class="weather-info" id="weather-app">
-          <div class="weather-temp-sky-rain">
-            <span class="weather-temp"></span>
-            <div class="weather-sky"></div>
-            <span class="weather-rain"></span>
-          </div>
-          <div class="weather-details">
-            <span class="wds-default">미세</span>
-            <span class="dust-value-0"></span>
-            <span class="wds-default">초미세</span>
-            <span class="dust-value-0"></span>
-          </div>
-        </div>
-      </div>
-      <div class="navy-top"></div>
-    </div>
-  </div>
-
-  <!-- 공지사항 -->
-  <div class="content-section">
-    <div style="margin-bottom: 10px;">
-      <h3 style="color:rgb(182, 28, 199); text-align:center; margin-bottom:5px;">공지사항</h3>
-      <div class="content-box">
-        <div id="notice-swiper-app">
-          <div class="swiper" id="notice-swiper" style="width: 100%; max-width: 500px; position: relative;">
-            <div class="swiper-wrapper">
-              <div class="swiper-slide" v-for="notice in notices" :key="notice.id" :style="getSlideStyle(notice)">
-                <p style="color: black; font-weight: bold; margin: 0 0 8px; text-align: center;">
-                  {{ notice.title }}
-                </p>
-                <img v-if="notice.image" :src="notice.image" alt="공지 이미지"
-                     style="width: 100%; max-height: 180px; object-fit: cover;" />
-                <div v-if="notice.content" v-html="notice.content"
-                     style="color: black; font-size: 14px; line-height: 1.6; text-align: left; padding-top: 8px;"></div>
-              </div>
+    <!-- 메인 섹션 -->
+    <main class="main" id="app">
+        <!-- 중앙 섹션 (5:5 바와 3:7 바 겹침) -->
+        <div class="middle-section">
+            <!-- 5:5 비율 노란/파란 바 (배경) -->
+            <div class="background-section">
+                <div class="yellow-bg"></div>
+                <div class="navy-bg"></div>
             </div>
-            <div class="swiper-controls">
-              <div class="swiper-button-prev"></div>
-              <button id="notice-swiper-toggle" class="swiper-toggle-btn">
-                <span class="material-icons">pause</span>
-              </button>
-              <div class="swiper-button-next"></div>
+            <!-- 3:7 비율 노란/파란 바 (상단) -->
+            <div class="top-section">
+                <div class="yellow-top">
+                    <!-- 날씨 정보 -->
+                    <div class="weather-info" id="weather-app">
+                        <div class="weather-temp-sky-rain">
+                            <span class="weather-temp"></span>
+                            <div class="weather-sky"></div>
+                            <span class="weather-rain"></span>
+                        </div>
+                        <div class="weather-details">
+                            <span class="wds-default">미세</span>
+                            <span class="dust-value-0"></span>
+                            <span class="wds-default">초미세</span>
+                            <span class="dust-value-0"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="navy-top"></div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
 
-    <!-- 실시간 돌발상황 -->
-    <div style="margin-bottom: 10px;">
-      <h3 style="color:rgb(185, 101, 17); text-align:center; margin-bottom:5px;">실시간 돌발상황</h3>
-      <div class="content-box">
-        <div class="index-box"><span>●</span><span>●</span><span>●</span></div>
-        <div style="padding: 10px;">실시간 돌발상황 내용 구성 예정</div>
-      </div>
-    </div>
-
-    <!-- 서울 대기오염 정보 -->
-    <div style="margin-bottom: 10px;">
-      <h3 style="color:rgb(51, 176, 13); text-align:center; margin-bottom:5px;">서울 대기오염 정보</h3>
-      <div class="content-box">
-        <div class="index-box"><span>●</span><span>●</span><span>●</span></div>
-        <div class="air-box">
-          <video class="air-bg-video" autoplay muted loop playsinline>
-            <source src="/videos/AirQuality/sky.mp4" type="video/mp4" />
-          </video>
-          <div id="air-info-box"></div>
+        <!-- 하단 콘텐츠 박스 -->
+        <div class="content-section">
+            <div class="content-box">
+                <div class="index-box"><span>●</span>
+                    <span>●</span>
+                    <span>●</span>
+                </div>
+                <div class="board-content">
+                    <div class="content-title 1"><span class="ctt">공지사항</span><span class="material-symbols-outlined"
+                            style="color: black; font-size: 60px;">
+                            read_more
+                        </span></div>
+                    <div class="board-content-content">
+                        <ul class="notice-list">
+                            <li v-for="notice in noticePosts" :key="notice.id">
+                                <a :href="'/boards/' + notice.boardId + '/posts/read/' + notice.id">
+                                    {{ notice.title }}
+                                </a>
+                            </li>
+                            <li v-if="noticePosts.length === 0">
+                                <p>게시된 공지사항이 없습니다.</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="content-box">
+                <div class="index-box"> <span>●</span>
+                    <span>●</span>
+                    <span>●</span>
+                </div>
+                <div class="board-content">
+                    <div class="content-title 2">
+                        <span class="ctt">주요 교통 정보</span>
+                        <div class="traffic-controls">
+                            <button class="event-arrow backward" @click="showPrevEvent">
+                                <span class="material-symbols-outlined">arrow_back_ios_new</span>
+                            </button>
+                            <button class="event-arrow forward" @click="showNextEvent">
+                                <span class="material-symbols-outlined">arrow_forward_ios</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="board-content-content">
+                        <div v-html="currentEventHtml" class="traffic-event-display"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-box">
+                <div class="index-box"> <span>●</span>
+                    <span>●</span>
+                    <span>●</span>
+                </div>
+                <div class="board-content">
+                    <div class="content-title 3"><span class="ctt">서울 교통 뉴스</span><span class="material-symbols-outlined"
+                            style="color: black; font-size: 60px;">
+                            read_more
+                        </span></div>
+                    <div class="board-content-content">
+                        <ul class="news-list">
+                            <li v-for="news in naverNews" :key="news.link">
+                                <a :href="news.link" target="_blank">
+                                    {{ news.title }}
+                                </a>
+                            </li>
+                            <li v-if="naverNews.length === 0">
+                                <p>표시할 교통 뉴스가 없습니다.</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="ITS-link">
-    <div class="ITS-link-box">
-      <p>타 ITS 사이트 링크 걸 공간</p>
-    </div>
-  </div>
-</main>
-
-<script type="module">
-  import { createApp, ref, onMounted } from 'vue'
-
-  const App = {
-    setup() {
-      const notices = ref([
-        {
-          id: 1,
-          type: '공지',
-          title: '[공지] 6월 정기 시스템 점검 안내',
-          content: `안녕하세요, 서울교통정보센터입니다.<br>보다 안정적인 서비스 제공을 위해 다음과 같이 시스템 점검을 진행합니다.<br><br>🛠 점검 일시: 2025년 6월 17일(화) 09:00 ~ 18:00<br>🔌 점검 내용: 서버 정기 보안 업데이트 및 트래픽 최적화<br>🚫 서비스 영향: 점검 시간 동안 지도/대중교통정보 일부 서비스 접속 불가`
-        },
-        {
-          id: 2,
-          type: '안내',
-          title: '[안내] 로그인 보안 강화 적용 예정',
-          content: `보다 안전한 교통정보 이용을 위해 로그인 시 보안 인증 절차가 강화될 예정입니다.<br><br>🔐 적용 일자: 2025년 6월 25일(화)<br>📌 주요 변경: 비밀번호 변경 주기 도입, 2단계 인증 시범 적용`
-        },
-        {
-          id: 3,
-          type: '이벤트',
-          title: '[이벤트] 대중교통 이용 캠페인',
-          image: '/images/transport-campaign.png'
-        }
-      ])
-
-      const getSlideStyle = (notice) => {
-        const base = {
-          padding: '15px',
-          borderRadius: '10px',
-          height: 'auto',
-          boxSizing: 'border-box'
-        }
-        if (notice.type === '공지') return { ...base, backgroundColor: '#fffbe6' }
-        if (notice.type === '안내') return { ...base, backgroundColor: '#e3f2fd' }
-        return base
-      }
-
-      onMounted(() => {
-        const swiper = new Swiper('#notice-swiper', {
-          direction: 'horizontal',
-          loop: true,
-          autoplay: {
-            delay: 7000,
-            disableOnInteraction: false,
-            pauseOnMouseEnter: true
-          },
-          navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev'
-          }
-        })
-
-        const toggleBtn = document.getElementById('notice-swiper-toggle')
-        const icon = toggleBtn.querySelector('.material-icons')
-        let isPlaying = true
-
-        toggleBtn.addEventListener('click', () => {
-          if (isPlaying) {
-            swiper.autoplay.stop()
-            icon.textContent = 'play_arrow'
-          } else {
-            swiper.autoplay.start()
-            icon.textContent = 'pause'
-          }
-          isPlaying = !isPlaying
-        })
-      })
-
-      return { notices, getSlideStyle }
-    }
-  }
-
-  createApp(App).mount('#notice-swiper-app')
-</script>
-
-<script type="module">
-  import { createApp, ref, onMounted } from 'vue'
-
-  const AirInfoApp = {
-    setup() {
-      const airInfo = ref('로딩 중...')
-
-      onMounted(async () => {
-        try {
-          const res = await fetch('/api/indexWeather')
-          if (!res.ok) throw new Error('불러오기 실패')
-          const d = await res.json()
-
-          airInfo.value = `
-            <span class="hover-line">• 중구: ${d.junggu}㎍/㎥ (${d.jungguStatus})</span>
-            <span class="hover-line">• 종로구: ${d.jongrogu}㎍/㎥ (${d.jongroguStatus})</span>
-            <span class="hover-line">• 용산구: ${d.yongsangu}㎍/㎥ (${d.yongsanguStatus})</span>
-            <span class="hover-line">• 은평구: ${d.eunpyeong}㎍/㎥ (${d.eunpyeongStatus})</span>
-            <span class="hover-line">• 서대문구: ${d.seodaemun}㎍/㎥ (${d.seodaemunStatus})</span>
-            <span class="hover-line">• 마포구: ${d.mapo}㎍/㎥ (${d.mapoStatus})</span>
-          `
-        } catch (e) {
-          airInfo.value = '<span class="hover-line">정보를 불러오는 데 실패했습니다.</span>'
-        }
-      })
-
-      return { airInfo }
-    },
-    template: `<div class="air-info-text" v-html="airInfo"></div>`
-  }
-
-  createApp(AirInfoApp).mount('#air-info-box')
-</script>
+        <div class="ITS-link">
+            <div class="ITS-link-box">
+                <p>타 ITS 사이트 링크 걸 공간</p>
+            </div>
+        </div>
+    </main>
