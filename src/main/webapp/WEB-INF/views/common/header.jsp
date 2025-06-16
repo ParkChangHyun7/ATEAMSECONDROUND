@@ -27,13 +27,13 @@
 
                 <!--  주차장 드롭다운 -->
                 <li class="dropdown">
-                  <a href="#">교통정보보</a>
+                  <a href="#">교통정보</a>
                   <ul class="dropdown-menu">
                     <li><a href="/parking">공영주차장</a></li>
-                    <li><a href="/private-parking">민영주차장</a></li>
                     <li><a href="/traffic/cctvMap">CCTV</a></li>
                     <li><a href="/traffic/eventMap">돌발정보</a></li>
                     <li><a href="/traffic/trafficflowmap">소통정보</a></li>
+                    <li><a href="/traffic/visualize/accident">교통사고 통계</a></li>
                   </ul>
                 </li>
 
