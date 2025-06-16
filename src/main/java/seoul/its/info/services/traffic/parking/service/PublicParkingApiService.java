@@ -3,6 +3,7 @@ package seoul.its.info.services.traffic.parking.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -19,42 +20,46 @@ import java.util.*;
 @Service
 public class PublicParkingApiService {
 
-    private static final String API_KEY = "674e6e41676368613734506e46676d";
-    private static final String BASE_URL = "http://openapi.seoul.go.kr:8088/" + API_KEY + "/json/GetParkInfo/1/1000/";
+    @Value("${seoul.parking.api.key}")
+    private String apiKey;
+
+    private static final int BATCH_SIZE = 1000; // 한 번에 가져올 데이터 수
+    private static final int MAX_TOTAL = 5000;  // 최대 5000개까지 시도
 
     public String getParkingData() throws Exception {
-        // 1. API 호출
-        URL url = new URL(BASE_URL);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-
-        BufferedReader reader = new BufferedReader(
-                new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8)
-        );
-
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            sb.append(line);
+        List<Map<String, Object>> allParkingData = new ArrayList<>();
+        
+        String baseUrl = "http://openapi.seoul.go.kr:8088/" + apiKey + "/json/GetParkInfo/";
+        
+        // 여러 번 API 호출하여 더 많은 데이터 수집
+        for (int start = 1; start <= MAX_TOTAL; start += BATCH_SIZE) {
+            int end = Math.min(start + BATCH_SIZE - 1, MAX_TOTAL);
+            String apiUrl = baseUrl + start + "/" + end + "/";
+            
+            try {
+                System.out.println("API 호출: " + apiUrl);
+                List<Map<String, Object>> batchData = callParkingApi(apiUrl);
+                
+                if (batchData.isEmpty()) {
+                    System.out.println("더 이상 데이터가 없습니다. 총 " + allParkingData.size() + "개 수집완료");
+                    break;
+                }
+                
+                allParkingData.addAll(batchData);
+                System.out.println("배치 " + start + "-" + end + ": " + batchData.size() + "개 추가, 총 " + allParkingData.size() + "개");
+                
+            } catch (Exception e) {
+                System.err.println("API 호출 실패 (" + start + "-" + end + "): " + e.getMessage());
+                // 에러가 발생해도 이미 수집한 데이터는 사용
+                break;
+            }
         }
 
-        reader.close();
-        conn.disconnect();
+        System.out.println("최종 수집된 주차장 데이터: " + allParkingData.size() + "개");
 
-        String originalJson = sb.toString();
-
-        // 2. JSON 파싱
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode root = mapper.readTree(originalJson);
-        JsonNode rowNode = root.path("GetParkInfo").path("row");
-
-        List<Map<String, Object>> originalList = mapper.convertValue(
-                rowNode, new TypeReference<List<Map<String, Object>>>() {}
-        );
-
-        // 3. 중복 제거 로직 (PKLT_NM + ADDR 기준으로 병합)
+        // 중복 제거 로직
         Map<String, Map<String, Object>> mergedMap = new LinkedHashMap<>();
-        for (Map<String, Object> lot : originalList) {
+        for (Map<String, Object> lot : allParkingData) {
             String name = String.valueOf(lot.getOrDefault("PKLT_NM", "")).trim();
             String addr = String.valueOf(lot.getOrDefault("ADDR", "")).trim();
             String key = name + "-" + addr;
@@ -83,11 +88,49 @@ public class PublicParkingApiService {
             }
         }
 
-        // 4. 다시 JSON 구조로 변환
+        System.out.println("중복 제거 후 최종 주차장 수: " + mergedMap.size() + "개");
+
+        // 최종 JSON 구조로 변환
         Map<String, Object> finalJson = new HashMap<>();
         finalJson.put("GetParkInfo", Map.of("row", new ArrayList<>(mergedMap.values())));
 
+        ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(finalJson);
+    }
+
+    // 개별 API 호출 메서드
+    private List<Map<String, Object>> callParkingApi(String apiUrl) throws Exception {
+        URL url = new URL(apiUrl);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setConnectTimeout(10000); // 10초 타임아웃
+        conn.setReadTimeout(10000);
+
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8)
+        );
+
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            sb.append(line);
+        }
+
+        reader.close();
+        conn.disconnect();
+
+        String jsonResponse = sb.toString();
+
+        // JSON 파싱
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root = mapper.readTree(jsonResponse);
+        JsonNode rowNode = root.path("GetParkInfo").path("row");
+
+        if (rowNode.isMissingNode() || !rowNode.isArray()) {
+            return new ArrayList<>();
+        }
+
+        return mapper.convertValue(rowNode, new TypeReference<List<Map<String, Object>>>() {});
     }
 
     // 유틸 메서드: null-safe 문자열 채우기
