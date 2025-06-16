@@ -36,7 +36,7 @@ public class QuestionClassifier {
       try {
          // 젬마에게 보낼 질문 페이로드 생성
          ObjectNode requestPayload = objectMapper.createObjectNode();
-         requestPayload.put("model", "gemma3:1b");
+         requestPayload.put("model", "gemma3:4b");
          requestPayload.put("prompt",
                "다음 문장은 사용자가 실제로 '날씨나 기상 상태에 대한 정보를 알고 싶어서 한 질문'인지 판단해 주세요. " +
                      "말의 의도상 날씨 상황이나 이유를 알고 싶어 한다면 'HeyYES', 그렇지 않으면 'SadlyNO'로만 답하세요. " +

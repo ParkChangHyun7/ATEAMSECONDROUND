@@ -89,9 +89,7 @@ public class PostController {
         return "base";
     }
 
-    // 게시글 목록 조회 (JSP 뷰 반환)
     @GetMapping
-    // @ResponseBody // JSP 뷰를 반환하므로 제거
     public String getPostList(
             @PathVariable Long boardId,
             @RequestParam(defaultValue = "1") int page,
