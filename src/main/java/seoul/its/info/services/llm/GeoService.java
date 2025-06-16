@@ -9,15 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import jakarta.annotation.PostConstruct;
-
 @Service
 public class GeoService {
 
     @Value("${kakao.api.rest.key}")
     private String kakaoApiKey;
 
-    public String getCoordinates(String neighborhoodName) {        
+    public String getCoordinates(String neighborhoodName) {
         RestTemplate restTemplate = new RestTemplate();
 
         // 1. HttpHeaders 객체 생성 및 Authorization 헤더 추가
@@ -41,7 +39,7 @@ public class GeoService {
         String response = restTemplate.exchange(requestUrl, HttpMethod.GET, entity, String.class).getBody();
         return response; // JSON 형태로 반환
     }
-    
+
     public void checkCoordinates() {
         String neighborhoodName = "행신동";
         String coordinates = getCoordinates(neighborhoodName);

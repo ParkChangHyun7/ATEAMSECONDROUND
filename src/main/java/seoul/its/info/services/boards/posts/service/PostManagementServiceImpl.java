@@ -13,7 +13,7 @@ import seoul.its.info.services.boards.posts.dto.PostsDto;
 import seoul.its.info.services.boards.posts.PostMapper;
 import seoul.its.info.services.users.login.detail.UserDetailsImpl; // 임포트 경로 수정
 import seoul.its.info.common.exception.SystemException; // SystemException 임포트
-import seoul.its.info.common.exception.ErrorCode;     // ErrorCode 임포트
+import seoul.its.info.common.exception.ErrorCode; // ErrorCode 임포트
 import seoul.its.info.common.util.file.imageupload.ImageUploadService; // ImageUploadService 임포트 추가
 
 // OWASP Antisamy 임포트
@@ -41,11 +41,8 @@ public class PostManagementServiceImpl implements PostManagementService {
     @PostConstruct
     private void loadAntisamyPolicy() {
         try {
-            // 기본 정책 파일 로드 (antisamy.xml은 classpath에 있어야 함)
             policy = Policy.getInstance(getClass().getClassLoader().getResourceAsStream("antisamy.xml"));
         } catch (PolicyException e) {
-            // 애플리케이션 시작 시 정책 파일 로드 실패는 심각한 문제임. 로깅 후 예외를 다시 던지거나
-            // 애플리케이션을 종료하는 등의 처리를 고려해야 함.
             System.err.println("Critical: Failed to load Antisamy policy file. " + e.getMessage());
             throw new RuntimeException("Failed to load Antisamy policy file", e);
         }
@@ -53,7 +50,8 @@ public class PostManagementServiceImpl implements PostManagementService {
 
     @Override
     @Transactional
-    public PostResponseDto createPost(Long boardId, PostRequestDto requestDto, UserDetails userDetails, String clientIp) {
+    public PostResponseDto createPost(Long boardId, PostRequestDto requestDto, UserDetails userDetails,
+            String clientIp) {
         UserDetailsImpl principal = (UserDetailsImpl) userDetails;
         if (principal == null) {
             throw new SystemException(ErrorCode.AUTHENTICATION_FAILED.getStatus().name(), "사용자 인증 정보를 찾을 수 없습니다.");
@@ -92,7 +90,8 @@ public class PostManagementServiceImpl implements PostManagementService {
         postMapper.createPost(newPost);
 
         if (newPost.getId() == null) {
-            throw new SystemException(ErrorCode.POST_CREATION_FAILED.getStatus().name(), ErrorCode.POST_CREATION_FAILED.getMessage());
+            throw new SystemException(ErrorCode.POST_CREATION_FAILED.getStatus().name(),
+                    ErrorCode.POST_CREATION_FAILED.getMessage());
         }
 
         imageUploadService.assignPostIdToTemporaryImages(currentUserId, 0, boardId, newPost.getId());
@@ -110,13 +109,15 @@ public class PostManagementServiceImpl implements PostManagementService {
         PostsDto existingPost = postMapper.findPostByIdForUpdate(postId);
 
         if (existingPost == null || !existingPost.getBoardId().equals(boardId)) {
-            throw new SystemException(ErrorCode.POST_NOT_FOUND.getStatus().name(), ErrorCode.POST_NOT_FOUND.getMessage());
+            throw new SystemException(ErrorCode.POST_NOT_FOUND.getStatus().name(),
+                    ErrorCode.POST_NOT_FOUND.getMessage());
         }
 
         boolean isAdmin = principal.getRole() != null && principal.getRole() >= ADMIN_ROLE_THRESHOLD;
         // 수정 권한 확인: 본인 게시물이거나, 공지사항(isNotice == 1)이면서 관리자 권한이 있는 경우만 허용
         if (!existingPost.getUserId().equals(currentUserId) && !(isAdmin && existingPost.getIsNotice() == 1)) {
-            throw new SystemException(ErrorCode.AUTHORIZATION_FAILED.getStatus().name(), ErrorCode.AUTHORIZATION_FAILED.getMessage());
+            throw new SystemException(ErrorCode.AUTHORIZATION_FAILED.getStatus().name(),
+                    ErrorCode.AUTHORIZATION_FAILED.getMessage());
         }
 
         PostsDto postToUpdate = new PostsDto();
@@ -134,7 +135,8 @@ public class PostManagementServiceImpl implements PostManagementService {
 
         if (updatedRows == 0) {
             // 게시글이 존재했으나 업데이트가 되지 않은 경우, 동시성 문제 또는 다른 이유일 수 있음
-            throw new SystemException(ErrorCode.POST_UPDATE_FAILED.getStatus().name(), ErrorCode.POST_UPDATE_FAILED.getMessage());
+            throw new SystemException(ErrorCode.POST_UPDATE_FAILED.getStatus().name(),
+                    ErrorCode.POST_UPDATE_FAILED.getMessage());
         }
         return postQueryService.getPostDetail(boardId, postId, userDetails);
     }
@@ -149,19 +151,22 @@ public class PostManagementServiceImpl implements PostManagementService {
         PostsDto postToDelete = postMapper.findPostByIdForUpdate(postId);
 
         if (postToDelete == null || !postToDelete.getBoardId().equals(boardId)) {
-            throw new SystemException(ErrorCode.POST_NOT_FOUND.getStatus().name(), ErrorCode.POST_NOT_FOUND.getMessage());
+            throw new SystemException(ErrorCode.POST_NOT_FOUND.getStatus().name(),
+                    ErrorCode.POST_NOT_FOUND.getMessage());
         }
 
         boolean isAdmin = principal.getRole() != null && principal.getRole() >= ADMIN_ROLE_THRESHOLD;
         if (!postToDelete.getUserId().equals(currentUserId) && !isAdmin) {
-            throw new SystemException(ErrorCode.AUTHORIZATION_FAILED.getStatus().name(), ErrorCode.AUTHORIZATION_FAILED.getMessage());
+            throw new SystemException(ErrorCode.AUTHORIZATION_FAILED.getStatus().name(),
+                    ErrorCode.AUTHORIZATION_FAILED.getMessage());
         }
 
         int deletedRows = postMapper.deletePost(boardId, postId);
 
         if (deletedRows == 0) {
             // 게시글이 존재했으나 삭제가 되지 않은 경우
-            throw new SystemException(ErrorCode.POST_DELETE_FAILED.getStatus().name(), ErrorCode.POST_DELETE_FAILED.getMessage());
+            throw new SystemException(ErrorCode.POST_DELETE_FAILED.getStatus().name(),
+                    ErrorCode.POST_DELETE_FAILED.getMessage());
         }
         // TODO: 관련된 데이터(댓글, 좋아요 등) 처리 로직 (CASCADE 설정이 없다면 Mapper에서, 아니면 여기서 서비스 호출)
         // commentService.deleteCommentsByPostId(postId);
@@ -182,4 +187,4 @@ public class PostManagementServiceImpl implements PostManagementService {
             return "";
         }
     }
-} 
+}

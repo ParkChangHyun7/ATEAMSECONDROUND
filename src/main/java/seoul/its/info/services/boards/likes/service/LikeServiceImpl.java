@@ -18,7 +18,6 @@ import java.util.Optional;
 public class LikeServiceImpl implements LikeService {
 
     private final LikeMapper likeMapper;
-    private final PostMapper postMapper;
 
     @Override
     @Transactional
