@@ -23,12 +23,12 @@ const app = createApp({
       let data = trafficData.value;
 
       if (selectedYear.value) {
-        data = data.filter((item) => item.연도 == selectedYear.value);
+        data = data.filter((item) => item.연도 === Number(selectedYear.value));
       }
 
       if (selectedAccidentTypes.value.length > 0) {
         data = data.filter((item) =>
-          selectedAccidentTypes.value.includes(item.대상사고_구분명)
+          selectedAccidentTypes.value.includes(item["대상사고 구분명"])
         );
       }
       console.log("필터링된 데이터:", data);
@@ -56,7 +56,8 @@ const app = createApp({
 
         const currentYearData = filteredData.value.find(
           (item) =>
-            item.대상사고_구분명 === "전체" && item.연도 == selectedYear.value
+            item["대상사고 구분명"] === "전체" &&
+            item.연도 === Number(selectedYear.value)
         );
 
         if (currentYearData) {
@@ -111,7 +112,9 @@ const app = createApp({
           const dataValues = [];
           selectedAccidentTypes.value.forEach((type) => {
             const item = filteredData.value.find(
-              (d) => d.대상사고_구분명 === type && d.연도 == selectedYear.value
+              (d) =>
+                d["대상사고 구분명"] === type &&
+                d.연도 === Number(selectedYear.value)
             );
             dataValues.push(item ? item[field] : 0);
           });
