@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
     <!-- 지도 들어갈 자리 -->
     <div class="map_container">
+        <div class="speed-meter">
+            <span></span>
+            <span></span></div>
         <div class="mapview" id="vmap"></div>
     </div>
     <!-- 메인 섹션 -->
@@ -32,30 +35,38 @@
                 </div>
                 <div class="navy-top" >
                     <div class="sitemap-icons">
+                    <a href="/parking">
                         <div class="middle-icons parking">
                             <span class="material-symbols-outlined">
                                 local_parking
                             </span>
                             <span class="icon-text">주차장 정보</span>
                         </div>
+                    </a>
+                    <a href="/traffic/trafficflowmap">
                         <div class="middle-icons traffic">
                             <span class="material-symbols-outlined">
                                 traffic_jam
                             </span>
-                            <span class="icon-text">교통 정보</span>
+                            <span class="icon-text">소통 정보</span>
                         </div>
+                    </a>
+                    <a href="/traffic/eventMap">
                         <div class="middle-icons event">
                             <span class="material-symbols-outlined">
                                 sync_problem
                             </span>
                             <span class="icon-text">돌발 정보</span>
                         </div>
+                    </a>
+                    <a href="/traffic/cctvMap">
                         <div class="middle-icons cctv">
                             <span class="material-symbols-outlined">
                                 speed_camera
                             </span>
                             <span class="icon-text">도로 CCTV</span>
                         </div>
+                        </a>
                         <div class="middle-icons metro">
                             <span class="material-symbols-outlined">
                                 train

@@ -49,7 +49,7 @@
       </div>
     </div>
     <div id="dropdown-menu-overlay"></div>
-    <div class=" auth-wrap">
+    <div class="auth-wrap">
       <div class="auth-links" id="auth-links-app"></div>
     </div>
   </header>

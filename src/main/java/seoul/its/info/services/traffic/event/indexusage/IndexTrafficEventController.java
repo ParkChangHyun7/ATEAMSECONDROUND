@@ -10,6 +10,8 @@ import org.springframework.http.MediaType;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/api/index")
@@ -26,7 +28,8 @@ public class IndexTrafficEventController {
     public ResponseEntity<String> getTrafficEvents() {
         try {
             indexTrafficEventService.processAndSaveTrafficEvents();
-            String jsonContent = new String(Files.readAllBytes(Paths.get(jsonFilePath)), java.nio.charset.StandardCharsets.UTF_8);
+            String jsonContent = new String(Files.readAllBytes(Paths.get(jsonFilePath)),
+                    java.nio.charset.StandardCharsets.UTF_8);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.valueOf("application/json; charset=UTF-8"));
@@ -38,4 +41,16 @@ public class IndexTrafficEventController {
             return new ResponseEntity<>("Error fetching traffic events", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-} 
+
+    @GetMapping("/speedmeter")
+    public ResponseEntity<Map<String, String>> getTrafficSpeedStats() {
+        try {
+            Map<String, String> speedStats = indexTrafficEventService.fetchTrafficSpeedStats().get();
+            return new ResponseEntity<>(speedStats, HttpStatus.OK);
+        } catch (InterruptedException | ExecutionException e) {
+            System.err.println("Error fetching traffic speed stats: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+}

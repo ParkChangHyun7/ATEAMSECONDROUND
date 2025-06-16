@@ -26,6 +26,7 @@ import org.w3c.dom.NodeList;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import org.springframework.web.client.RestTemplate;
 
@@ -34,7 +35,6 @@ import org.locationtech.proj4j.CoordinateReferenceSystem;
 import org.locationtech.proj4j.ProjCoordinate;
 import org.locationtech.proj4j.CoordinateTransform;
 import org.locationtech.proj4j.CoordinateTransformFactory;
-
 
 @Service
 public class IndexTrafficEventServiceImpl implements IndexTrafficEventService {
@@ -53,7 +53,8 @@ public class IndexTrafficEventServiceImpl implements IndexTrafficEventService {
             Path path = Paths.get(jsonFilePath);
             if (Files.exists(path)) {
                 try {
-                    LocalDateTime fileLastModified = LocalDateTime.ofInstant(Files.getLastModifiedTime(path).toInstant(), java.time.ZoneId.systemDefault());
+                    LocalDateTime fileLastModified = LocalDateTime
+                            .ofInstant(Files.getLastModifiedTime(path).toInstant(), java.time.ZoneId.systemDefault());
                     LocalDateTime currentHourStart = LocalDateTime.now().withMinute(0).withSecond(0).withNano(0);
 
                     if (fileLastModified.isAfter(currentHourStart)) {
@@ -92,7 +93,6 @@ public class IndexTrafficEventServiceImpl implements IndexTrafficEventService {
 
         if (xmlStart != -1 && xmlEnd != -1 && xmlEnd > xmlStart) {
             validXmlResponse = xmlResponse.substring(xmlStart, xmlEnd);
-            System.out.println("Extracted Valid XML Response:\n" + validXmlResponse); // 유효한 XML 응답 출력
         } else {
             System.err.println("Could not extract valid XML from response: " + xmlResponse);
             throw new Exception("Invalid XML response format");
@@ -108,8 +108,10 @@ public class IndexTrafficEventServiceImpl implements IndexTrafficEventService {
 
         CRSFactory crsFactory = new CRSFactory();
         CoordinateTransformFactory ctFactory = new CoordinateTransformFactory();
-        CoordinateReferenceSystem grs80tm = crsFactory.createFromParameters("GRS80TM", "+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs");
-        CoordinateReferenceSystem wgs84 = crsFactory.createFromParameters("WGS84", "+proj=longlat +datum=WGS84 +no_defs");
+        CoordinateReferenceSystem grs80tm = crsFactory.createFromParameters("GRS80TM",
+                "+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs");
+        CoordinateReferenceSystem wgs84 = crsFactory.createFromParameters("WGS84",
+                "+proj=longlat +datum=WGS84 +no_defs");
         CoordinateTransform transform = ctFactory.createTransform(grs80tm, wgs84);
 
         List<CompletableFuture<Map<String, Object>>> futures = new ArrayList<>();
@@ -139,7 +141,7 @@ public class IndexTrafficEventServiceImpl implements IndexTrafficEventService {
                     ProjCoordinate srcCoord = new ProjCoordinate(x, y);
                     ProjCoordinate dstCoord = new ProjCoordinate();
                     transform.transform(srcCoord, dstCoord);
-    
+
                     eventData.put("xcoordinate", dstCoord.x);
                     eventData.put("ycoordinate", dstCoord.y);
                 } else {
@@ -162,7 +164,8 @@ public class IndexTrafficEventServiceImpl implements IndexTrafficEventService {
                     try {
                         String linkApiUrl = linkInfoBase + openApiBaseKey.trim() + "/xml/LinkInfo/1/5/" + currentLinkId;
                         String linkXmlResponse = restTemplate.getForObject(linkApiUrl, String.class);
-                        Document linkDoc = builder.parse(new org.xml.sax.InputSource(new java.io.StringReader(linkXmlResponse)));
+                        Document linkDoc = builder
+                                .parse(new org.xml.sax.InputSource(new java.io.StringReader(linkXmlResponse)));
                         linkDoc.getDocumentElement().normalize();
 
                         NodeList linkRowList = linkDoc.getElementsByTagName("row");
@@ -174,7 +177,8 @@ public class IndexTrafficEventServiceImpl implements IndexTrafficEventService {
                             linkEventData.put("distmeter", getTagValue("map_dist", linkRow));
                         }
                     } catch (Exception e) {
-                        System.err.println("Error fetching link data for LINK_ID: " + currentLinkId + " - " + e.getMessage());
+                        System.err.println(
+                                "Error fetching link data for LINK_ID: " + currentLinkId + " - " + e.getMessage());
                     }
                     return linkEventData;
                 }));
@@ -213,4 +217,33 @@ public class IndexTrafficEventServiceImpl implements IndexTrafficEventService {
             throw e;
         }
     }
-} 
+
+    @Override
+    @Async
+    public CompletableFuture<Map<String, String>> fetchTrafficSpeedStats() {
+        return CompletableFuture.supplyAsync(() -> {
+            RestTemplate restTemplate = new RestTemplate();
+            String apiUrl = "https://topis.seoul.go.kr/main/selectSpdStat.do";
+            Map<String, String> speedStats = new HashMap<>();
+
+            try {
+                String jsonResponse = restTemplate.getForObject(apiUrl, String.class);
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode rootNode = mapper.readTree(jsonResponse);
+                JsonNode rowsNode = rootNode.path("rows");
+
+                if (rowsNode.isArray() && rowsNode.size() > 0) {
+                    JsonNode firstRow = rowsNode.get(0);
+                    String val1 = firstRow.path("val1").asText();
+                    String val2 = firstRow.path("val2").asText();
+                    speedStats.put("val1", val1);
+                    speedStats.put("val2", val2);
+                }
+            } catch (Exception e) {
+                System.err.println("Error fetching traffic speed stats: " + e.getMessage());
+                e.printStackTrace();
+            }
+            return speedStats;
+        });
+    }
+}
