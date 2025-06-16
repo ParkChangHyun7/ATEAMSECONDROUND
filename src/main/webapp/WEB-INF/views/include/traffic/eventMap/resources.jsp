@@ -59,25 +59,80 @@
 }
 
 
-  #eventList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
   }
 
-  #eventList li {
-    padding: 6px;
-    border-bottom: 1px solid #ddd;
+  .event-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+
+  .event-table thead {
+    background-color: #f8f9fa;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+
+  .event-table th {
+    padding: 8px 6px;
+    border: 1px solid #dee2e6;
+    font-weight: bold;
+    text-align: center;
+    background-color: #e9ecef;
+    font-size: 11px;
+  }
+
+  .event-table th:nth-child(1) { width: 25%; } /* 구분 */
+  .event-table th:nth-child(2) { width: 35%; } /* 도로명 */
+  .event-table th:nth-child(3) { width: 40%; } /* 상황 */
+
+  .event-table tbody {
+    max-height: calc(65vh - 40px);
+  }
+
+  .event-table td {
+    padding: 6px 4px;
+    border: 1px solid #dee2e6;
+    vertical-align: top;
+    word-wrap: break-word;
+    font-size: 11px;
+    line-height: 1.3;
+  }
+
+  .event-row {
     cursor: pointer;
+    transition: background-color 0.2s ease;
   }
 
-  #eventList li:hover {
-    background-color: #eee;
+  .event-row:hover {
+    background-color: #f8f9fa;
+  }
+
+  .event-category {
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .event-road {
+    font-weight: 500;
+  }
+
+  .event-message {
+    font-size: 10px;
+    color: #666;
   }
 
   .active-list-item {
-    background-color: #ffeb3b33;
-    border-left: 4px solid #ffc107;
+    background-color: #fff3cd !important;
+    border-left: 4px solid #ffc107 !important;
+  }
+
+  .active-list-item td {
+    background-color: #fff3cd;
   }
 
   #scrollToTopBtn {

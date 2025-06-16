@@ -98,6 +98,11 @@
   margin-left: 20px;
 }
 
+.navs li:hover {
+  color: #f1b300;
+  transition: color 0.3s ease;
+}
+
 .navs a {
   color: white;
   text-decoration: none;
@@ -171,6 +176,7 @@
 
 .navs .dropdown-menu li a:hover {
   background-color: #666;
+  text-decoration: none;
 }
 
 .navs .dropdown:hover .dropdown-menu {

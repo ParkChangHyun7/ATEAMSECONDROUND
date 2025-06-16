@@ -1,30 +1,10 @@
 
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
-
-
-
-
-
-
-
-<!DOCTYPE html>
-<html>
-<head>
-  <title>교통흐름지도</title>
-
-  <!-- 카카오맵 API (services 포함) -->
+<!-- 카카오맵 API (services 포함) -->
   <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=ddc3a5089cd2e1974490b196aab220ec&libraries=services"></script>
 
   <!-- 스타일 -->
   <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-
     #search-container {
       width: 100%;
       display: flex;

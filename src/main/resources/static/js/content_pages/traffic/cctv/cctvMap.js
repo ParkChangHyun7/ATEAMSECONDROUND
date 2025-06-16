@@ -60,7 +60,31 @@ function initializeCCTVMap() {
       const lng = parseFloat(cctv.coordX);
       const position = new kakao.maps.LatLng(lat, lng);
 
-      const marker = new kakao.maps.Marker({ position, map });
+      // CCTV 커스텀 마커 이미지 설정
+      const imageSrc = '/images/cctv/cctv.png';
+      const imageSize = new kakao.maps.Size(32, 32); // 마커 크기
+      const imageOption = { offset: new kakao.maps.Point(16, 32) }; // 마커 기준점
+      
+      const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+      const marker = new kakao.maps.Marker({ 
+        position, 
+        map,
+        image: markerImage
+      });
+      
+      // 마우스 오버 효과 추가
+      const hoverImageSize = new kakao.maps.Size(40, 40); // 호버 시 크기 증가
+      const hoverImageOption = { offset: new kakao.maps.Point(20, 40) };
+      const hoverMarkerImage = new kakao.maps.MarkerImage(imageSrc, hoverImageSize, hoverImageOption);
+      
+      // 마커에 마우스 이벤트 추가
+      kakao.maps.event.addListener(marker, 'mouseover', () => {
+        marker.setImage(hoverMarkerImage);
+      });
+      
+      kakao.maps.event.addListener(marker, 'mouseout', () => {
+        marker.setImage(markerImage);
+      });
       allMarkers.push(marker);
 
       const infowindow = new kakao.maps.InfoWindow({
@@ -150,8 +174,21 @@ function initializeCCTVMap() {
         if (status === kakao.maps.services.Status.OK) {
           const latlng = new kakao.maps.LatLng(data[0].y, data[0].x);
           map.panTo(latlng);
-          if (searchMarker) searchMarker.setPosition(latlng);
-          else searchMarker = new kakao.maps.Marker({ position: latlng, map });
+          if (searchMarker) {
+            searchMarker.setPosition(latlng);
+          } else {
+            // 검색 마커용 CCTV 이미지
+            const searchImageSrc = '/images/cctv/cctv.png';
+            const searchImageSize = new kakao.maps.Size(40, 40); // 검색 마커는 조금 더 크게
+            const searchImageOption = { offset: new kakao.maps.Point(20, 40) };
+            const searchMarkerImage = new kakao.maps.MarkerImage(searchImageSrc, searchImageSize, searchImageOption);
+            
+            searchMarker = new kakao.maps.Marker({ 
+              position: latlng, 
+              map,
+              image: searchMarkerImage
+            });
+          }
         } else {
           alert("검색 결과가 없습니다.");
         }
