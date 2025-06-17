@@ -29,20 +29,22 @@ import java.util.concurrent.Executors;
 @Service
 public class ChatHandlerServiceImpl implements ChatHandlerService {
 
-   private static final String OLLAMA_API_URL = "http://localhost:11434/api/generate";
-   private static final String MODEL_NAME = "gemma3:4b";
+   private static final String OLLAMA_API_URL = "https://0e54-180-231-104-47.ngrok-free.app/";
+   private static final String MODEL_NAME = "gemma3:4b-it-q4_K_M";
 
    // 데이터 분석용 (정확성, 간결함 위주)
-   private static final double ANALYZE_TEMPERATURE = 0.1;
+   private static final double ANALYZE_TEMPERATURE = 0.2;
    private static final int ANALYZE_TOP_K = 30;
    private static final double ANALYZE_TOP_P = 0.9;
+   private static final int ANALYZE_NUM_CTX = 8192; // 컨텍스트 창 크기
    private static final int ANALYZE_NUM_PREDICT = 1024; // 답변 최대 길이 (토큰)
    private static final double ANALYZE_REPEAT_PENALTY = 1.1; // 반복 패널티
-   
+
    // 일반 대화용 (창의성, 풍부함 위주)
    private static final double GENERIC_TEMPERATURE = 0.5;
    private static final int GENERIC_TOP_K = 50;
    private static final double GENERIC_TOP_P = 0.95;
+   private static final int GENERIC_NUM_CTX = 8192; // 컨텍스트 창 크기
    private static final int GENERIC_NUM_PREDICT = 1024;
    private static final double GENERIC_REPEAT_PENALTY = 1.1;
 
@@ -53,7 +55,7 @@ public class ChatHandlerServiceImpl implements ChatHandlerService {
    public ChatHandlerServiceImpl(RestTemplate restTemplate, ObjectMapper objectMapper) {
       this.restTemplate = restTemplate;
       this.objectMapper = objectMapper;
-      this.webClient = WebClient.builder().baseUrl("http://localhost:11434").build();
+      this.webClient = WebClient.builder().baseUrl("https://0e54-180-231-104-47.ngrok-free.app/").build();
    }
 
    @Override
@@ -122,7 +124,7 @@ public class ChatHandlerServiceImpl implements ChatHandlerService {
    public SseEmitter handleDataAnalyzeStream(String userQuestion) {
       SseEmitter emitter = new SseEmitter(300_000L); // 타임아웃 5분으로 설정
       ExecutorService sseMvcExecutor = Executors.newSingleThreadExecutor();
-      
+
       emitter.onCompletion(() -> {
          sseMvcExecutor.shutdown();
       });
@@ -136,39 +138,40 @@ public class ChatHandlerServiceImpl implements ChatHandlerService {
          try {
             String referenceData = loadJsonFromClasspath("com/json/trafficAccident.json");
             String systemPrompt = buildDataAnalyzePrompt();
-            
-            String requestBody = buildGemmaRequestBody(systemPrompt, referenceData, userQuestion, true, 
-                ANALYZE_TEMPERATURE, ANALYZE_TOP_K, ANALYZE_TOP_P, ANALYZE_NUM_PREDICT, ANALYZE_REPEAT_PENALTY);
+
+            String requestBody = buildGemmaRequestBody(systemPrompt, referenceData, userQuestion, true,
+                  ANALYZE_TEMPERATURE, ANALYZE_TOP_K, ANALYZE_TOP_P, ANALYZE_NUM_PREDICT, ANALYZE_REPEAT_PENALTY, ANALYZE_NUM_CTX);
 
             webClient.post()
-               .uri("/api/generate")
-               .accept(MediaType.APPLICATION_NDJSON)
-               .contentType(MediaType.APPLICATION_JSON)
-               .bodyValue(requestBody)
-               .retrieve()
-               .bodyToFlux(String.class)
-               .doOnNext(line -> {
-                  try {
-                     if (line.trim().isEmpty() || !line.startsWith("{")) return;
-                     // 받은 JSON 라인을 파싱하지 않고 그대로 클라이언트에 전송
-                     emitter.send(SseEmitter.event().data(line));
-                  } catch (IOException e) {
-                     // 클라이언트 연결이 끊겼을 가능성이 높으므로, 에러를 던져 스트림 종료
-                     emitter.completeWithError(e);
-                  }
-               })
-               .doOnError(emitter::completeWithError)
-               .doOnComplete(() -> {
-                  // 스트림이 성공적으로 완료되면 emitter를 정상적으로 종료
-                  emitter.complete();
-               })
-               .subscribe();
+                  .uri("/api/generate")
+                  .accept(MediaType.APPLICATION_NDJSON)
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .bodyValue(requestBody)
+                  .retrieve()
+                  .bodyToFlux(String.class)
+                  .doOnNext(line -> {
+                     try {
+                        if (line.trim().isEmpty() || !line.startsWith("{"))
+                           return;
+                        // 받은 JSON 라인을 파싱하지 않고 그대로 클라이언트에 전송
+                        emitter.send(SseEmitter.event().data(line));
+                     } catch (IOException e) {
+                        // 클라이언트 연결이 끊겼을 가능성이 높으므로, 에러를 던져 스트림 종료
+                        emitter.completeWithError(e);
+                     }
+                  })
+                  .doOnError(emitter::completeWithError)
+                  .doOnComplete(() -> {
+                     // 스트림이 성공적으로 완료되면 emitter를 정상적으로 종료
+                     emitter.complete();
+                  })
+                  .subscribe();
 
          } catch (Exception e) {
             emitter.completeWithError(e);
          }
       });
-      
+
       return emitter;
    }
 
@@ -179,30 +182,34 @@ public class ChatHandlerServiceImpl implements ChatHandlerService {
       }
    }
 
-   private String buildGemmaRequestBody(String systemPrompt, String referenceData, String userQuestion, boolean stream, 
-                                       double temperature, int topK, double topP, int numPredict, double repeatPenalty) {
+   private String buildGemmaRequestBody(String systemPrompt, String referenceData, String userQuestion, boolean stream,
+         double temperature, int topK, double topP, int numPredict, double repeatPenalty, int numCtx) {
       try {
          ObjectNode rootNode = objectMapper.createObjectNode();
          rootNode.put("model", MODEL_NAME);
 
-         // 프롬프트 구조 변경: [참고 자료] -> [지시문] -> [질문]
+         // 프롬프트 구조 변경
          String fullPrompt = String.format(
-             "아래의 [참고 자료]와 [지시문]을 바탕으로 [질문]에 답변하세요.\n\n" +
-             "--- [참고 자료] ---\n%s\n\n" +
-             "--- [지시문] ---\n%s\n\n" +
-             "--- [질문] ---\n%s",
-             referenceData, systemPrompt, userQuestion);
-         
+               "{참고자료 시작} " +
+                     "%s" +
+                     "{참고자료 종료}" +
+                     "{SystemPrompt Start} 당신은 데이터 분석 전문가로 참고자료에 대한 답변만을 하도록 제한합니다." +
+                     "사용자의 질문이 참고 자료와 관련이 있는지 판단하고, 무관한 질문에 대해서는 답변할 수 없음을 말 하세요." +
+                     "참고자료와 관련된 사용자의 질문이라면 다양한 방향으로 친절히 답 해주세요. {SystemPrompt End}"+
+                     "사용자의 질문 = %s ",
+               referenceData, userQuestion);
+
          rootNode.put("prompt", fullPrompt);
-         
+
          ObjectNode optionsNode = objectMapper.createObjectNode();
          optionsNode.put("temperature", temperature);
          optionsNode.put("top_k", topK);
          optionsNode.put("top_p", topP);
+         optionsNode.put("num_ctx", numCtx);
          optionsNode.put("num_predict", numPredict);
          optionsNode.put("repeat_penalty", repeatPenalty);
          rootNode.set("options", optionsNode);
-         
+
          rootNode.put("stream", stream);
 
          return objectMapper.writeValueAsString(rootNode);
@@ -212,12 +219,7 @@ public class ChatHandlerServiceImpl implements ChatHandlerService {
    }
 
    private String buildDataAnalyzePrompt() {
-      return "[역할] 당신은 '데이터 분석 전문 AI'입니다.\n\n" +
-             "[규칙]\n" +
-             "1. **답변 범위**: 오직 주어진 [참고 자료]의 내용만으로 답변해야 합니다. 외부 지식을 활용하거나 데이터를 추측해서는 안됩니다.\n" +
-             "2. **주제 이탈**: 사용자의 질문이 [참고 자료]와 전혀 관련 없는 경우(예: 요리법, 날씨), \"저는 데이터 분석 전문 AI이므로, 해당 질문에는 답변할 수 없습니다.\" 라고만 답변해야 합니다.\n" +
-             "3. **데이터 부재**: 자료에 없는 내용에 대한 질문은 \"제공된 데이터에 해당 정보가 없습니다.\" 라고 답변하세요.\n" +
-             "4. **답변 스타일**: 원본 데이터(JSON, XML 등)를 직접 노출하지 말고, 내용을 요약하고 분석하여 한국어로 설명해주세요.";
+      return "";
    }
 
    private String buildFullPrompt(String systemPrompt, String referenceData, String userQuestion) {
@@ -278,9 +280,10 @@ public class ChatHandlerServiceImpl implements ChatHandlerService {
    }
 
    @Override
-   public ChatHandlerResponseDto.ChatResponse handleGenericChat(String systemPrompt, String referenceData, String userQuestion) {
-      String requestBody = buildGemmaRequestBody(systemPrompt, referenceData, userQuestion, false, 
-          GENERIC_TEMPERATURE, GENERIC_TOP_K, GENERIC_TOP_P, GENERIC_NUM_PREDICT, GENERIC_REPEAT_PENALTY);
+   public ChatHandlerResponseDto.ChatResponse handleGenericChat(String systemPrompt, String referenceData,
+         String userQuestion) {
+      String requestBody = buildGemmaRequestBody(systemPrompt, referenceData, userQuestion, false,
+            GENERIC_TEMPERATURE, GENERIC_TOP_K, GENERIC_TOP_P, GENERIC_NUM_PREDICT, GENERIC_REPEAT_PENALTY, GENERIC_NUM_CTX);
       String ollamaResponse = callOllamaApi(requestBody);
       return parseOllamaResponse(ollamaResponse);
    }
@@ -298,7 +301,7 @@ public class ChatHandlerServiceImpl implements ChatHandlerService {
          return "{\"error\":\"" + e.getStatusCode() + "\", \"message\":\"" + e.getResponseBodyAsString() + "\"}";
       }
    }
-   
+
    private ChatHandlerResponseDto.ChatResponse parseOllamaResponse(String responseBody) {
       try {
          JsonNode root = objectMapper.readTree(responseBody);
