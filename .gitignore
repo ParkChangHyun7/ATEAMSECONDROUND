@@ -191,3 +191,6 @@ src/main/data/api/json/seoulpublicdata.json
 .windsurf
 src/main/data/api/json/seoulTrafficEvent.json
 src/main/data/api/json/seoulpublicdata.json
+# 민감 정보 제외
+src/main/resources/application.properties
+src/main/resources/application-API-KEY.properties
