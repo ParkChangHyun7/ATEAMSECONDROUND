@@ -1,60 +1,182 @@
-# SOLID 원칙
+# 🚦 Seoul ITS Info - 서울 교통정보 통합 플랫폼
 
-## S - 단일 책임 원칙 (Single Responsibility Principle, SRP)
-하나의 클래스는 하나의 책임만 가져야 한다.  
-**비유**: 만약 커피숍에서 바리스타가 커피도 만들고, 청소도 하고, 재료 구매도 한다면 문제가 생긴다. → "커피 제조"만 맡기는 것이 올바른 단일 책임 분배.
+> A-Team이 개발한 서울시 지능형 교통체계(ITS) 정보 제공 웹 플랫폼
 
-## O - 개방-폐쇄 원칙 (Open/Closed Principle, OCP)
-"확장에는 열려 있고, 수정에는 닫혀 있어야 한다."  
-**비유**: 플러그형 멀티탭처럼 추가 장치는 쉽게 연결할 수 있어야 하지만, 기존 멀티탭 자체를 뜯어 고치진 않아야 한다.
+## 📋 프로젝트 개요
 
-## L - 리스코프 치환 원칙 (Liskov Substitution Principle, LSP)
-자식 클래스는 부모 클래스를 대체할 수 있어야 한다.  
-**비유**: 스포츠카(자식 클래스)는 자동차(부모 클래스)로서 기본 기능(운전, 정지 등)을 당연히 할 수 있어야 한다. 만약 스포츠카가 "일반 도로 주행 불가"라면 자동차 역할을 제대로 못하는 셈.
+Seoul ITS Info는 서울시민들에게 실시간 교통정보를 제공하는 종합 웹 플랫폼입니다. 
+교통 상황, 지하철, 주차장, CCTV, 날씨 정보 등을 한 곳에서 확인할 수 있으며, 
+AI 챗봇을 통해 개인화된 교통정보 서비스를 제공합니다.
 
-## I - 인터페이스 분리 원칙 (Interface Segregation Principle, ISP)
-특정 클라이언트를 위한 인터페이스만 제공해야 한다. (필요 없는 기능을 강제로 구현하게 하지 말 것)  
-**비유**: 식당 주문 앱에 "요리하기" 버튼이 뜬다면 어색하다. 고객은 "주문하기"만 필요하다. 필요한 기능만 보여줘야 한다.
+## ✨ 주요 기능
 
-## D - 의존 역전 원칙 (Dependency Inversion Principle, DIP)
-고수준 모듈(비즈니스 로직)이 저수준 모듈(구현 세부사항)에 의존하면 안 된다. 둘 다 추상화에 의존해야 한다.  
-**비유**: 콘센트(고수준)는 냉장고(저수준) 모델에 따라 바뀌면 안 된다. 표준 플러그 형태만 맞으면 어떤 냉장고든 꽂을 수 있어야 한다.
+### 🗺️ 교통 정보
+- **실시간 교통 상황**: 서울시 도로 소통 정보 및 교통량 시각화
+- **돌발 상황**: 교통사고, 공사, 행사 등 실시간 돌발상황 알림
+- **도로 CCTV**: 주요 도로의 실시간 CCTV 영상 제공
+
+### 🚇 대중교통
+- **지하철 정보**: 서울 지하철 노선도 및 실시간 운행정보
+- **버스 정보**: 서울시 버스 노선 및 정류장 정보
+- **따릉이**: 서울시 공공자전거 대여소 현황
+
+### 🅿️ 주차장 정보
+- **공영 주차장**: 서울시 공영주차장 위치 및 실시간 현황
+- **민영 주차장**: 민영주차장 정보 및 요금 안내
+
+### 🌤️ 날씨 & 대기질
+- **실시간 날씨**: 서울시 날씨 정보 및 예보
+- **대기질**: 미세먼지, 초미세먼지 등 대기질 정보
+
+### 🤖 AI 챗봇
+- **날씨 상담**: Gemini AI를 활용한 날씨 정보 상담
+- **데이터 분석**: Ollama 기반 교통데이터 분석 및 인사이트 제공
+
+### 💬 커뮤니티
+- **게시판**: 공지사항, 자유게시판 등 커뮤니티 기능
+- **사용자 관리**: 회원가입, 로그인, 프로필 관리
+
+## 🛠️ 기술 스택
+
+### Backend
+- **Framework**: Spring Boot 3.4.6
+- **Language**: Java 17
+- **Database**: MySQL
+- **ORM**: MyBatis
+- **Security**: Spring Security
+- **API**: REST API, WebFlux
+
+### Frontend
+- **View**: JSP, JSTL
+- **Styling**: CSS3, Responsive Design
+- **JavaScript**: Vanilla JS, Vue.js
+- **Maps**: OpenLayers, Google Maps API, Kakao Maps API
+
+### AI & External APIs
+- **AI Models**: Google Gemini, Ollama (Gemma 3:4b)
+- **APIs**: 
+  - 서울시 열린데이터 광장
+  - 공공데이터포털
+  - 기상청 API
+  - 카카오 API
+  - 네이버 API
+  - T-Map API
+
+### Python Services
+- **Framework**: FastAPI
+- **Libraries**: BeautifulSoup4, GeoPandas, Requests
+- **Functions**: 크롤링, 파일 서버, Ollama 연동, 날씨 데이터 처리
+
+## 🚀 설치 및 실행
+
+### 사전 요구사항
+- Java 17+
+- MySQL 8.0+
+- Python 3.8+ (Python API 사용 시)
+- Maven 3.6+
+
+### 1. 저장소 클론
+```bash
+git clone https://github.com/your-username/ATEAMSECONDROUND.git
+cd ATEAMSECONDROUND
+```
+
+### 2. 데이터베이스 설정
+MySQL에서 데이터베이스를 생성하고 `application.properties`에서 연결 정보를 설정하세요.
+
+### 3. API 키 설정
+`src/main/resources/com/properties/application-API-KEY.properties` 파일에 다음 API 키들을 설정하세요:
+- Kakao API Key
+- Google Maps API Key
+- 공공데이터포털 API Key
+- 기상청 API Key
+- Gemini API Key
+- 기타 필요한 API 키들
+
+### 4. 애플리케이션 실행
+```bash
+# Spring Boot 애플리케이션 실행
+./mvnw spring-boot:run
+
+# 또는 JAR 파일 빌드 후 실행
+./mvnw clean package
+java -jar target/seoul-its-info-0.0.1-SNAPSHOT.jar
+```
+
+### 5. Python API 실행 (선택사항)
+```bash
+cd python_api
+pip install -r requirements.txt
+uvicorn file_server:app --reload --port 8001
+```
+
+## 📁 프로젝트 구조
+
+```
+ATEAMSECONDROUND/
+├── src/main/
+│   ├── java/seoul/its/info/
+│   │   ├── common/          # 공통 설정 및 유틸리티
+│   │   ├── services/        # 서비스 레이어
+│   │   │   ├── traffic/     # 교통 정보 서비스
+│   │   │   ├── metro/       # 지하철 정보 서비스
+│   │   │   ├── llm/         # AI 챗봇 서비스
+│   │   │   ├── boards/      # 게시판 서비스
+│   │   │   └── users/       # 사용자 관리 서비스
+│   │   └── main/            # 메인 컨트롤러
+│   ├── resources/
+│   │   ├── static/          # 정적 리소스 (CSS, JS, 이미지)
+│   │   └── data/            # 데이터 파일
+│   └── webapp/WEB-INF/views/ # JSP 뷰 파일
+├── python_api/              # Python 기반 API 서비스
+└── data/                    # 정적 데이터 파일 (JSON, CSV)
+```
+
+## 🌐 주요 엔드포인트
+
+- `/` - 메인 페이지
+- `/traffic/trafficflowmap` - 교통 소통 정보
+- `/traffic/eventMap` - 돌발 상황 지도
+- `/traffic/cctvMap` - CCTV 지도
+- `/parking` - 주차장 정보
+- `/metro` - 지하철 정보
+- `/chat` - AI 챗봇
+- `/boards/{boardId}/posts` - 게시판
+
+## 🔑 주요 API
+
+### 교통 정보
+- `GET /api/traffic/events` - 실시간 교통 이벤트
+- `GET /api/traffic/flow` - 교통 소통 정보
+
+### AI 챗봇
+- `POST /api/classifier` - 질문 분류
+- `POST /api/chat/handler` - 일반 채팅
+- `GET /api/chat/dataAnalyze-stream` - 데이터 분석 (SSE)
+
+### 주차장
+- `GET /api/parking/public` - 공영 주차장 정보
+
+## 🤝 기여하기
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 라이선스
+
+이 프로젝트는 MIT 라이선스 하에 배포됩니다. 자세한 내용은 `LICENSE` 파일을 참고하세요.
+
+## 👥 팀 정보
+
+**A-Team** - Seoul ITS Info 개발팀
+
+## 📞 문의사항
+
+프로젝트에 대한 문의사항이나 버그 리포트는 Issues를 통해 연락주세요.
 
 ---
 
-# DRY 원칙
-
-## DRY - Don't Repeat Yourself
-코드에서 같은 내용을 여러 번 반복하지 말고, 하나의 장소에만 작성한다.  
-**비유**: "레시피"가 여러 번 반복되는 요리책을 생각해보자. 같은 요리법이 여러 페이지에 걸쳐 반복된다면, 요리할 때마다 그 부분을 찾기 번거롭다. → 레시피는 한 번만 작성하고, 재사용 가능한 형태로 정리해야 한다.
-
-## DRY 원칙의 의미
-- **유지보수성 증가**: 코드를 수정할 때 한 군데만 수정하면 되므로, 실수가 줄어들고 시간이 절약된다.
-- **가독성 증가**: 코드가 간결하고 깔끔하게 유지되어, 다른 개발자가 이해하기 쉽다.
-- **버그 감소**: 중복된 코드에서 오류가 발생하면, 모든 코드에서 수정해야 하는 번거로움이 생긴다. 중복을 없애면 그런 상황을 피할 수 있다.
-
----
-
-# YAGNI 원칙
-
-## YAGNI - You Aren't Gonna Need It
-미래의 필요를 예상해 미리 기능을 추가하거나 복잡하게 만들지 말고, 지금 필요한 것에만 집중하자.  
-**비유**: "겨울이 오기 전 옷장에 여름 옷까지 미리 다 채우는 것보다는, 겨울 옷만 준비하고 여름이 되면 필요한 옷만 사는 것이 더 효율적이다." → 불필요한 준비를 미리 하지 말고, 실제로 필요할 때만 추가하는 것이 더 효과적이다.
-
-## YAGNI 원칙의 의미
-- **시간과 자원의 낭비를 줄여준다**: 지금 당장 필요한 것에만 집중하고, 나중에 필요할 때 추가하는 방식으로 개발을 효율적으로 진행한다.
-- **복잡성을 줄이고 가독성을 높인다**: 불필요한 기능이나 코드를 피함으로써 코드가 간결하고 유지보수하기 쉬운 상태로 남는다.
-- **불확실성에서 벗어나 현재에 집중**: 예측할 수 없는 기능이나 요구 사항을 미리 추가하지 않음으로써 불확실성을 피한다.
-
----
-
-# KISS 원칙
-
-## KISS - Keep It Simple, Stupid
-가능하면 간단하고 직관적인 방식으로 문제를 해결하라.  
-**비유**: "복잡하게 만든 요리보다는 간단한 재료로 만든 요리가 더 맛있고, 만들기도 쉽다." → 복잡한 레시피나 과정을 사용할수록 실수할 확률이 높고, 완성된 결과도 예측하기 어려워진다. → 간단하고 효율적인 방법으로 문제를 해결하는 것이 더 나은 선택일 수 있다.
-
-## KISS 원칙의 의미
-- **간단함이 강력하다**: 복잡하게 만들수록 코드가 길어지고, 나중에 수정하거나 확장할 때 더 어려워진다. 단순한 해결책이 더 효과적이다.
-- **가독성 향상**: 간단한 코드가 읽기 쉽고 이해하기 쉽기 때문에, 다른 개발자와의 협업이나 유지보수가 용이하다.
-- **버그 발생 가능성 감소**: 코드가 복잡해지면 실수하거나 버그가 발생할 가능성이 높아진다. 단순한 코드일수록 버그를 찾고 수정하기가 쉬운 장점이 있다.
+**Seoul ITS Info** - 더 스마트한 서울 교통정보 플랫폼 🚀
