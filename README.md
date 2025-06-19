@@ -178,7 +178,6 @@ http://localhost:9998
 
 - **Email**: [chang6100@naver.com]
 - **GitHub**: [https://github.com/ParkChangHyun7]
-- **Portfolio**: [https://your-portfolio.com]
 
 ---
 
