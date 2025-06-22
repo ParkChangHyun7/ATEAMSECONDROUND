@@ -191,3 +191,4 @@ src/main/data/api/json/seoulpublicdata.json
 .windsurf
 src/main/data/api/json/seoulTrafficEvent.json
 src/main/data/api/json/seoulpublicdata.json
+"src/main/resources/application.properties" 
