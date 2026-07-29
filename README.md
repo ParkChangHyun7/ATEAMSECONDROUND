@@ -82,7 +82,20 @@ cd ATEAMSECONDROUND
 ```
 
 ### 2. 데이터베이스 설정
-MySQL에서 데이터베이스를 생성하고 `application.properties`에서 연결 정보를 설정하세요.
+
+MySQL에서 `seoul_its_info2` 데이터베이스를 생성하고, 
+`src/main/resources/application.properties`에서 아래 항목을 본인 환경에 맞게 수정하세요.
+
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/seoul_its_info2?useSSL=false&serverTimezone=Asia/Seoul
+spring.datasource.username=본인 MySQL 계정
+spring.datasource.password=본인 MySQL 비밀번호
+```
+
+> ⚠️ **보안 안내**: 기존에 설정되어 있던 Google OAuth 클라이언트 시크릿은 저장소가 Public으로 
+> 전환되면서 노출된 이력이 있어 재발급/비활성화될 예정입니다. Google 로그인 기능을 
+> 테스트하려면 [Google Cloud Console](https://console.cloud.google.com)에서 별도의 
+> OAuth 2.0 클라이언트를 새로 발급받아 `application.properties`에 설정해야 합니다.
 
 ### 3. API 키 설정
 `src/main/resources/com/properties/application-API-KEY.properties` 파일에 다음 API 키들을 설정하세요:
