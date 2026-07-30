@@ -182,6 +182,54 @@ ATEAMSECONDROUND/
 
 이 프로젝트는 MIT 라이선스 하에 배포됩니다. 자세한 내용은 `LICENSE` 파일을 참고하세요.
 
+
+## 🚀 로컬 실행 방법
+
+### 사전 준비물
+- JDK 17
+- MySQL 8.x
+- Maven (또는 프로젝트에 포함된 mvnw 사용)
+
+### 1. 데이터베이스 준비
+로컬 MySQL에 아래 이름으로 스키마를 생성해주세요.
+```sql
+CREATE DATABASE `seoul_its_info2`;
+```
+
+### 2. application.properties 생성
+보안을 위해 `src/main/resources/application.properties`는 git에 포함되어 있지 않습니다.
+아래 내용을 참고하여 직접 생성해주세요.
+
+```properties
+spring.application.name=SeoulITSInfoByATeamApplication.java
+server.port=9998
+spring.profiles.active=dev
+
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/seoul_its_info2?useSSL=false&serverTimezone=Asia/Seoul
+spring.datasource.username=본인의_MySQL_계정
+spring.datasource.password=본인의_MySQL_비밀번호
+
+mybatis.mapper-locations=classpath:src/main/resources/mapper/*.xml
+mybatis.type-aliases-package=seoul.its.info
+mybatis.configuration.map-underscore-to-camel-case=true
+```
+
+> ⚠️ 구글 OAuth, 이메일 발송, 외부 API 키 등은 별도 설정이 필요하며, 
+> 해당 기능 없이도 기본 페이지 실행 및 확인은 가능합니다.
+
+### 3. 실행
+```bash
+./mvnw spring-boot:run
+```
+또는 IDE(STS4, IntelliJ 등)에서 Spring Boot 애플리케이션으로 직접 실행
+
+실행 후 `http://localhost:9998` 접속하면 확인 가능합니다.
+
+### 참고
+- 개발 당시 사용하던 팀 공용 서버는 현재 운영 종료된 상태로, 
+  위 방법을 통해 로컬 환경에서 동일하게 재현 가능합니다.
+
 ## 👥 팀 정보
 
 **A-Team** - Seoul ITS Info 개발팀
