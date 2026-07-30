@@ -143,23 +143,25 @@ uvicorn file_server:app --reload --port 8001
 
 ## 📁 프로젝트 구조
 
+\`\`\`
 ATEAMSECONDROUND/
-├── src/main/
-│ ├── java/seoul/its/info/
-│ │ ├── common/ # 공통 설정 및 유틸리티
-│ │ ├── services/ # 서비스 레이어
-│ │ │ ├── traffic/ # 교통 정보 서비스
-│ │ │ ├── metro/ # 지하철 정보 서비스
-│ │ │ ├── llm/ # AI 챗봇 서비스
-│ │ │ ├── boards/ # 게시판 서비스
-│ │ │ └── users/ # 사용자 관리 서비스
-│ │ └── main/ # 메인 컨트롤러
-│ ├── resources/
-│ │ ├── static/ # 정적 리소스 (CSS, JS, 이미지)
-│ │ └── data/ # 데이터 파일
-│ └── webapp/WEB-INF/views/ # JSP 뷰 파일
-├── python_api/ # Python 기반 API 서비스
-└── data/ # 정적 데이터 파일 (JSON, CSV)
+├─ src/main/
+│  ├─ java/seoul/its/info/
+│  │  ├─ common/         # 공통 설정 및 유틸리티
+│  │  ├─ services/       # 서비스 레이어
+│  │  │  ├─ traffic/     # 교통 정보 서비스
+│  │  │  ├─ metro/       # 지하철 정보 서비스
+│  │  │  ├─ llm/         # AI 챗봇 서비스
+│  │  │  ├─ boards/      # 게시판 서비스
+│  │  │  └─ users/       # 사용자 관리 서비스
+│  │  └─ main/           # 메인 컨트롤러
+│  ├─ resources/
+│  │  ├─ static/         # 정적 리소스 (CSS, JS, 이미지)
+│  │  └─ data/           # 데이터 파일
+│  └─ webapp/WEB-INF/views/  # JSP 뷰 파일
+├─ python_api/           # Python 기반 API 서비스
+└─ data/                 # 정적 데이터 파일 (JSON, CSV)
+\`\`\`
 
 ## 🌐 주요 엔드포인트
 
