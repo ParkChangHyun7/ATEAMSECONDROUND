@@ -1,10 +1,11 @@
+/* 헤더 스타일 */
 .header_container {
   width: 100%;
   height: 70px;
   display: block;
-  background-color: #444;
+  background-color: #daeb1f;
   align-items: center;
-  color: white;
+  color: rgb(44, 153, 212);
   position: fixed;
   top: 0;
   left: 0;
@@ -16,7 +17,7 @@
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
-  padding-top: 16px;
+  padding: 16px 20px 0 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -73,7 +74,7 @@
 .nav-menu-wrap {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
 }
 
 .nav_container {
@@ -95,22 +96,31 @@
 
 .navs li {
   position: relative;
-  margin-left: 20px;
-}
-
-.navs li:hover {
-  color: #f1b300;
-  transition: color 0.3s ease;
+  margin-left: 12px;
 }
 
 .navs a {
-  color: white;
+  color: rgb(41, 77, 234);
   text-decoration: none;
   font-size: 16px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  display: block;
 }
 
 .navs a:hover {
-  text-decoration: underline;
+  background-color: rgba(43, 43, 227, 0.2);
+  color: #ff1493;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(26, 173, 129, 0.2);
+}
+
+.material-symbols-outlined.menu_open {
+  color: white;
+  font-size: 40px;
+  display: block;
+  font-variation-settings: "FILL" 0, "wght" 200;
 }
 
 .auth-wrap {
@@ -120,34 +130,175 @@
   align-items: center;
   justify-content: right;
   margin: 0 auto;
+  position: relative;
 }
 
 .auth-links {
   display: flex;
   align-items: center;
-  padding-left: 15px;
-  padding-right: 15px;
-  padding-bottom: 5px;
-  padding-top: 10px;
-  background-color: #444;
-  color: #fff;
-  gap: 15px;
-  font-size: 12px;
-  font-weight: 200;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+  gap: 12px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.1));
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 25px;
+  box-shadow: 
+    0 8px 20px rgba(0,0,0,0.1),
+    0 4px 10px rgba(0,0,0,0.05),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-links::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+  animation: shimmerAuth 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes shimmerAuth {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(30deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(30deg); }
+}
+
+.auth-links:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 30px rgba(0,0,0,0.15),
+    0 6px 15px rgba(0,0,0,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.3);
+  background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.15));
+  border: 1px solid rgba(255,255,255,0.4);
 }
 
 .auth-link {
-  text-decoration-line: none;
-  color: #fff;
+  text-decoration: none;
+  color: #333;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 18px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
+  border: 1px solid rgba(255,255,255,0.4);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.auth-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.5s ease;
+}
+
+.auth-link:hover::before {
+  left: 100%;
 }
 
 .auth-link:hover {
-  color: #f1b300;
-  font-weight: 400;
+  transform: translateY(-1px) scale(1.02);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
+  border: 1px solid rgba(255,255,255,0.6);
 }
 
+.auth-link span {
+  position: relative;
+  z-index: 1;
+}
+
+/* 구분자 스타일 */
+.auth-links > span {
+  color: rgba(51, 51, 51, 0.4);
+  font-weight: 300;
+  font-size: 14px;
+}
+
+/* 특별한 스타일 - 회원가입 버튼 */
+.auth-link[href="/user/join"] {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.auth-link[href="/user/join"]:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* 로그인 버튼 */
+.auth-link[href="/user/login"] {
+  background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+  color: #333;
+  border: 1px solid rgba(102, 126, 234, 0.3);
+}
+
+.auth-link[href="/user/login"]:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.6);
+}
+
+/* 로그아웃 버튼 */
+.auth-link[href="/user/logout"] {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+
+.auth-link[href="/user/logout"]:hover {
+  background: linear-gradient(135deg, #ee5a52 0%, #ff6b6b 100%);
+  box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* 사용자 정보 링크 */
+.auth-link[href="/user/modify"] {
+  background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(81, 207, 102, 0.3);
+}
+
+.auth-link[href="/user/modify"]:hover {
+  background: linear-gradient(135deg, #40c057 0%, #51cf66 100%);
+  box-shadow: 0 8px 20px rgba(81, 207, 102, 0.4);
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* 운영자 버튼 */
+.auth-link[href="/admin"] {
+  background: linear-gradient(135deg, #ffd43b 0%, #fab005 100%);
+  color: #333;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(255, 212, 59, 0.3);
+}
+
+.auth-link[href="/admin"]:hover {
+  background: linear-gradient(135deg, #fab005 0%, #ffd43b 100%);
+  box-shadow: 0 8px 20px rgba(255, 212, 59, 0.4);
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* 드롭다운 메뉴 스타일 */
 .navs .dropdown {
   position: relative;
 }
@@ -176,32 +327,10 @@
 
 .navs .dropdown-menu li a:hover {
   background-color: #666;
-  text-decoration: none;
 }
 
 .navs .dropdown:hover .dropdown-menu {
   display: block;
-}
-
-#dropdown-menu-overlay {
-  position: fixed;
-  top: 70px;
-  left: 0;
-  width: 100%;
-  height: 0;
-  background-color: #444;
-  opacity: 0;
-  z-index: 998;
-  visibility: hidden;
-  transition: height 0.3s ease-in-out, opacity 0.3s ease-in-out,
-    visibility 0s 0.3s;
-}
-
-#dropdown-menu-overlay.show {
-  visibility: visible;
-  opacity: 0.7;
-  transition: height 0.3s ease-in-out, opacity 0.3s ease-in-out,
-    visibility 0s 0s;
 }
 
 /* 헤더 반응형 스타일 */
@@ -224,10 +353,53 @@
   .menu-btn {
     display: block;
   }
+  
+  /* 모바일에서 auth 영역 스타일 조정 */
   .auth-wrap {
+    display: flex;
+    justify-content: center;
+    padding: 0 10px;
+  }
+  
+  .auth-links {
+    gap: 8px;
+    padding: 8px 15px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+  }
+  
+  .auth-link {
+    font-size: 11px;
+    padding: 6px 12px;
+    border-radius: 15px;
+  }
+  
+  .auth-link[href="/user/join"],
+  .auth-link[href="/user/login"],
+  .auth-link[href="/user/logout"],
+  .auth-link[href="/user/modify"],
+  .auth-link[href="/admin"] {
+    transform: none;
+  }
+  
+  .auth-link:hover {
+    transform: translateY(-1px) scale(1.01);
+  }
+  
+  /* 구분자 숨기기 */
+  .auth-links > span {
     display: none;
   }
+}
+
+@media screen and (max-width: 480px) {
   .auth-links {
-    display: none;
+    gap: 6px;
+    padding: 6px 12px;
+  }
+  
+  .auth-link {
+    font-size: 10px;
+    padding: 5px 10px;
   }
 }

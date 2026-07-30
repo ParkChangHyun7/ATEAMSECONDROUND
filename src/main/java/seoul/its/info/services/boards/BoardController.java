@@ -47,8 +47,8 @@ public class BoardController {
     @PostMapping("/create")
     @ResponseBody
     public ResponseEntity<?> createBoard(@RequestBody BoardRequestDto boardRequestDto) {
-        boardService.createBoard(boardRequestDto);
-        return ResponseEntity.ok().build();
+        boardService.createBoard(boardRequestDto); // 🔥 확인 필요: createBoard 메서드의 반환 타입 및 예외 처리
+        return ResponseEntity.ok().build(); // 200 OK 응답
     }
 
     // 게시판 수정

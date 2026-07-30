@@ -3,27 +3,73 @@
 }
 
 .topdiv-join {
-  background-color: #f8f9fa;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
   justify-content: center;
   padding-top: 50px;
   margin: 0;
   color: #333;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.topdiv-join::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+  animation: backgroundFloat 20s ease-in-out infinite;
+}
+
+@keyframes backgroundFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(1deg); }
 }
 
 .container {
-  background-color: #ffffff;
-  padding: 0 40px;
-  padding-top: 30px;
-  padding-bottom: 0px;
-  border-radius: 8px;
-  box-shadow: 0 5px 50px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.95));
+  padding: 40px 50px;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20px);
   max-width: 550px;
   min-width: 360px;
   width: 100%;
   box-sizing: border-box;
   margin-top: 50px;
   margin-bottom: 100px;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  animation: containerFloat 6s ease-in-out infinite;
+}
+
+.container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+  animation: topBorderFlow 3s linear infinite;
+}
+
+@keyframes containerFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes topBorderFlow {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 .container button {
@@ -36,10 +82,20 @@
 }
 
 .h1 {
-  font-size: 33px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  text-align: left;
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  text-align: center;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: titleGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+  0% { filter: drop-shadow(0 2px 4px rgba(102, 126, 234, 0.3)); }
+  100% { filter: drop-shadow(0 4px 8px rgba(118, 75, 162, 0.4)); }
 }
 
 .form-section {
@@ -74,12 +130,29 @@
 .form-section input,
 .form-section select {
   width: 100%;
-  padding: 14px 12px;
-  border: 1px solid #ced4da;
-  border-radius: 5px;
-  font-size: 14px;
+  padding: 16px 16px;
+  border: 2px solid rgba(102, 126, 234, 0.2);
+  border-radius: 12px;
+  font-size: 15px;
   box-sizing: border-box;
   margin-bottom: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.form-section input:focus,
+.form-section select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+  background: rgba(255, 255, 255, 1);
+  transform: translateY(-2px);
+}
+
+.form-section input:hover:not(:focus),
+.form-section select:hover:not(:focus) {
+  border-color: rgba(102, 126, 234, 0.4);
+  transform: translateY(-1px);
 }
 
 .agreement-item input[type="checkbox"] {
@@ -187,13 +260,46 @@
 .phone-verify-button,
 .phone-confirm-button,
 .address-search-button {
-  font-size: 14px;
-  background-color: #1d3b5b;
+  font-size: 15px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
   border: none;
   color: #fff;
   cursor: pointer;
-  height: 45px;
+  height: 50px;
   margin-bottom: 15px;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.phone-verify-button::before,
+.phone-confirm-button::before,
+.address-search-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.phone-verify-button:hover:not(:disabled),
+.phone-confirm-button:hover:not(:disabled),
+.address-search-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #5a6fd8, #6a4190);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.phone-verify-button:hover:not(:disabled)::before,
+.phone-confirm-button:hover:not(:disabled)::before,
+.address-search-button:hover:not(:disabled)::before {
+  left: 100%;
 }
 
 .phone-confirm-button,

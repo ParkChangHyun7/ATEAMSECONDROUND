@@ -1,62 +1,169 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <style>
-  .cpabout {}
+  .cpabout {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cpabout::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+    animation: backgroundFloat 20s ease-in-out infinite;
+  }
+
+  @keyframes backgroundFloat {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(1deg); }
+  }
 
   .cpabout .inner {
     width: 1200px;
     margin: 0 auto;
     padding-top: 100px;
     padding-bottom: 50px;
+    position: relative;
+    z-index: 1;
   }
 
   .cpabout .page-title {
-    font-size: 33px;
+    font-size: 42px;
     text-align: center;
-    margin-bottom: 50px;
-    font-weight: 600;
+    margin-bottom: 60px;
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    animation: titleGlow 3s ease-in-out infinite alternate;
+    position: relative;
+  }
+
+  .cpabout .page-title::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+    border-radius: 2px;
+    animation: underlineGlow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes titleGlow {
+    0% { text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); }
+    100% { text-shadow: 0 4px 30px rgba(255, 255, 255, 0.4), 0 0 40px rgba(255, 255, 255, 0.2); }
+  }
+
+  @keyframes underlineGlow {
+    0% { box-shadow: 0 0 10px rgba(255, 107, 107, 0.5); }
+    100% { box-shadow: 0 0 20px rgba(69, 183, 209, 0.8), 0 0 30px rgba(78, 205, 196, 0.6); }
   }
 
   .cpabout .tab-nav {
     display: flex;
-    justify-content: left;
-    border-bottom: 1px solid #dadada;
-    margin-bottom: 20px;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
   }
 
   .cpabout .tab-nav-item {
-    padding: 10px 20px;
-    margin-right: 10px;
-    background-color: #f1f1f1;
-    border: 1px solid transparent;
-    border-bottom: none;
+    padding: 15px 25px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
     cursor: pointer;
-    font-size: 20px;
-    transition: background-color 0.2s ease;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cpabout .tab-nav-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
   }
 
   .cpabout .tab-nav-item:hover {
-    background-color: #e0e0e0;
-    text-decoration: underline;
+    transform: translateY(-5px) scale(1.05);
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+
+  .cpabout .tab-nav-item:hover::before {
+    left: 100%;
   }
 
   .cpabout .tab-nav-item.is-active {
-    background-color: #fff;
-    font-weight: bold;
-    border-color: #dadada;
-    margin-bottom: -1px;
-    position: relative;
-    z-index: 1;
-    cursor: default;
-    text-decoration: none;
+    background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    animation: activeTabPulse 2s ease-in-out infinite;
   }
 
-  .cpabout .tab-nav-item.is-active:hover {
-    background-color: #fff;
+  @keyframes activeTabPulse {
+    0%, 100% { box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3); }
+    50% { box-shadow: 0 15px 35px rgba(255, 107, 107, 0.4), 0 0 30px rgba(78, 205, 196, 0.3); }
   }
 
   .cpabout .tab-content {
-    padding: 20px 0;
+    padding: 40px;
     display: none;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(20px);
+    animation: contentSlideIn 0.6s ease-out;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cpabout .tab-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+    animation: topBorderFlow 3s linear infinite;
+  }
+
+  @keyframes topBorderFlow {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  @keyframes contentSlideIn {
+    0% { 
+      opacity: 0; 
+      transform: translateY(30px) scale(0.95); 
+    }
+    100% { 
+      opacity: 1; 
+      transform: translateY(0) scale(1); 
+    }
   }
 
   .cpabout .tab-content.is-active {
@@ -64,36 +171,103 @@
   }
 
   .cpabout .tab-content-title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 25px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+  }
+
+  .cpabout .tab-content-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+    border-radius: 2px;
+    animation: titleUnderlineExpand 1s ease-out;
+  }
+
+  @keyframes titleUnderlineExpand {
+    0% { width: 0; }
+    100% { width: 60px; }
   }
 
   .cpabout .tab-content-subtitle {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 20px;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: #2c3e50;
   }
 
   .cpabout .info-card {
     display: flex;
-    gap: 20px;
+    gap: 25px;
     align-items: center;
     margin-bottom: 30px;
-    padding: 20px;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    background-color: #f9f9f9;
+    padding: 30px;
+    border: none;
+    border-radius: 15px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(240, 248, 255, 0.9));
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cpabout .info-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s;
+  }
+
+  .cpabout .info-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  }
+
+  .cpabout .info-card:hover::before {
+    left: 100%;
   }
 
   .cpabout .info-card-icon {
     flex-shrink: 0;
-    border-radius: 15px;
+    width: 120px;
+    height: 120px;
+    border-radius: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    transition: all 0.4s ease;
+    animation: iconFloat 3s ease-in-out infinite;
+  }
+
+  @keyframes iconFloat {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(5deg); }
+  }
+
+  .cpabout .info-card:hover .info-card-icon {
+    transform: scale(1.1) rotate(10deg);
+    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+  }
+
+  .cpabout .info-card-icon svg {
+    fill: white;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
   }
 
   .cpabout .info-card-body {
@@ -101,126 +275,296 @@
   }
 
   .cpabout .info-card-title {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 10px;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    background: linear-gradient(135deg, #2c3e50, #3498db);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   .cpabout .info-card-description {
     font-size: 16px;
-    line-height: 1.6;
+    line-height: 1.8;
     padding-left: 0;
+    color: #555;
   }
 
   .cpabout .info-card-description li {
     list-style-position: outside;
     margin-left: 1.2em;
-    padding: 5px 0;
+    padding: 8px 0;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .cpabout .info-card-description li::before {
+    content: '✨';
+    position: absolute;
+    left: -1.5em;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .cpabout .info-card:hover .info-card-description li::before {
+    opacity: 1;
   }
 
   .cpabout .info-card-description .highlight {
-    color: #1d3b5b;
-    font-weight: 500;
+    background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+    position: relative;
   }
 
-  .cpabout .org-subtitle {
-    width: 280px;
-    margin: 0 auto 30px auto;
+  .cpabout .org-overview {
+    margin: 0 auto 40px auto;
+    max-width: 800px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.95));
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+    animation: overviewFloat 6s ease-in-out infinite;
+  }
+
+  .cpabout .org-overview::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+    animation: topBorderFlow 3s linear infinite;
+  }
+
+  @keyframes overviewFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+  }
+
+  .cpabout .org-overview-title {
+    font-size: 28px;
+    font-weight: 700;
     text-align: center;
-    color: #1d3b5b;
-    border: 1px solid #1d3b5b;
-    border-radius: 45px;
-    padding: 20px;
+    margin-bottom: 25px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .cpabout .org-overview-content p {
     font-size: 18px;
-    line-height: 1.5;
+    line-height: 1.8;
+    color: #555;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .cpabout .org-stats {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+  }
+
+  .cpabout .stat-item {
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    flex: 1;
+  }
+
+  .cpabout .stat-item:hover {
+    transform: translateY(-5px) scale(1.05);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.15));
+  }
+
+  .cpabout .stat-number {
+    display: block;
+    font-size: 32px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+
+  .cpabout .stat-label {
+    font-size: 14px;
+    color: #667eea;
+    font-weight: 600;
+  }
+
+  .cpabout .org-chart-details {
+    display: none !important;
   }
 
   .cpabout .org-chart {
     display: flex;
-    gap: 20px;
+    gap: 25px;
     justify-content: space-between;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
   }
 
   .cpabout .org-chart-item {
     flex: 1;
-    border: 1px solid #dadada;
-    border-radius: 8px;
+    border: none;
+    border-radius: 15px;
     overflow: hidden;
-    background-color: #fff;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.9));
     cursor: pointer;
-    transition: box-shadow 0.2s ease;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+
+  .cpabout .org-chart-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
   }
 
   .cpabout .org-chart-item:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  }
+
+  .cpabout .org-chart-item:hover::before {
+    transform: scaleX(1);
   }
 
   .cpabout .org-chart-title {
     display: block;
-    background-color: #f3f6fb;
-    font-size: 18px;
-    font-weight: bold;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
     text-align: center;
-    padding: 15px;
-    margin-bottom: 15px;
-    border-bottom: 1px solid #dadada;
+    padding: 20px;
+    margin-bottom: 0;
+    border: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cpabout .org-chart-title::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .cpabout .org-chart-item:hover .org-chart-title::before {
+    left: 100%;
   }
 
   .cpabout .org-chart-duties {
-    padding: 0 15px 15px 15px;
+    padding: 25px;
   }
 
   .cpabout .org-chart-duties li {
     font-size: 16px;
-    padding: 8px 0;
-    list-style-type: disc;
-    list-style-position: outside;
-    margin-left: 1.2em;
+    padding: 10px 0;
+    list-style-type: none;
+    margin-left: 0;
+    position: relative;
+    color: #555;
+    transition: all 0.3s ease;
+  }
+
+  .cpabout .org-chart-duties li::before {
+    content: '▶';
+    color: #667eea;
+    font-weight: bold;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+  }
+
+  .cpabout .org-chart-item:hover .org-chart-duties li::before {
+    color: #ff6b6b;
+    transform: translateX(5px);
   }
 
   .cpabout .org-chart-duties .indent {
-    margin-left: 1em;
-    font-size: 0.95em;
-    color: #555;
+    margin-left: 1.5em;
+    font-size: 0.9em;
+    color: #777;
+    font-style: italic;
+  }
+
+  .cpabout .org-chart-details {
+    display: none !important;
   }
 
   .cpabout .data-table {
     width: 100%;
-    margin: 20px 0 40px 0;
+    margin: 30px 0 50px 0;
     max-width: 100%;
     border-collapse: collapse;
-    border: 1px solid #ddd;
+    border: none;
     font-size: 16px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    background: white;
   }
 
   .cpabout .data-table th,
   .cpabout .data-table td {
-    border: 1px solid #ddd;
-    padding: 12px 15px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 18px 20px;
     text-align: left;
     vertical-align: top;
+    transition: all 0.3s ease;
   }
 
   .cpabout .data-table thead th {
-    background-color: #f3f6fb;
-    font-size: 17px;
-    font-weight: bold;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
     text-align: center;
-    border-bottom: 2px solid #ccc;
+    border: none;
+    position: relative;
   }
 
-  .cpabout .data-table-roles th:nth-child(1) {
-    width: 25%;
+  .cpabout .data-table tbody tr {
+    transition: all 0.3s ease;
   }
 
-  .cpabout .data-table-roles th:nth-child(2) {
-    width: 25%;
+  .cpabout .data-table tbody tr:hover {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+    transform: scale(1.01);
   }
 
-  .cpabout .data-table-roles th:nth-child(3) {
-    width: 50%;
+  .cpabout .data-table tbody tr:nth-child(even) {
+    background: rgba(248, 250, 252, 0.5);
   }
+
+  .cpabout .data-table-roles th:nth-child(1) { width: 25%; }
+  .cpabout .data-table-roles th:nth-child(2) { width: 25%; }
+  .cpabout .data-table-roles th:nth-child(3) { width: 50%; }
 
   .cpabout .data-table-roles td {
     text-align: center;
@@ -236,40 +580,33 @@
   }
 
   .cpabout .data-table-roles li {
-    list-style: disc;
-    list-style-position: outside;
-    margin-left: 1.2em;
-    padding: 5px 0;
+    list-style: none;
+    margin-left: 0;
+    padding: 8px 0;
     font-size: 16px;
     text-align: left;
+    position: relative;
+    transition: all 0.3s ease;
   }
 
-  .cpabout .data-table-status th:nth-child(1) {
-    width: 20%;
+  .cpabout .data-table-roles li::before {
+    content: '🔹';
+    margin-right: 8px;
   }
 
-  .cpabout .data-table-status th:nth-child(2) {
-    width: 50%;
-  }
-
-  .cpabout .data-table-status th:nth-child(3) {
-    width: 30%;
-    text-align: center;
-  }
+  .cpabout .data-table-status th:nth-child(1) { width: 20%; }
+  .cpabout .data-table-status th:nth-child(2) { width: 50%; }
+  .cpabout .data-table-status th:nth-child(3) { width: 30%; text-align: center; }
 
   .cpabout .data-table-status td {
     vertical-align: middle;
-    border-bottom-style: dotted;
-  }
-
-  .cpabout .data-table-status tbody tr:last-child td {
-    border-bottom-style: solid;
   }
 
   .cpabout .data-table-status .category-title {
-    background-color: #f0f0f0;
-    font-weight: bold;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    font-weight: 700;
     text-align: center;
+    color: #667eea;
   }
 
   .cpabout .data-table-status .cell-list {
@@ -279,10 +616,16 @@
 
   .cpabout .data-table-status .cell-list li {
     font-size: 16px;
-    border-bottom: 1px dashed #eee;
-    padding: 8px 0;
+    border-bottom: 1px dashed rgba(102, 126, 234, 0.2);
+    padding: 10px 0;
     list-style: none;
     margin: 0;
+    transition: all 0.3s ease;
+  }
+
+  .cpabout .data-table-status .cell-list li:hover {
+    color: #667eea;
+    padding-left: 10px;
   }
 
   .cpabout .data-table-status .cell-list li:last-child {
@@ -291,25 +634,38 @@
 
   .cpabout .data-table-status td:last-child {
     text-align: center;
+    font-weight: 600;
+    color: #667eea;
   }
 
   .cpabout .data-table-status tfoot td {
-    background-color: #f3f6fb;
-    font-weight: bold;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    font-weight: 700;
     text-align: center;
-    border-top: 2px solid #ccc;
+    font-size: 18px;
   }
 
   .cpabout .map-container {
-    margin: 0 auto 30px auto;
+    margin: 0 auto 40px auto;
     width: 950px;
     max-width: 100%;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s ease;
+  }
+
+  .cpabout .map-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
   }
 
   .cpabout .map-container iframe {
     display: block;
     width: 100%;
-    border: 1px solid #ddd;
+    border: none;
+    transition: all 0.3s ease;
   }
 
   .cpabout .data-table-location th:nth-child(1) {
@@ -322,13 +678,15 @@
   }
 
   .cpabout .data-table-location .label-cell {
-    background-color: #f9f9f9;
-    font-weight: bold;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    font-weight: 700;
     text-align: center;
+    color: #667eea;
   }
 
   .cpabout .data-table-location .value-cell {
-    padding-left: 20px;
+    padding-left: 25px;
+    color: #555;
   }
 
   .cpabout .data-table-location ul {
@@ -338,35 +696,112 @@
 
   .cpabout .data-table-location li {
     list-style: none;
-    padding: 3px 0;
+    padding: 5px 0;
+    transition: all 0.3s ease;
+  }
+
+  .cpabout .data-table-location li:hover {
+    color: #667eea;
+    padding-left: 10px;
   }
 
   .cpabout .data-table-location .indent {
-    list-style: disc;
-    list-style-position: outside;
+    list-style: none;
     margin-left: 1.5em;
     padding-top: 5px;
+    position: relative;
+  }
+
+  .cpabout .data-table-location .indent::before {
+    content: '→';
+    color: #667eea;
+    margin-right: 8px;
+    font-weight: bold;
   }
 
   .cpabout .org-chart-details {
-    padding: 15px;
-    background-color: #f7f7f7;
-    border-top: 1px solid #e0e0e0;
+    padding: 25px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+    border-top: 1px solid rgba(102, 126, 234, 0.2);
     display: none;
     font-size: 15px;
-    line-height: 1.6;
+    line-height: 1.8;
+    color: #555;
   }
 
   .cpabout .org-chart-details p {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
   }
 
   .cpabout .org-chart-details p:last-child {
     margin-bottom: 0;
   }
 
+  .cpabout .org-chart-details strong {
+    color: #667eea;
+    font-weight: 700;
+  }
+
   .cpabout .org-chart-item.is-expanded .org-chart-details {
     display: block;
+    animation: detailsSlideDown 0.4s ease-out;
+  }
+
+  @keyframes detailsSlideDown {
+    0% { 
+      opacity: 0; 
+      max-height: 0; 
+      transform: translateY(-10px); 
+    }
+    100% { 
+      opacity: 1; 
+      max-height: 200px; 
+      transform: translateY(0); 
+    }
+  }
+
+  /* 반응형 디자인 */
+  @media (max-width: 1024px) {
+    .cpabout .inner {
+      width: 95%;
+      padding: 80px 20px 40px;
+    }
+    
+    .cpabout .org-chart {
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .cpabout .info-card {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .cpabout .info-card-icon {
+      width: 100px;
+      height: 100px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .cpabout .page-title {
+      font-size: 32px;
+    }
+    
+    .cpabout .tab-nav {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .cpabout .tab-nav-item {
+      width: 80%;
+      text-align: center;
+    }
+    
+    .cpabout .tab-content {
+      padding: 25px;
+    }
   }
 </style>
 
@@ -441,7 +876,26 @@
       <%-- Tab 2: 운영조직 --%>
       <section class="tab-content" id="tab-organization">
         <h2 class="tab-content-title">운영조직</h2>
-        <p class="org-subtitle"><strong>서울지방국토관리청<br />도로교통정보센터</strong></p>
+        <div class="org-overview">
+          <h3 class="org-overview-title">서울지방국토관리청 도로교통정보센터</h3>
+          <div class="org-overview-content">
+            <p>국도 교통정보 수집·가공·제공을 통한 교통서비스 향상과 도로관리 효율화를 위해 설립된 전문기관입니다.</p>
+            <div class="org-stats">
+              <div class="stat-item">
+                <span class="stat-number">24</span>
+                <span class="stat-label">시간 운영</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">3,625</span>
+                <span class="stat-label">개 시설</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">670</span>
+                <span class="stat-label">개 CCTV</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div class="org-chart">
           <article class="org-chart-item">

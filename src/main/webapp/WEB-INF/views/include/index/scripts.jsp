@@ -2,4 +2,3 @@
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoApiKey}"></script>
     <script type="module" src="/js/content_pages/index/index.js"></script>
     <script type="module" src="/js/content_pages/index/weather.js"></script>
-    <script type="module" src="/js/content_pages/index/trafficEventHandler.js"></script>

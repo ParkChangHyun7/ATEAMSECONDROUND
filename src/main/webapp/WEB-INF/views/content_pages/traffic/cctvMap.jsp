@@ -35,7 +35,3 @@
   <button id="searchButton">검색</button>
 </div>
 
-<!-- ✅ 스크립트 로딩 -->
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_KAKAO_API_KEY&libraries=services"></script>
-<script src="/js/content_pages/traffic/cctv/cctvMap.js"></script>
