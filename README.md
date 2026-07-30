@@ -141,9 +141,6 @@ uvicorn file_server:app --reload --port 8001
 
 - **의존성 충돌 해결**: `antisamy` 라이브러리가 전이적으로 끌어오는 구버전 `xerces`/`xml-apis`가 Java 17에 내장된 `java.xml` 모듈과 충돌하여 `NoClassDefFoundError`가 발생. `pom.xml`에서 해당 의존성을 exclusion 처리하여 해결.
 
-## 📁 프로젝트 구조
-
-\`\`\`
 ATEAMSECONDROUND/
 ├─ src/main/
 │  ├─ java/seoul/its/info/
@@ -161,7 +158,6 @@ ATEAMSECONDROUND/
 │  └─ webapp/WEB-INF/views/  # JSP 뷰 파일
 ├─ python_api/           # Python 기반 API 서비스
 └─ data/                 # 정적 데이터 파일 (JSON, CSV)
-\`\`\`
 
 ## 🌐 주요 엔드포인트
 
